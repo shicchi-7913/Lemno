@@ -1,0 +1,36 @@
+[tools]
+rust = "1.99.1"
+node = "24.22.2"
+pnpm = "11.28.11"
+
+[env]
+TAURI_APP_PATH = "{{ config_root }}/backend"
+TAURI_FRONTEND_PATH = "{{ config_root }}/frontend"
+
+[tasks.setup]
+description = "Install frontend dependencies from pnpm-lock.yaml"
+dir = "{{ config_root }}/frontend"
+run = "pnpm install --frozen-lockfile"
+
+[tasks.lock]
+description = "Generate or update pnpm-lock.yaml"
+dir = "{{ config_root }}/frontend"
+run = "pnpm install --lockfile-only --no-frozen-lockfile"
+
+[tasks.dev]
+description = "Run the Tauri desktop app in development mode"
+dir = "{{ config_root }}/frontend"
+run = "pnpm run tauri dev"
+
+[tasks.check]
+description = "Check TypeScript and Rust"
+dir = "{{ config_root }}/frontend"
+run = [
+  "pnpm exec tsc --noEmit",
+  "cargo check --locked --manifest-path ../backend/Cargo.toml",
+]
+
+[tasks.build]
+description = "Build and bundle the Tauri desktop app"
+dir = "{{ config_root }}/frontend"
+run = "pnpm run tauri build"
