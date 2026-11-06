@@ -1,0 +1,8 @@
+.claude/feedback
+
+# macOS
+.DS_Store
+
+# Xcode
+DerivedData/
+xcuserdata/
