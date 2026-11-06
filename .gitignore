@@ -2,7 +2,3 @@
 
 # macOS
 .DS_Store
-
-# Xcode
-DerivedData/
-xcuserdata/

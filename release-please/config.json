@@ -4,13 +4,7 @@
     ".": {
       "release-type": "simple",
       "package-name": "Lemno",
-      "include-component-in-tag": false,
-      "extra-files": [
-        {
-          "type": "generic",
-          "path": "Version.xcconfig"
-        }
-      ]
+      "include-component-in-tag": false
     }
   }
 }
