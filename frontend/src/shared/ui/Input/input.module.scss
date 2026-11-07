@@ -1,11 +1,21 @@
 @use '../../styles/space' as *;
 @use '../../styles/field';
 
+:where(.input) {
+  font: inherit;
+}
+
 .input {
   @include field.status;
 
   width: 100%;
   min-width: 0;
+  -webkit-tap-highlight-color: transparent;
+
+  &:focus {
+    outline: 2px solid var(--control-focus-color, var(--color-focus));
+    outline-offset: 1px;
+  }
 
   &::placeholder {
     font-size: inherit;

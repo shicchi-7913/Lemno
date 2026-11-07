@@ -1,5 +1,9 @@
 @use '../../styles/space' as *;
 
+:where(.button) {
+  font: inherit;
+}
+
 .button {
   padding: space(2.25) space(3);
   border-radius: 9px;
@@ -7,6 +11,20 @@
   color: var(--color-text-muted);
   background: var(--color-surface-muted);
   white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color 140ms ease,
+    color 140ms ease;
+
+  &:disabled {
+    cursor: default;
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 3px;
+  }
 
   &:hover:not(:disabled) {
     background: var(--color-brand-bg);
@@ -15,6 +33,10 @@
   &[aria-pressed='true'] {
     color: var(--color-brand-text);
     background: var(--color-brand-bg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
   }
 }
 

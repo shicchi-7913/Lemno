@@ -1,9 +1,19 @@
 @use '../../styles/space' as *;
 
+:where(.select) {
+  font: inherit;
+}
+
 .select {
   min-width: 0;
   border: 0;
   padding: space(1.25) 0;
   color: var(--color-text-secondary);
   background: var(--color-surface);
+  -webkit-tap-highlight-color: transparent;
+
+  &:focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 3px;
+  }
 }
