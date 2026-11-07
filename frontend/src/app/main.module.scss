@@ -1,0 +1,8 @@
+@use '../shared/styles/space' as *;
+
+.startupError {
+  color: var(--color-danger-text);
+  padding: space(10);
+  font-size: 14px;
+  line-height: 2;
+}

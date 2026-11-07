@@ -1,0 +1,151 @@
+@use '../../../shared/styles/space' as *;
+
+.tableScroll {
+  overflow-x: auto;
+}
+
+.tableScroll table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  table-layout: fixed;
+  min-width: 660px;
+}
+
+.tableScroll th {
+  background: var(--color-surface-page);
+  padding: space(4) space(5);
+  font-size: 11px;
+  color: var(--color-text-subtle);
+  font-weight: 500;
+}
+
+.tableScroll th:first-child {
+  width: 37%;
+}
+
+.tableScroll th:nth-child(2) {
+  width: 18%;
+}
+
+.tableScroll th:nth-child(3) {
+  width: 16%;
+}
+
+.tableScroll th:nth-child(4) {
+  width: 14%;
+}
+
+.tableScroll th:last-child {
+  width: 15%;
+}
+
+.tableScroll td {
+  padding: space(4.25) space(5);
+  border-bottom: 1px solid var(--color-border-subtle);
+  font-size: 11px;
+  vertical-align: middle;
+}
+
+.tableScroll tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.wordText {
+  font-size: 14px;
+  font-weight: 450;
+  color: var(--color-text-strong);
+  overflow-wrap: anywhere;
+}
+
+.wordMeaning {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  margin: space(1) 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.wordExample {
+  font-size: 10px;
+  color: var(--color-text-subtle);
+  font-style: italic;
+  line-height: 1.6;
+  margin: space(0.75) 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.usageCount {
+  color: var(--color-success-text);
+}
+
+.reviewCount {
+  color: var(--color-text-muted);
+}
+
+.rowActions {
+  display: flex;
+  align-items: center;
+  gap: space(0.5);
+}
+
+.listFooter {
+  padding: space(3.5) space(5);
+  color: var(--color-text-subtle);
+  font-size: 10px;
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.listFooter:empty {
+  display: none;
+}
+
+.emptyState {
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  padding: space(8.75) space(6);
+}
+
+.emptySymbol {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 18px;
+  color: var(--color-success-text);
+  background: var(--color-success-bg);
+  margin-bottom: space(3.75);
+}
+
+.emptySymbol svg {
+  width: 26px;
+  height: 26px;
+}
+
+.emptyState h2 {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+.emptyState p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--color-text-muted);
+  max-width: 420px;
+
+  &[role='alert'] {
+    color: var(--color-danger-text);
+  }
+}
+
+.emptyState > button {
+  margin-top: space(3);
+}

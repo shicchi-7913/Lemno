@@ -1,0 +1,210 @@
+@use '../../../shared/styles/space' as *;
+
+.sidebar {
+  width: 240px;
+  position: fixed;
+  inset: 0 auto 0 0;
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  padding: space(7.5) space(3.75) space(4);
+  overflow-y: auto;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: space(2.5);
+  padding: space(0.75) space(3) space(9);
+}
+
+.brandSymbol {
+  width: 40px;
+  height: 40px;
+  border-radius: 15px;
+  background: var(--color-brand-bg);
+  color: var(--color-brand-text);
+  display: grid;
+  place-items: center;
+}
+
+.brandSymbol svg {
+  width: 24px;
+  height: 24px;
+}
+
+.brandName {
+  color: var(--color-text-strong);
+  font-size: 27px;
+  font-weight: 650;
+  letter-spacing: -1.5px;
+  line-height: 1.1;
+}
+
+.brandName span {
+  color: var(--color-brand-accent);
+}
+
+.brandSubtitle {
+  font-size: 9px;
+  color: var(--color-text-muted);
+  line-height: 1.8;
+}
+
+.profileCard {
+  display: flex;
+  gap: space(3);
+  align-items: center;
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: space(3.5) space(3);
+  margin-bottom: space(8);
+}
+
+.profileFlag {
+  font-size: 20px;
+}
+
+.profileCard strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 550;
+}
+
+.profileCard small {
+  display: block;
+  font-size: 10px;
+  color: var(--color-text-muted);
+  margin-top: space(1);
+}
+
+.profileChevron {
+  margin-left: auto;
+}
+
+.profileChevron svg {
+  width: 13px;
+}
+
+.navLabel {
+  padding: 0 space(3);
+  color: var(--color-text-subtle);
+  font-size: 10px;
+  font-weight: 550;
+  letter-spacing: 1.4px;
+  margin-bottom: space(3);
+}
+
+.navItem {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: space(3);
+  padding: space(3.25) space(3.5);
+  border: 0;
+  background: transparent;
+  border-radius: 10px;
+  text-align: left;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 550;
+  margin: space(0.75) 0;
+}
+
+.navItem:disabled {
+  color: var(--color-text-muted);
+  opacity: 1;
+}
+
+.navItem.active {
+  background: var(--color-brand-bg);
+  color: var(--color-brand-text);
+}
+
+.exploreLabel {
+  margin-top: space(6.5);
+}
+
+.exploreLabel ~ .navItem {
+  padding-top: space(2.5);
+  padding-bottom: space(2.5);
+  font-size: 11px;
+}
+
+.exploreLabel ~ .navItem svg {
+  width: 16px;
+  height: 16px;
+}
+
+.sidebarBottom {
+  margin-top: auto;
+  padding-top: space(2.5);
+}
+
+.encouragement {
+  display: flex;
+  gap: space(2.5);
+  border-radius: 14px;
+  padding: space(5) space(4) space(3.5);
+  background: var(--color-success-bg);
+  color: var(--color-success-text);
+}
+
+.encouragement > svg {
+  width: 19px;
+  height: 19px;
+}
+
+.encouragement strong {
+  font-size: 12px;
+  font-weight: 550;
+}
+
+.encouragement p {
+  font-size: 10px;
+  line-height: 1.7;
+  margin: space(2.25) 0 0;
+}
+
+@media (max-width: 1100px) {
+  .sidebar {
+    width: 210px;
+  }
+}
+
+@media (max-width: 780px) {
+  .sidebar {
+    width: 72px;
+    padding: space(6.25) space(2.5);
+  }
+
+  .brand {
+    padding: 0 space(1.25) space(7.5);
+  }
+
+  .brand > div,
+  .profileCard,
+  .navLabel,
+  .navItem span,
+  .sidebarBottom,
+  .exploreLabel ~ .navItem {
+    display: none;
+  }
+
+  .brandSymbol {
+    width: 40px;
+  }
+
+  .navItem {
+    justify-content: center;
+    padding: space(4) space(2);
+  }
+}
+
+@media (max-width: 520px) {
+  .sidebar {
+    display: none;
+  }
+}

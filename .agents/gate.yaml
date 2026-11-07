@@ -1,0 +1,22 @@
+policy: false
+
+rules:
+  # CI runs pnpm run lint; check.sh scopes ESLint and runs the same styles:lint.
+  - match:
+      - "frontend/src/**/*.{ts,tsx,scss}"
+      - "frontend/*.{json,yaml,ts,js}"
+    run:
+      - name: apps-lint
+        cmd: bash ".agents/scripts/check.sh" lint
+      - name: format
+        cmd: bash ".agents/scripts/check.sh" format
+    run_checks:
+      - build
+
+consistency_checks:
+  # Same frontend build as CI, including SCSS type generation and TypeScript.
+  - name: build
+    run:
+      - name: build
+        cmd: bash ".agents/scripts/check.sh" build
+        timeout: 600

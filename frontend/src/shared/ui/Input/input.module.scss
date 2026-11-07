@@ -1,0 +1,41 @@
+@use '../../styles/space' as *;
+@use '../../styles/field';
+
+.input {
+  @include field.status;
+
+  width: 100%;
+  min-width: 0;
+}
+
+.default {
+  border: 1px solid var(--color-border);
+  border-radius: 9px;
+  padding: space(2.75) space(3);
+  color: var(--color-text-strong);
+  font-size: 13px;
+  background: var(--color-surface-input);
+  line-height: 1.7;
+
+  &::placeholder {
+    color: var(--color-text-placeholder);
+    font-size: 12px;
+  }
+}
+
+.plain {
+  border: 0;
+  outline: none;
+  padding: 0;
+  color: var(--color-text-strong);
+  background: transparent;
+  font-size: 12px;
+
+  &:focus {
+    outline: none;
+  }
+
+  &::placeholder {
+    color: var(--color-text-placeholder);
+  }
+}

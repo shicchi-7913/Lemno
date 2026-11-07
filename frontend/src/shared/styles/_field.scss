@@ -1,0 +1,21 @@
+// Shared by Input and Textarea. Native validation uses the same error palette.
+@mixin status {
+  &[data-status='warning'] {
+    border-color: var(--color-warning-text);
+    background: var(--color-warning-bg);
+    --control-focus-color: var(--color-warning-text);
+  }
+
+  &[data-status='error'],
+  &[aria-invalid='true'],
+  &:user-invalid {
+    border-color: var(--color-danger-text);
+    background: var(--color-danger-bg);
+    --control-focus-color: var(--color-danger-text);
+  }
+
+  &:disabled {
+    color: var(--color-disabled-text);
+    background: var(--color-disabled-bg);
+  }
+}
