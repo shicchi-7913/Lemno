@@ -1,9 +1,13 @@
 @use '../../styles/space' as *;
 @use '../../styles/field';
 
+:where(.textarea) {
+  font: inherit;
+}
+
 .textarea {
   border: 1px solid var(--color-border);
-  border-radius: 9px;
+  border-radius: var(--radius-sm);
   padding: space(2.75) space(3);
   color: var(--color-text-strong);
   width: 100%;
@@ -11,6 +15,12 @@
   line-height: 1.7;
   resize: vertical;
   min-height: 80px;
+  -webkit-tap-highlight-color: transparent;
+
+  &:focus {
+    outline: 2px solid var(--control-focus-color, var(--color-focus));
+    outline-offset: 1px;
+  }
 
   &::placeholder {
     color: var(--color-text-placeholder);

@@ -4,8 +4,12 @@
   height: 24px;
   border: 2px solid var(--color-border-subtle);
   border-top-color: var(--color-brand-text);
-  border-radius: 50%;
+  border-radius: var(--radius-circle);
   animation: spin 800ms linear infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
 }
 
 @keyframes spin {

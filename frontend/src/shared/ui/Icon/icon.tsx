@@ -1,5 +1,5 @@
 import styles from './icon.module.scss';
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
 const shapes = {
   plus: <path d="M12 5v14M5 12h14" />,
@@ -41,10 +41,19 @@ const shapes = {
 
 export type IconName = keyof typeof shapes;
 
-export const Icon = ({ name, className = '' }: { name: IconName; className?: string }) => {
+export const Icon = ({
+  name,
+  size = 18,
+  className = '',
+}: {
+  name: IconName;
+  size?: number;
+  className?: string;
+}) => {
   return (
     <svg
       className={`${styles.icon} ${className}`}
+      style={{ '--icon-size': `${size}px` } as CSSProperties}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"

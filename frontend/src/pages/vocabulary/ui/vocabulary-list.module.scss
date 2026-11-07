@@ -117,15 +117,10 @@
   place-items: center;
   width: 54px;
   height: 54px;
-  border-radius: 18px;
+  border-radius: var(--radius-lg);
   color: var(--color-success-text);
   background: var(--color-success-bg);
   margin-bottom: space(3.75);
-}
-
-.emptySymbol svg {
-  width: 26px;
-  height: 26px;
 }
 
 .emptyState h2 {

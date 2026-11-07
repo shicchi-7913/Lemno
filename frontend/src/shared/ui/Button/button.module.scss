@@ -1,12 +1,16 @@
 @use '../../styles/space' as *;
 
+:where(.button) {
+  font: inherit;
+}
+
 .button {
   display: inline-flex;
   justify-content: center;
   align-items: center;
   gap: space(2.25);
   border: 1px solid transparent;
-  border-radius: 11px;
+  border-radius: var(--radius-md);
   min-height: 39px;
   padding: space(2.5) space(4);
   line-height: 1.5;
@@ -14,6 +18,20 @@
   white-space: nowrap;
   color: var(--tone-text);
   background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color 140ms ease,
+    color 140ms ease;
+
+  &:focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 }
 
 .solid {
@@ -45,15 +63,11 @@
   place-items: center;
   padding: space(1.75);
   min-height: 0;
-  border-radius: 7px;
-
-  svg {
-    width: 16px;
-    height: 16px;
-  }
+  border-radius: var(--radius-sm);
 }
 
 .button:disabled {
+  cursor: default;
   color: var(--color-disabled-text);
   background: var(--color-disabled-bg);
 }

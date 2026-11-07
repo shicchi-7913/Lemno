@@ -97,7 +97,7 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
         <fieldset className={styles.dialogControls} disabled={pending}>
           <div className={styles.dialogHeading}>
             <span className={`${styles.dialogSymbol}${deleting ? ` ${styles.dangerSymbol}` : ''}`}>
-              <Icon name={deleting ? 'trash' : 'book'} />
+              <Icon name={deleting ? 'trash' : 'book'} size={22} />
             </span>
             <Button
               variant="ghost"
@@ -107,7 +107,7 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
               aria-label={t('close')}
               onClick={onDismiss}
             >
-              <Icon name="close" />
+              <Icon name="close" size={16} />
             </Button>
           </div>
           <Heading as="h2" id={`${id}-title`} className={styles.dialogTitle}>

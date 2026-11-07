@@ -10,16 +10,11 @@
 .brandSymbol {
   width: 40px;
   height: 40px;
-  border-radius: 15px;
+  border-radius: var(--radius-lg);
   background: var(--color-brand-bg);
   color: var(--color-brand-text);
   display: grid;
   place-items: center;
-}
-
-.brandSymbol svg {
-  width: 24px;
-  height: 24px;
 }
 
 .brandName {
@@ -46,7 +41,7 @@
   align-items: center;
   background: var(--color-surface-muted);
   border: 1px solid var(--color-border);
-  border-radius: 14px;
+  border-radius: var(--radius-lg);
   padding: space(3.5) space(3);
   margin-bottom: space(8);
 }
@@ -72,10 +67,6 @@
   margin-left: auto;
 }
 
-.profileChevron svg {
-  width: 13px;
-}
-
 .navLabel {
   padding: 0 space(3);
   color: var(--color-text-subtle);
@@ -86,6 +77,7 @@
 }
 
 .navItem {
+  font: inherit;
   display: flex;
   width: 100%;
   align-items: center;
@@ -93,7 +85,7 @@
   padding: space(3.25) space(3.5);
   border: 0;
   background: transparent;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   text-align: left;
   text-decoration: none;
   color: var(--color-text-muted);
@@ -127,11 +119,6 @@
   font-size: var(--font-size-xs);
 }
 
-.exploreLabel ~ .navItem svg {
-  width: 16px;
-  height: 16px;
-}
-
 .sidebarBottom {
   margin-top: auto;
   padding-top: space(2.5);
@@ -140,15 +127,10 @@
 .encouragement {
   display: flex;
   gap: space(2.5);
-  border-radius: 14px;
+  border-radius: var(--radius-lg);
   padding: space(5) space(4) space(3.5);
   background: var(--color-success-bg);
   color: var(--color-success-text);
-}
-
-.encouragement > svg {
-  width: 19px;
-  height: 19px;
 }
 
 .encouragement strong {

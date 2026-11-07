@@ -9,7 +9,7 @@
   background: var(--color-brand-fill);
   color: var(--color-text-on-fill);
   box-shadow: 0 8px 30px var(--color-shadow);
-  border-radius: 11px;
+  border-radius: var(--radius-md);
   padding: space(3.5) space(6);
   max-width: calc(100% - 40px);
 }
