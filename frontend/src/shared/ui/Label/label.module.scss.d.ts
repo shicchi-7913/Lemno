@@ -1,6 +1,6 @@
 // Generated from SCSS. Do not edit.
 export type Styles = {
-  'label': string;
+  label: string;
 };
 
 export type ClassNames = keyof Styles;
