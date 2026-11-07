@@ -6,3 +6,10 @@
 /frontend/dist/
 
 .pnpm-store
+
+.lemno
+
+# Local quality gate state
+.agents/.gate-status/
+
+.claude/feedback/
