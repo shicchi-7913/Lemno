@@ -1,0 +1,63 @@
+// Semantic color inventory. Keep literal colors in this file only.
+// Text/background pairs belong together; fill colors are for solid controls.
+:root {
+  --color-text-default: #294d42;
+  --color-text-heading: #26473c;
+  --color-text-strong: #355e4b;
+  --color-text-secondary: #557b68;
+  --color-text-muted: #7c9587;
+  --color-text-subtle: #97aa9e;
+  --color-text-placeholder: var(--color-text-subtle);
+  --color-text-on-fill: #fff;
+
+  --color-surface-page: #f7f9f7;
+  --color-surface: #fff;
+  --color-surface-muted: #f4f8f5;
+  --color-surface-input: #fcfdfb;
+  --color-border: #e1eae3;
+  --color-border-subtle: #edf1ec;
+  --color-focus: #8bc7b1;
+  --color-disabled-text: #557b68;
+  --color-disabled-bg: #dcebe0;
+
+  --color-neutral-text: var(--color-text-secondary);
+  --color-neutral-bg: var(--color-surface-muted);
+  --color-neutral-border: var(--color-border);
+  --color-neutral-fill: #557b68;
+  --color-neutral-fill-hover: #3f604e;
+
+  --color-brand-text: #26765f;
+  --color-brand-bg: #eaf4ed;
+  --color-brand-border: #b8d2c0;
+  --color-brand-fill: #26765f;
+  --color-brand-fill-hover: #1c644e;
+
+  --color-success-text: #38734f;
+  --color-success-bg: #e9f5ed;
+  --color-success-border: #b8d2c0;
+  --color-success-fill: #38734f;
+  --color-success-fill-hover: #2b5b3d;
+
+  --color-warning-text: #865b23;
+  --color-warning-bg: #fff3e5;
+  --color-warning-border: #e5c48d;
+  --color-warning-fill: #865b23;
+  --color-warning-fill-hover: #6e491b;
+
+  // Error feedback and destructive actions share this danger palette.
+  --color-danger-text: #a34a3d;
+  --color-danger-bg: #fff0ec;
+  --color-danger-border: #dfaea5;
+  --color-danger-fill: #a34a3d;
+  --color-danger-fill-hover: #873a30;
+
+  --color-info-text: #3d62a3;
+  --color-info-bg: #edf2fe;
+  --color-info-border: #b9cbed;
+  --color-info-fill: #3d62a3;
+  --color-info-fill-hover: #2e4d85;
+
+  --color-brand-accent: #d4a164;
+  --color-shadow: #193f3025;
+  --color-backdrop: #193d3047;
+}

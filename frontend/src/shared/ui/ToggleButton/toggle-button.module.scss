@@ -1,0 +1,26 @@
+@use '../../styles/space' as *;
+
+.button {
+  padding: space(2.25) space(3);
+  border-radius: 9px;
+  border: 0;
+  color: var(--color-text-muted);
+  background: var(--color-surface-muted);
+  font-size: 11px;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) {
+    background: var(--color-brand-bg);
+  }
+
+  &[aria-pressed='true'] {
+    color: var(--color-brand-text);
+    background: var(--color-brand-bg);
+  }
+}
+
+@media (max-width: 520px) {
+  .button {
+    padding: space(2) space(2.5);
+  }
+}

@@ -1,3 +1,8 @@
+packages:
+  - '.'
+
 saveExact: true
 allowBuilds:
+  '@parcel/watcher': false
+  esbuild: true
   fsevents: false

@@ -1,0 +1,4 @@
+// One unit is 4px. Fractional and negative units support fine adjustments.
+@function space($n) {
+  @return 4px * $n;
+}

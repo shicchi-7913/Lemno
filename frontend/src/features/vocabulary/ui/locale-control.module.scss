@@ -1,0 +1,27 @@
+@use '../../../shared/styles/space' as *;
+
+.localeControl {
+  display: flex;
+  gap: space(2);
+  align-items: center;
+  color: var(--color-text-muted);
+}
+
+.localeControl .localeLabel {
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.localeControl svg {
+  width: 15px;
+}
+
+.localeSelect {
+  width: 80px;
+}
+
+@media (max-width: 780px) {
+  .localeControl .localeLabel {
+    display: none;
+  }
+}

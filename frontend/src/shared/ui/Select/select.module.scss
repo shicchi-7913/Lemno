@@ -1,0 +1,10 @@
+@use '../../styles/space' as *;
+
+.select {
+  min-width: 0;
+  border: 0;
+  padding: space(1.25) 0;
+  color: var(--color-text-secondary);
+  background: var(--color-surface);
+  font-size: 11px;
+}

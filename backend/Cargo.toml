@@ -18,6 +18,15 @@ tauri-build = { version = "=2.7.4", features = [] }
 
 [dependencies]
 tauri = { version = "=2.12.5", features = [] }
+tauri-plugin-store = "2"
+serde = { version = "1", features = ["derive"] }
+lemno-domain = { path = "crates/domain" }
+lemno-application = { path = "crates/application" }
+lemno-infrastructure = { path = "crates/infrastructure" }
+
+[workspace]
+members = ["crates/domain", "crates/application", "crates/infrastructure"]
+resolver = "2"
 
 # Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration
 [profile.release]

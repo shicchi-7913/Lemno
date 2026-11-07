@@ -22,6 +22,16 @@ description = "Run the Tauri desktop app in development mode"
 dir = "{{ config_root }}/frontend"
 run = "pnpm run tauri dev"
 
+[tasks.format]
+description = "Run ESLint on the frontend"
+dir = "{{ config_root }}/frontend"
+run = "pnpm run format"
+
+[tasks.eslint]
+description = "Run ESLint on the frontend"
+dir = "{{ config_root }}/frontend"
+run = "pnpm run lint"
+
 [tasks.check]
 description = "Check TypeScript and Rust"
 dir = "{{ config_root }}/frontend"

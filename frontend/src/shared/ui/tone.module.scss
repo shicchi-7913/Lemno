@@ -1,0 +1,10 @@
+// The same semantic palette powers labels and all button appearances.
+@each $tone in neutral, brand, success, warning, danger, info {
+  .#{$tone} {
+    --tone-text: var(--color-#{$tone}-text);
+    --tone-bg: var(--color-#{$tone}-bg);
+    --tone-border: var(--color-#{$tone}-border);
+    --tone-fill: var(--color-#{$tone}-fill);
+    --tone-fill-hover: var(--color-#{$tone}-fill-hover);
+  }
+}

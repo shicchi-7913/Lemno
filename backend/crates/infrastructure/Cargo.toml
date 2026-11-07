@@ -1,0 +1,12 @@
+[package]
+name = "lemno-infrastructure"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+lemno-domain = { path = "../domain" }
+rusqlite = { version = "0.38", features = ["bundled"] }
+uuid = { version = "1", features = ["v4"] }
+
+[dev-dependencies]
+lemno-application = { path = "../application" }

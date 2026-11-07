@@ -1,0 +1,75 @@
+@use '../../../shared/styles/space' as *;
+
+.dialogHeading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.dialogSymbol {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  color: var(--color-brand-text);
+  background: var(--color-brand-bg);
+}
+
+.dialogSymbol svg {
+  width: 22px;
+  height: 22px;
+}
+
+.form .dialogTitle {
+  margin: space(4.25) 0 space(2);
+}
+
+.form .dialogDescription {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  line-height: 1.9;
+  margin: 0 0 space(5.75);
+  overflow-wrap: anywhere;
+}
+
+.dialogControls {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: space(4.5);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: space(2);
+}
+
+.dialogActions {
+  display: flex;
+  gap: space(2.5);
+  justify-content: flex-end;
+  margin-top: space(6.75);
+}
+
+.formError {
+  color: var(--color-danger-text);
+  font-size: 12px;
+  line-height: 1.8;
+  padding: space(3);
+  background: var(--color-danger-bg);
+  border-radius: 8px;
+  margin: space(4.5) 0 0;
+}
+
+.dangerSymbol {
+  color: var(--color-danger-text);
+  background: var(--color-danger-bg);
+}
