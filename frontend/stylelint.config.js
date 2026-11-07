@@ -11,6 +11,8 @@ export default {
         'var(--font-size-#{$size})',
       ],
       font: ['inherit'],
+      // Include physical and logical corner properties as well as the shorthand.
+      '/^border(?:-[a-z]+)*-radius$/': ['0', '/^var\\(--radius-(?:sm|md|lg|xl|pill|circle)\\)$/'],
     },
     'function-disallowed-list': [
       '/^(rgb|rgba|hsl|hsla|hwb|lab|lch|oklab|oklch|color|color-mix|light-dark)$/i',

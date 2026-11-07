@@ -27,7 +27,7 @@
   background: var(--color-brand-bg);
   border: 1px solid var(--color-brand-border);
   padding: space(4.75) space(5);
-  border-radius: 14px;
+  border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -70,7 +70,7 @@
 .statCard {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   padding: space(5);
 }
 
@@ -102,7 +102,7 @@
 
 .vocabularyPanel {
   border: 1px solid var(--color-border);
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   background: var(--color-surface);
   overflow: hidden;
 }
@@ -121,7 +121,7 @@
   align-items: center;
   width: 310px;
   border: 1px solid var(--color-border);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   padding: space(2.25) space(3);
   color: var(--color-text-subtle);
 }

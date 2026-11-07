@@ -9,7 +9,7 @@
 .dialogSymbol {
   width: 42px;
   height: 42px;
-  border-radius: 13px;
+  border-radius: var(--radius-md);
   display: grid;
   place-items: center;
   color: var(--color-brand-text);
@@ -65,7 +65,7 @@
   line-height: 1.8;
   padding: space(3);
   background: var(--color-danger-bg);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   margin: space(4.5) 0 0;
 }
 

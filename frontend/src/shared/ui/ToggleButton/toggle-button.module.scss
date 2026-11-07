@@ -6,7 +6,7 @@
 
 .button {
   padding: space(2.25) space(3);
-  border-radius: 9px;
+  border-radius: var(--radius-sm);
   border: 0;
   color: var(--color-text-muted);
   background: var(--color-surface-muted);
