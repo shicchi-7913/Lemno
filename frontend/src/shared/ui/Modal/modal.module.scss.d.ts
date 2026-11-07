@@ -1,6 +1,6 @@
 // Generated from SCSS. Do not edit.
 export type Styles = {
-  'modal': string;
+  modal: string;
 };
 
 export type ClassNames = keyof Styles;

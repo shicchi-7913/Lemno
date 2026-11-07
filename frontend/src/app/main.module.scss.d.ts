@@ -1,6 +1,6 @@
 // Generated from SCSS. Do not edit.
 export type Styles = {
-  'startupError': string;
+  startupError: string;
 };
 
 export type ClassNames = keyof Styles;

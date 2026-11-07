@@ -1,6 +1,6 @@
 // Generated from SCSS. Do not edit.
 export type Styles = {
-  'button': string;
+  button: string;
 };
 
 export type ClassNames = keyof Styles;

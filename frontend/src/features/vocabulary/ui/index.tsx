@@ -1,6 +1,6 @@
 import { Button } from '../../../shared/ui/Button';
 import styles from './vocabulary.module.scss';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   VocabularyDialog,
   useVocabulary,
@@ -11,12 +11,10 @@ import { desktopAvailable } from '../../../shared/api';
 import { useI18n } from '../../../shared/i18n';
 import { Icon } from '../../../shared/ui/Icon';
 import { Heading } from '../../../shared/ui/Heading';
-import { Avatar } from '../../../shared/ui/Avatar';
 import { Input } from '../../../shared/ui/Input';
 import { ToggleButton } from '../../../shared/ui/ToggleButton';
+import { useToast } from '../../../shared/ui/Toast';
 import { filterVocabulary, memoryStatus, statuses, type Status } from '../model';
-import { LocaleControl } from './locale-control';
-import { Sidebar } from './sidebar';
 import { VocabularyList } from './vocabulary-list';
 
 export const VocabularyPage = () => {
@@ -29,16 +27,9 @@ export const VocabularyPage = () => {
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState<Status>('all');
   const [dialog, setDialog] = useState<VocabularyDialogState | null>(null);
-  const [notification, setNotification] = useState<{ message: string } | null>(null);
   const addRef = useRef<HTMLButtonElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
-  const notify = useCallback((message: string) => setNotification({ message }), []);
-
-  useEffect(() => {
-    if (!notification) return;
-    const timer = setTimeout(() => setNotification(null), 4000);
-    return () => clearTimeout(timer);
-  }, [notification]);
+  const notify = useToast();
 
   function complete(change: VocabularyChange) {
     setDialog(null);
@@ -68,119 +59,96 @@ export const VocabularyPage = () => {
 
   return (
     <>
-      <Sidebar />
-      <div className={styles.mainShell}>
-        <header className={styles.topbar}>
-          <div className={styles.breadcrumbs}>
-            <span>{t('workspace')}</span>
-            <Icon name="chevron" />
-            <strong>{t('vocabulary')}</strong>
+      <section className={styles.pageHeading}>
+        <div>
+          {/* eslint-disable-next-line i18next/no-literal-string */}
+          <div className={styles.eyebrow}>— &nbsp; YOUR VOCABULARY</div>
+          <Heading as="h1">{t('title')}</Heading>
+          <p>{t('subtitle')}</p>
+        </div>
+        <Button
+          ref={addRef}
+          id="add-word"
+          type="button"
+          variant="solid"
+          tone="brand"
+          disabled={!desktopAvailable || loading || failed}
+          title={desktopAvailable ? undefined : t('desktopOnly')}
+          onClick={() => setDialog({ mode: 'create' })}
+        >
+          <Icon name="plus" />
+          {t('add')}
+        </Button>
+      </section>
+      {!desktopAvailable && <p className={styles.previewNotice}>{t('desktopOnly')}</p>}
+      <section className={styles.reviewBanner} aria-label={t('reviewTitle')}>
+        <div>
+          <h2>{t('reviewTitle')}</h2>
+          <p>{t('reviewBody')}</p>
+        </div>
+        <Button
+          variant="solid"
+          tone="brand"
+          className={styles.reviewButton}
+          type="button"
+          disabled
+          title={t('soon')}
+        >
+          <Icon name="repeat" />
+          <span>{t('review')}</span>
+          <span className={styles.comingSoon}>{t('soon')}</span>
+        </Button>
+      </section>
+      <section className={styles.statistics} aria-label={t('title')}>
+        {/* eslint-disable-next-line i18next/no-literal-string */}
+        {(['saved', 'reviewing', 'mastered', 'used'] as const).map((key) => (
+          <div className={styles.statCard} key={key}>
+            <h2>{t(key)}</h2>
+            <p>
+              <strong data-stat={key}>{loading || failed ? '—' : stats[key]}</strong>
+              <span>{t('itemCount', { count: 0 }).replace(/^0\s*/, '')}</span>
+            </p>
           </div>
-          <div className={styles.topbarRight}>
-            <LocaleControl onError={notify} />
-            <Avatar aria-hidden="true">S</Avatar>
-          </div>
-        </header>
-        <main className={styles.workspace}>
-          <section className={styles.pageHeading}>
-            <div>
-              {/* eslint-disable-next-line i18next/no-literal-string */}
-              <div className={styles.eyebrow}>— &nbsp; YOUR VOCABULARY</div>
-              <Heading as="h1">{t('title')}</Heading>
-              <p>{t('subtitle')}</p>
-            </div>
-            <Button
-              ref={addRef}
-              id="add-word"
-              type="button"
-              variant="solid"
-              tone="brand"
-              disabled={!desktopAvailable || loading || failed}
-              title={desktopAvailable ? undefined : t('desktopOnly')}
-              onClick={() => setDialog({ mode: 'create' })}
-            >
-              <Icon name="plus" />
-              {t('add')}
-            </Button>
-          </section>
-          {!desktopAvailable && <p className={styles.previewNotice}>{t('desktopOnly')}</p>}
-          <section className={styles.reviewBanner} aria-label={t('reviewTitle')}>
-            <div>
-              <h2>{t('reviewTitle')}</h2>
-              <p>{t('reviewBody')}</p>
-            </div>
-            <Button
-              variant="solid"
-              tone="brand"
-              className={styles.reviewButton}
-              type="button"
-              disabled
-              title={t('soon')}
-            >
-              <Icon name="repeat" />
-              <span>{t('review')}</span>
-              <span className={styles.comingSoon}>{t('soon')}</span>
-            </Button>
-          </section>
-          <section className={styles.statistics} aria-label={t('title')}>
-            {/* eslint-disable-next-line i18next/no-literal-string */}
-            {(['saved', 'reviewing', 'mastered', 'used'] as const).map((key) => (
-              <div className={styles.statCard} key={key}>
-                <h2>{t(key)}</h2>
-                <p>
-                  <strong data-stat={key}>{loading || failed ? '—' : stats[key]}</strong>
-                  <span>{t('itemCount', { count: 0 }).replace(/^0\s*/, '')}</span>
-                </p>
-              </div>
-            ))}
-          </section>
-          <section className={styles.vocabularyPanel} aria-label={t('title')}>
-            <div className={styles.listToolbar}>
-              <div className={styles.searchField}>
-                <Icon name="search" />
-                <Input
-                  variant="plain"
-                  ref={searchRef}
-                  id="vocabulary-search"
-                  type="search"
-                  placeholder={t('search')}
-                  aria-label={t('searchLabel')}
-                  autoComplete="off"
-                  value={query}
-                  onChange={(event) => setQuery(event.currentTarget.value)}
-                />
-              </div>
-              <div className={styles.filters} role="group" aria-label={t('memory')}>
-                {statuses.map((value) => (
-                  <ToggleButton
-                    key={value}
-                    pressed={status === value}
-                    onClick={() => setStatus(value)}
-                  >
-                    {t(value)}
-                  </ToggleButton>
-                ))}
-              </div>
-            </div>
-            <VocabularyList
-              items={visible}
-              total={items.length}
-              loading={loading}
-              failed={failed}
-              onReload={() => {
-                void vocabulary.refetch();
-              }}
-              onReset={resetFilters}
-              onAdd={() => setDialog({ mode: 'create' })}
-              onEdit={(item) => setDialog({ mode: 'edit', item })}
-              onDelete={(item) => setDialog({ mode: 'delete', item })}
+        ))}
+      </section>
+      <section className={styles.vocabularyPanel} aria-label={t('title')}>
+        <div className={styles.listToolbar}>
+          <div className={styles.searchField}>
+            <Icon name="search" />
+            <Input
+              variant="plain"
+              ref={searchRef}
+              id="vocabulary-search"
+              type="search"
+              placeholder={t('search')}
+              aria-label={t('searchLabel')}
+              autoComplete="off"
+              value={query}
+              onChange={(event) => setQuery(event.currentTarget.value)}
             />
-          </section>
-        </main>
-      </div>
-      <div className={styles.toast} role="status" aria-live="polite" hidden={!notification}>
-        {notification?.message}
-      </div>
+          </div>
+          <div className={styles.filters} role="group" aria-label={t('memory')}>
+            {statuses.map((value) => (
+              <ToggleButton key={value} pressed={status === value} onClick={() => setStatus(value)}>
+                {t(value)}
+              </ToggleButton>
+            ))}
+          </div>
+        </div>
+        <VocabularyList
+          items={visible}
+          total={items.length}
+          loading={loading}
+          failed={failed}
+          onReload={() => {
+            void vocabulary.refetch();
+          }}
+          onReset={resetFilters}
+          onAdd={() => setDialog({ mode: 'create' })}
+          onEdit={(item) => setDialog({ mode: 'edit', item })}
+          onDelete={(item) => setDialog({ mode: 'delete', item })}
+        />
+      </section>
       {dialog && (
         <VocabularyDialog state={dialog} onDismiss={() => setDialog(null)} onComplete={complete} />
       )}

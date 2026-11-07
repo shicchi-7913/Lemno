@@ -1,0 +1,51 @@
+@use '../../../shared/styles/space' as *;
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: space(4.5);
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.breadcrumbs svg {
+  width: 12px;
+  color: var(--color-text-subtle);
+}
+
+.breadcrumbs strong {
+  font-weight: 550;
+  color: var(--color-text-secondary);
+}
+
+.topbarRight {
+  display: flex;
+  align-items: center;
+  gap: space(4);
+  flex-shrink: 0;
+}
+
+.localIndicator {
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: space(2);
+  color: var(--color-text-muted);
+}
+
+.statusDot {
+  width: 7px;
+  height: 7px;
+  background: var(--color-success-fill);
+  border-radius: 50%;
+}
+
+@media (max-width: 520px) {
+  .topbarRight {
+    gap: space(2.5);
+  }
+
+  .breadcrumbs {
+    gap: space(2.5);
+  }
+}
