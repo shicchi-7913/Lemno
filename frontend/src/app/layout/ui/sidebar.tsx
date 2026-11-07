@@ -12,7 +12,7 @@ export const Sidebar = () => {
     <>
       <div className={styles.brand}>
         <span className={styles.brandSymbol}>
-          <Icon name="sun" />
+          <Icon name="sun" size={24} />
         </span>
         <div>
           {/* eslint-disable-next-line i18next/no-literal-string -- Keep the product name unchanged across locales. */}
@@ -30,7 +30,7 @@ export const Sidebar = () => {
           <strong>{t('profile')}</strong>
         </div>
         <span className={styles.profileChevron}>
-          <Icon name="down" />
+          <Icon name="down" size={13} />
         </span>
       </div>
       <nav>
@@ -47,7 +47,7 @@ export const Sidebar = () => {
       </nav>
       <div className={styles.sidebarBottom}>
         <div className={styles.encouragement}>
-          <Icon name="spark" />
+          <Icon name="spark" size={19} />
           <div>
             <strong>{t('motto')}</strong>
             <p>{t('mottoBody')}</p>

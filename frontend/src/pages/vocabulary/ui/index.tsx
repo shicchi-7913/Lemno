@@ -95,7 +95,7 @@ export const VocabularyPage = () => {
           disabled
           title={t('soon')}
         >
-          <Icon name="repeat" />
+          <Icon name="repeat" size={16} />
           <span>{t('review')}</span>
           <span className={styles.comingSoon}>{t('soon')}</span>
         </Button>
@@ -115,7 +115,7 @@ export const VocabularyPage = () => {
       <section className={styles.vocabularyPanel} aria-label={t('title')}>
         <div className={styles.listToolbar}>
           <div className={styles.searchField}>
-            <Icon name="search" />
+            <Icon name="search" size={16} />
             <Input
               variant="plain"
               ref={searchRef}

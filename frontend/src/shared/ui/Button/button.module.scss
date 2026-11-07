@@ -64,11 +64,6 @@
   padding: space(1.75);
   min-height: 0;
   border-radius: var(--radius-sm);
-
-  svg {
-    width: 16px;
-    height: 16px;
-  }
 }
 
 .button:disabled {

@@ -19,7 +19,7 @@ export const Topbar = () => {
         <span>{t('workspace')}</span>
         {currentPage && (
           <>
-            <Icon name="chevron" />
+            <Icon name="chevron" size={12} />
             <strong>{t(currentPage.label)}</strong>
           </>
         )}

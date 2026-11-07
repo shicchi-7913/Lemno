@@ -56,7 +56,7 @@ export const VocabularyList = ({
         ) : items.length === 0 ? (
           <div className={styles.emptyState}>
             <span className={styles.emptySymbol}>
-              <Icon name={total ? 'search' : 'book'} />
+              <Icon name={total ? 'search' : 'book'} size={26} />
             </span>
             <h2>{t(total ? 'noResults' : 'emptyTitle')}</h2>
             <p>{t(total ? 'noResultsBody' : 'emptyBody')}</p>
@@ -115,7 +115,7 @@ export const VocabularyList = ({
                           title={t('edit')}
                           onClick={() => onEdit(item)}
                         >
-                          <Icon name="edit" />
+                          <Icon name="edit" size={16} />
                         </Button>
                         <Button
                           variant="ghost"
@@ -126,7 +126,7 @@ export const VocabularyList = ({
                           title={t('delete')}
                           onClick={() => onDelete(item)}
                         >
-                          <Icon name="trash" />
+                          <Icon name="trash" size={16} />
                         </Button>
                       </div>
                     </td>

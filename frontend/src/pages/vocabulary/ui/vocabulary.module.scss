@@ -49,10 +49,6 @@
   margin: 0;
 }
 
-.reviewButton svg {
-  width: 16px;
-}
-
 .comingSoon {
   border-left: 1px solid var(--color-brand-border);
   padding-left: space(2);
@@ -129,11 +125,6 @@
 .searchField:focus-within {
   outline: 2px solid var(--color-focus);
   outline-offset: 1px;
-}
-
-.searchField svg {
-  width: 16px;
-  height: 16px;
 }
 
 .filters {

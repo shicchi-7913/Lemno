@@ -3,6 +3,9 @@ export default {
   rules: {
     'color-no-hex': true,
     'color-named': 'never',
+    'rule-selector-property-disallowed-list': {
+      '/\\bsvg\\b/': ['width', 'height'],
+    },
     'declaration-property-value-allowed-list': {
       'font-size': [
         'inherit',
