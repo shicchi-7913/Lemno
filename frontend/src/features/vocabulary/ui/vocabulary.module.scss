@@ -1,65 +1,5 @@
 @use '../../../shared/styles/space' as *;
 
-.mainShell {
-  margin-left: 240px;
-}
-
-.topbar {
-  height: 70px;
-  background: var(--color-surface);
-  border-bottom: 1px solid var(--color-border);
-  padding: 0 space(9);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.breadcrumbs {
-  display: flex;
-  align-items: center;
-  gap: space(4.5);
-  font-size: 12px;
-  color: var(--color-text-muted);
-}
-
-.breadcrumbs svg {
-  width: 12px;
-  color: var(--color-text-subtle);
-}
-
-.breadcrumbs strong {
-  font-weight: 550;
-  color: var(--color-text-secondary);
-}
-
-.topbarRight {
-  display: flex;
-  align-items: center;
-  gap: space(4);
-  flex-shrink: 0;
-}
-
-.localIndicator {
-  font-size: 11px;
-  display: flex;
-  align-items: center;
-  gap: space(2);
-  color: var(--color-text-muted);
-}
-
-.statusDot {
-  width: 7px;
-  height: 7px;
-  background: var(--color-success-fill);
-  border-radius: 50%;
-}
-
-.workspace {
-  padding: space(8.5) space(9) space(10.5);
-  max-width: 1512px;
-  margin: 0 auto;
-}
-
 .pageHeading {
   display: flex;
   justify-content: space-between;
@@ -212,40 +152,7 @@
   line-height: 1.7;
 }
 
-.toast {
-  position: fixed;
-  z-index: 10;
-  bottom: 30px;
-  left: calc(50% + 120px);
-  transform: translateX(-50%);
-  background: var(--color-brand-fill);
-  color: var(--color-text-on-fill);
-  box-shadow: 0 8px 30px var(--color-shadow);
-  border-radius: 11px;
-  padding: space(3.5) space(6);
-  font-size: 12px;
-  max-width: calc(100% - 40px);
-}
-
-@media (min-width: 1500px) {
-  .workspace {
-    padding-top: space(10.5);
-  }
-}
-
 @media (max-width: 1100px) {
-  .mainShell {
-    margin-left: 210px;
-  }
-
-  .workspace {
-    padding: space(7.5) space(6);
-  }
-
-  .topbar {
-    padding: 0 space(6);
-  }
-
   .listToolbar {
     flex-wrap: wrap;
     gap: space(3.75);
@@ -263,21 +170,9 @@
   .statCard {
     padding: space(4.5) space(3.75);
   }
-
-  .toast {
-    left: calc(50% + 105px);
-  }
 }
 
 @media (max-width: 780px) {
-  .mainShell {
-    margin-left: 72px;
-  }
-
-  .workspace {
-    padding: space(6.5) space(5);
-  }
-
   .reviewBanner {
     align-items: flex-start;
     flex-direction: column;
@@ -299,34 +194,9 @@
   .pageHeading > button {
     margin-top: space(7.5);
   }
-
-  .toast {
-    left: calc(50% + 36px);
-  }
 }
 
 @media (max-width: 520px) {
-  .mainShell {
-    margin-left: 0;
-  }
-
-  .topbar {
-    padding: 0 space(4.5);
-    height: 60px;
-  }
-
-  .topbarRight {
-    gap: space(2.5);
-  }
-
-  .breadcrumbs {
-    gap: space(2.5);
-  }
-
-  .workspace {
-    padding: space(6) space(4);
-  }
-
   .pageHeading {
     flex-direction: column;
     gap: space(4);
@@ -350,9 +220,5 @@
 
   .filters {
     flex-wrap: wrap;
-  }
-
-  .toast {
-    left: 50%;
   }
 }

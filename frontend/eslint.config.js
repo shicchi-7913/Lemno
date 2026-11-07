@@ -19,6 +19,7 @@ export default defineConfig([
       react: { version: reactPackage.version },
     },
     rules: {
+      'react/no-multi-comp': 'error',
       'react/function-component-definition': [
         'error',
         {

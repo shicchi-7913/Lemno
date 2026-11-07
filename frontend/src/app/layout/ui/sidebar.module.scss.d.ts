@@ -12,7 +12,6 @@ export type Styles = {
   profileCard: string;
   profileChevron: string;
   profileFlag: string;
-  sidebar: string;
   sidebarBottom: string;
 };
 

@@ -6,6 +6,7 @@ import { MemoryRouter, Route, Routes } from 'react-router';
 import { VocabularyPage } from '../features/vocabulary';
 import { initI18n, startupErrorMessage } from '../shared/i18n';
 import { queryClient } from './query-client';
+import { WorkspaceLayout } from './layout';
 import './styles.scss';
 
 async function start(): Promise<void> {
@@ -18,7 +19,9 @@ async function start(): Promise<void> {
         <QueryClientProvider client={queryClient}>
           <MemoryRouter>
             <Routes>
-              <Route path="/" element={<VocabularyPage />} />
+              <Route element={<WorkspaceLayout />}>
+                <Route index element={<VocabularyPage />} />
+              </Route>
             </Routes>
           </MemoryRouter>
         </QueryClientProvider>
