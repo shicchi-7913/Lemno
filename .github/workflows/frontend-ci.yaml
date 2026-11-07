@@ -2,28 +2,40 @@ name: Frontend CI
 
 on:
   pull_request:
-    paths:
-      - "frontend/**"
-      - "mise.toml"
-      - ".github/workflows/frontend-ci.yaml"
   push:
     branches: [main]
-    paths:
-      - "frontend/**"
-      - "mise.toml"
-      - ".github/workflows/frontend-ci.yaml"
-  workflow_dispatch:
 
 permissions:
   contents: read
+  pull-requests: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+  changes:
+    runs-on: ubuntu-slim
+    outputs:
+      frontend: ${{ steps.filter.outputs.frontend == 'true' }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Detect changed paths
+        id: filter
+        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4
+        with:
+          filters: |
+            frontend:
+              - 'frontend/**'
+              - 'mise.toml'
+              - '.github/workflows/frontend-ci.yaml'
+
   frontend:
     name: Frontend (${{ matrix.check }})
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     strategy:
@@ -49,3 +61,33 @@ jobs:
 
       - name: Run ${{ matrix.check }}
         run: pnpm run ${{ matrix.check }}
+
+  required_ci:
+    name: required_ci
+    if: always()
+    needs: [changes, frontend]
+    runs-on: ubuntu-slim
+    steps:
+      - name: Verify required CI
+        env:
+          CHANGES_RESULT: ${{ needs.changes.result }}
+          FRONTEND_RELEVANT: ${{ needs.changes.outputs.frontend }}
+          FRONTEND_RESULT: ${{ needs.frontend.result }}
+        run: |
+          if [ "$CHANGES_RESULT" != success ]; then
+            echo '::error::Change detection must succeed.'
+            exit 1
+          fi
+
+          case "$FRONTEND_RELEVANT:$FRONTEND_RESULT" in
+            true:success)
+              echo 'Frontend checks passed.' >> "$GITHUB_STEP_SUMMARY"
+              ;;
+            false:skipped)
+              echo 'No frontend changes; frontend checks were not required.' >> "$GITHUB_STEP_SUMMARY"
+              ;;
+            *)
+              echo "::error::Unexpected frontend CI result: relevant=$FRONTEND_RELEVANT, result=$FRONTEND_RESULT."
+              exit 1
+              ;;
+          esac
