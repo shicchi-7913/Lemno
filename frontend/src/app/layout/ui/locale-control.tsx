@@ -23,7 +23,7 @@ export const LocaleControl = ({ onError }: { onError: (message: string) => void 
   return (
     <div className={styles.localeControl}>
       <Icon name="globe" />
-      <FormLabel className={styles.localeLabel} htmlFor="locale">
+      <FormLabel size="2xs" className={styles.localeLabel} htmlFor="locale">
         {t('locale')}
       </FormLabel>
       <Select

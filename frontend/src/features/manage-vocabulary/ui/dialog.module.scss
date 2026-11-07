@@ -26,7 +26,7 @@
 }
 
 .form .dialogDescription {
-  font-size: 12px;
+  font-size: var(--font-size-sm);
   color: var(--color-text-muted);
   line-height: 1.9;
   margin: 0 0 space(5.75);
@@ -61,7 +61,7 @@
 
 .formError {
   color: var(--color-danger-text);
-  font-size: 12px;
+  font-size: var(--font-size-sm);
   line-height: 1.8;
   padding: space(3);
   background: var(--color-danger-bg);

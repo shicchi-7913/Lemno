@@ -24,7 +24,7 @@
 
 .brandName {
   color: var(--color-text-strong);
-  font-size: 27px;
+  font-size: var(--font-size-3xl);
   font-weight: 650;
   letter-spacing: -1.5px;
   line-height: 1.1;
@@ -35,7 +35,7 @@
 }
 
 .brandSubtitle {
-  font-size: 9px;
+  font-size: var(--font-size-2xs);
   color: var(--color-text-muted);
   line-height: 1.8;
 }
@@ -52,18 +52,18 @@
 }
 
 .profileFlag {
-  font-size: 20px;
+  font-size: var(--font-size-xl);
 }
 
 .profileCard strong {
   display: block;
-  font-size: 12px;
+  font-size: var(--font-size-sm);
   font-weight: 550;
 }
 
 .profileCard small {
   display: block;
-  font-size: 10px;
+  font-size: var(--font-size-2xs);
   color: var(--color-text-muted);
   margin-top: space(1);
 }
@@ -79,7 +79,7 @@
 .navLabel {
   padding: 0 space(3);
   color: var(--color-text-subtle);
-  font-size: 10px;
+  font-size: var(--font-size-2xs);
   font-weight: 550;
   letter-spacing: 1.4px;
   margin-bottom: space(3);
@@ -97,7 +97,7 @@
   text-align: left;
   text-decoration: none;
   color: var(--color-text-muted);
-  font-size: 12px;
+  font-size: var(--font-size-sm);
   font-weight: 550;
   margin: space(0.75) 0;
 }
@@ -124,7 +124,7 @@
 .exploreLabel ~ .navItem {
   padding-top: space(2.5);
   padding-bottom: space(2.5);
-  font-size: 11px;
+  font-size: var(--font-size-xs);
 }
 
 .exploreLabel ~ .navItem svg {
@@ -152,12 +152,12 @@
 }
 
 .encouragement strong {
-  font-size: 12px;
+  font-size: var(--font-size-sm);
   font-weight: 550;
 }
 
 .encouragement p {
-  font-size: 10px;
+  font-size: var(--font-size-2xs);
   line-height: 1.7;
   margin: space(2.25) 0 0;
 }

@@ -6,6 +6,10 @@
 
   width: 100%;
   min-width: 0;
+
+  &::placeholder {
+    font-size: inherit;
+  }
 }
 
 .default {
@@ -13,13 +17,11 @@
   border-radius: 9px;
   padding: space(2.75) space(3);
   color: var(--color-text-strong);
-  font-size: 13px;
   background: var(--color-surface-input);
   line-height: 1.7;
 
   &::placeholder {
     color: var(--color-text-placeholder);
-    font-size: 12px;
   }
 }
 
@@ -29,7 +31,6 @@
   padding: 0;
   color: var(--color-text-strong);
   background: transparent;
-  font-size: 12px;
 
   &:focus {
     outline: none;

@@ -1,15 +1,18 @@
 import type { ComponentProps } from 'react';
 import styles from './textarea.module.scss';
+import sizes from '../typography.module.scss';
+import type { TextSize } from '../typography';
 
 type TextareaProps = ComponentProps<'textarea'> & {
   status?: 'warning' | 'error';
+  size?: TextSize;
 };
 
-export const Textarea = ({ status, className = '', ...props }: TextareaProps) => (
+export const Textarea = ({ status, size = 'md', className = '', ...props }: TextareaProps) => (
   <textarea
     {...props}
     data-status={status}
     aria-invalid={status === 'error' ? true : props['aria-invalid']}
-    className={`${styles.textarea} ${className}`}
+    className={`${styles.textarea} ${sizes[`size-${size}`]} ${className}`}
   />
 );
