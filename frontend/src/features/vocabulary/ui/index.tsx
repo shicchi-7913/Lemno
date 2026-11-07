@@ -90,6 +90,7 @@ export const VocabularyPage = () => {
           variant="solid"
           tone="brand"
           className={styles.reviewButton}
+          size="xs"
           type="button"
           disabled
           title={t('soon')}

@@ -1,0 +1,11 @@
+@each $size in '2xs', xs, sm, md, lg, xl, '2xl', '3xl' {
+  .size-#{$size} {
+    font-size: var(--font-size-#{$size});
+  }
+}
+
+@media (max-width: 780px) {
+  .size-3xl {
+    font-size: var(--font-size-2xl);
+  }
+}

@@ -15,7 +15,7 @@
 .tableScroll th {
   background: var(--color-surface-page);
   padding: space(4) space(5);
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   color: var(--color-text-subtle);
   font-weight: 500;
 }
@@ -43,7 +43,7 @@
 .tableScroll td {
   padding: space(4.25) space(5);
   border-bottom: 1px solid var(--color-border-subtle);
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   vertical-align: middle;
 }
 
@@ -52,14 +52,14 @@
 }
 
 .wordText {
-  font-size: 14px;
+  font-size: var(--font-size-md);
   font-weight: 450;
   color: var(--color-text-strong);
   overflow-wrap: anywhere;
 }
 
 .wordMeaning {
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   color: var(--color-text-muted);
   line-height: 1.7;
   margin: space(1) 0 0;
@@ -68,7 +68,7 @@
 }
 
 .wordExample {
-  font-size: 10px;
+  font-size: var(--font-size-2xs);
   color: var(--color-text-subtle);
   font-style: italic;
   line-height: 1.6;
@@ -94,7 +94,7 @@
 .listFooter {
   padding: space(3.5) space(5);
   color: var(--color-text-subtle);
-  font-size: 10px;
+  font-size: var(--font-size-2xs);
   border-top: 1px solid var(--color-border-subtle);
 }
 
@@ -129,14 +129,14 @@
 }
 
 .emptyState h2 {
-  font-size: 16px;
+  font-size: var(--font-size-lg);
   font-weight: 500;
   margin: 0;
   color: var(--color-text-secondary);
 }
 
 .emptyState p {
-  font-size: 12px;
+  font-size: var(--font-size-sm);
   line-height: 1.8;
   color: var(--color-text-muted);
   max-width: 420px;

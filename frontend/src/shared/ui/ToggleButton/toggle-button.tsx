@@ -1,12 +1,16 @@
 import type { ComponentProps } from 'react';
 import styles from './toggle-button.module.scss';
+import sizes from '../typography.module.scss';
+import type { TextSize } from '../typography';
 
 type ToggleButtonProps = Omit<ComponentProps<'button'>, 'aria-pressed'> & {
   pressed: boolean;
+  size?: TextSize;
 };
 
 export const ToggleButton = ({
   pressed,
+  size = 'xs',
   type = 'button',
   className = '',
   ...props
@@ -15,6 +19,6 @@ export const ToggleButton = ({
     {...props}
     type={type}
     aria-pressed={pressed}
-    className={`${styles.button} ${className}`}
+    className={`${styles.button} ${sizes[`size-${size}`]} ${className}`}
   />
 );

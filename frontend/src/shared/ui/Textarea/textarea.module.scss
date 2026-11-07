@@ -7,7 +7,6 @@
   padding: space(2.75) space(3);
   color: var(--color-text-strong);
   width: 100%;
-  font-size: 13px;
   background: var(--color-surface-input);
   line-height: 1.7;
   resize: vertical;
@@ -15,7 +14,7 @@
 
   &::placeholder {
     color: var(--color-text-placeholder);
-    font-size: 12px;
+    font-size: inherit;
   }
 
   @include field.status;
