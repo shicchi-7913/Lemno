@@ -6,7 +6,7 @@ import {
   useVocabulary,
   type VocabularyChange,
   type VocabularyDialogState,
-} from '../../manage-vocabulary';
+} from '../../../features/manage-vocabulary';
 import { desktopAvailable } from '../../../shared/api';
 import { useI18n } from '../../../shared/i18n';
 import { Icon } from '../../../shared/ui/Icon';
