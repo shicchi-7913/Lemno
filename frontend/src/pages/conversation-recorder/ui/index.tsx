@@ -11,6 +11,7 @@ import { Icon } from '@/shared/ui/Icon';
 import { IconBadge } from '@/shared/ui/IconBadge';
 import { Input } from '@/shared/ui/Input';
 import { Select } from '@/shared/ui/Select';
+import { Stepper } from '@/shared/ui/Stepper';
 import { Textarea } from '@/shared/ui/Textarea';
 
 import { useConversationMutation, useTopics } from '../../../features/conversation-workspace';
@@ -100,18 +101,12 @@ export const ConversationRecorderPage = () => {
         </div>
       </section>
       <div className={styles.recorder}>
-        <ol className={styles.steps} aria-label={t('conversationRecordTitle')}>
-          {steps.map((label, index) => (
-            <li
-              key={label}
-              className={index <= step ? styles.currentStep : ''}
-              aria-current={index === step ? 'step' : undefined}
-            >
-              <span>{index < step ? <Icon name="check" size={15} /> : index + 1}</span>
-              {t(label)}
-            </li>
-          ))}
-        </ol>
+        <Stepper
+          className={styles.steps}
+          steps={steps.map((label) => t(label))}
+          currentStep={step}
+          aria-label={t('conversationRecordTitle')}
+        />
         {!desktopAvailable && <p className={styles.notice}>{t('conversationDesktopOnly')}</p>}
         {step === 2 ? (
           <section className={`${styles.panel} ${styles.success}`} aria-live="polite">

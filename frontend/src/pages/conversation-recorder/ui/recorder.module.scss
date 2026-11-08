@@ -33,48 +33,7 @@
   margin: 0 auto;
 }
 .steps {
-  display: flex;
-  padding: 0;
   margin: space(6) 0 space(7);
-  list-style: none;
-}
-.steps li {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  gap: space(3);
-  color: var(--color-text-subtle);
-  font-size: var(--font-size-xs);
-  white-space: nowrap;
-}
-.steps li::after {
-  content: '';
-  height: 1px;
-  background: var(--color-border);
-  flex: 1;
-  margin: 0 space(3);
-}
-.steps li:last-child {
-  flex: 0;
-}
-.steps li:last-child::after {
-  display: none;
-}
-.steps li > span {
-  display: grid;
-  place-items: center;
-  border-radius: var(--radius-circle);
-  width: 32px;
-  height: 32px;
-  background: var(--color-border);
-  font-weight: var(--font-weight-semibold);
-}
-.steps li.currentStep {
-  color: var(--color-text-secondary);
-}
-.steps li.currentStep > span {
-  background: var(--color-brand-fill);
-  color: var(--color-text-on-fill);
 }
 .recordForm {
   padding: space(7);
@@ -230,12 +189,6 @@
   .recordForm {
     padding: space(5);
   }
-  .steps li {
-    gap: space(2);
-  }
-  .steps li::after {
-    margin: 0 space(2);
-  }
   .learnedRow {
     grid-template-columns: 1fr 1fr;
     padding-bottom: space(3);
@@ -243,14 +196,5 @@
   }
   .expressionChoices {
     grid-template-columns: 1fr;
-  }
-}
-@media (max-width: 620px) {
-  .steps li > span {
-    width: 26px;
-    height: 26px;
-  }
-  .steps li {
-    font-size: var(--font-size-2xs);
   }
 }

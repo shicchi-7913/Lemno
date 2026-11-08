@@ -3,7 +3,6 @@ export type Styles = {
   backButton: string;
   contained: string;
   controls: string;
-  currentStep: string;
   error: string;
   expressionChoices: string;
   field: string;
