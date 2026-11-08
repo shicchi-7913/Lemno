@@ -64,94 +64,6 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: space(4);
 }
-.topicCard {
-  display: flex;
-  flex-direction: column;
-  min-height: 272px;
-  padding: space(5);
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-  border-radius: var(--radius-lg);
-}
-.cardTop {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: space(3);
-}
-.topicEmoji {
-  display: grid;
-  place-items: center;
-  width: 68px;
-  height: 68px;
-  border-radius: var(--radius-lg);
-  font-size: var(--font-size-3xl);
-}
-.daily {
-  background: var(--color-warning-bg);
-}
-.work {
-  background: var(--color-info-bg);
-}
-.travel,
-.hobby {
-  background: var(--color-brand-bg);
-}
-.duration {
-  display: flex;
-  align-items: center;
-  gap: space(1);
-  color: var(--color-text-subtle);
-  font-size: var(--font-size-2xs);
-}
-.topicMeta {
-  display: flex;
-  align-items: center;
-  gap: space(2);
-  margin: space(4) 0 space(2);
-  font-size: var(--font-size-2xs);
-  color: var(--color-text-secondary);
-}
-.topicCard h2 {
-  margin: 0;
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-semibold);
-}
-.topicCard h2 button {
-  display: inline-flex;
-  align-items: center;
-  gap: space(1);
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  border: 0;
-  padding: 0;
-  cursor: pointer;
-}
-.topicDescription {
-  font-size: var(--font-size-xs);
-  line-height: 1.9;
-  color: var(--color-text-muted);
-  margin: space(3) 0 space(8);
-}
-.cardActions {
-  margin-top: auto;
-  padding-top: space(2);
-  border-top: 1px solid var(--color-border-subtle);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.cardActions > button {
-  padding-left: 0;
-}
-.cardActions > div {
-  display: flex;
-}
-.cardActions > div button {
-  color: var(--color-text-subtle);
-}
 .controls {
   border: 0;
   padding: 0;
@@ -263,7 +175,6 @@
   background: var(--color-brand-fill);
 }
 
-.topicCard h2 button:focus-visible,
 .actionLink:focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: 3px;
@@ -289,9 +200,6 @@
 @media (max-width: 620px) {
   .topicGrid {
     grid-template-columns: 1fr;
-  }
-  .topicCard {
-    min-height: 250px;
   }
   .dialog {
     padding: space(5);

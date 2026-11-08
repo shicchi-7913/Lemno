@@ -11,7 +11,6 @@ export type Styles = {
   sessionIcon: string;
   sessionMeta: string;
   sessionText: string;
-  statCard: string;
   statistics: string;
 };
 

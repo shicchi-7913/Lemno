@@ -9,8 +9,9 @@ import { Input } from '@/shared/ui/Input';
 import { ToggleButton } from '@/shared/ui/ToggleButton';
 
 import { ConversationTabs, useTopics } from '../../../features/conversation-workspace';
-import { categories, categoryEmoji, categoryKeys, difficultyKeys } from '../model';
+import { categories, categoryKeys } from '../model';
 
+import { Card } from './card';
 import { TopicDialog } from './topic-dialog';
 
 import styles from './topics.module.scss';
@@ -106,65 +107,13 @@ export const TopicsPage = () => {
       ) : (
         <div className={styles.topicGrid}>
           {visible.map((topic) => (
-            <article className={styles.topicCard} key={topic.id}>
-              <div className={styles.cardTop}>
-                <span
-                  className={`${styles.topicEmoji} ${styles[topic.category]}`}
-                  aria-hidden="true"
-                >
-                  {topic.id === 'seed-restaurant'
-                    ? '🍝'
-                    : topic.id === 'seed-ideas'
-                      ? '💡'
-                      : categoryEmoji[topic.category]}
-                </span>
-                <span className={styles.duration}>
-                  <Icon name="clock" size={13} />
-                  {t('topicDuration')}
-                </span>
-              </div>
-              <p className={styles.topicMeta}>
-                {t(categoryKeys[topic.category])}
-                <span>·</span>
-                {t(difficultyKeys[topic.difficulty])}
-              </p>
-              <h2>
-                <button type="button" onClick={() => setDialog({ mode: 'start', topic })}>
-                  {topic.title}
-                  <Icon name="external" size={13} />
-                </button>
-              </h2>
-              <p className={styles.topicDescription}>{topic.scenario}</p>
-              <div className={styles.cardActions}>
-                <Button
-                  variant="ghost"
-                  onClick={() => setDialog({ mode: 'start', topic })}
-                  rightIcon={<Icon name="external" size={15} />}
-                >
-                  {t('topicStart')}
-                </Button>
-                <div>
-                  <Button
-                    iconOnly
-                    variant="ghost"
-                    tone="neutral"
-                    aria-label={t('editItem', { word: topic.title })}
-                    onClick={() => setDialog({ mode: 'edit', topic })}
-                  >
-                    <Icon name="edit" size={16} />
-                  </Button>
-                  <Button
-                    iconOnly
-                    variant="ghost"
-                    tone="neutral"
-                    aria-label={t('deleteItem', { word: topic.title })}
-                    onClick={() => setDialog({ mode: 'delete', topic })}
-                  >
-                    <Icon name="trash" size={16} />
-                  </Button>
-                </div>
-              </div>
-            </article>
+            <Card
+              key={topic.id}
+              topic={topic}
+              onStart={() => setDialog({ mode: 'start', topic })}
+              onEdit={() => setDialog({ mode: 'edit', topic })}
+              onDelete={() => setDialog({ mode: 'delete', topic })}
+            />
           ))}
         </div>
       )}

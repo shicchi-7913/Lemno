@@ -6,6 +6,7 @@ import { useI18n } from '@/shared/i18n';
 import { Button } from '@/shared/ui/Button';
 import { Heading } from '@/shared/ui/Heading';
 import { Icon } from '@/shared/ui/Icon';
+import { StatCard } from '@/shared/ui/StatCard';
 
 import { conversationDate, ConversationTabs } from '../../../features/conversation-workspace';
 
@@ -52,10 +53,11 @@ export const ConversationHistoryPage = () => {
       {!desktopAvailable && <p className={styles.notice}>{t('conversationDesktopOnly')}</p>}
       <section className={styles.statistics} aria-label={t('conversationHistory')}>
         {stats.map((stat) => (
-          <div className={styles.statCard} key={stat.label}>
-            <h2>{t(stat.label)}</h2>
-            <strong>{history.isLoading || history.isError ? '—' : stat.value}</strong>
-          </div>
+          <StatCard
+            key={stat.label}
+            label={t(stat.label)}
+            value={history.isLoading || history.isError ? '—' : stat.value}
+          />
         ))}
       </section>
       <section className={styles.panel}>
@@ -75,7 +77,9 @@ export const ConversationHistoryPage = () => {
         ) : items.length === 0 ? (
           <div className={styles.empty}>
             <Icon name="headphones" size={30} />
-            <h3>{t('conversationEmpty')}</h3>
+            <Heading as="h3" size="md">
+              {t('conversationEmpty')}
+            </Heading>
             <p>{t('conversationEmptyBody')}</p>
             <Button variant="outline" onClick={() => navigate('/conversations/new')}>
               {t('conversationAdd')}
@@ -88,7 +92,9 @@ export const ConversationHistoryPage = () => {
                 <Icon name="headphones" size={23} />
               </span>
               <div className={styles.sessionText}>
-                <h3>{item.title || t('conversationUntitled')}</h3>
+                <Heading as="h3" size="md">
+                  {item.title || t('conversationUntitled')}
+                </Heading>
                 <p>{item.notes}</p>
               </div>
               <div className={styles.sessionMeta}>

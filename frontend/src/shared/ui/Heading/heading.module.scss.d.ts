@@ -2,6 +2,7 @@
 export type Styles = {
   h1: string;
   h2: string;
+  h3: string;
   heading: string;
 };
 

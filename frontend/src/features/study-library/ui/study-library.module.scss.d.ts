@@ -9,7 +9,6 @@ export type Styles = {
   reviewBanner: string;
   reviewButton: string;
   searchField: string;
-  statCard: string;
   statistics: string;
 };
 
