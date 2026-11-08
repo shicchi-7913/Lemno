@@ -8,6 +8,7 @@ import { FormLabel } from '@/shared/ui/FormLabel';
 import { Heading } from '@/shared/ui/Heading';
 import { Icon } from '@/shared/ui/Icon';
 import { Input } from '@/shared/ui/Input';
+import { Link } from '@/shared/ui/Link';
 import { Modal } from '@/shared/ui/Modal';
 import { Select } from '@/shared/ui/Select';
 import { Textarea } from '@/shared/ui/Textarea';
@@ -163,15 +164,7 @@ export const TopicDialog = ({ mode, topic, onDismiss, onComplete }: Props) => {
             >
               {t('topicCopyPrompt')}
             </Button>
-            <a
-              className={styles.actionLink}
-              href="https://chatgpt.com/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {t('topicOpenChatGPT')}
-              <Icon name="external" size={15} />
-            </a>
+            <Link href="https://chatgpt.com/">{t('topicOpenChatGPT')}</Link>
           </div>
           <Button
             className={styles.fullWidth}

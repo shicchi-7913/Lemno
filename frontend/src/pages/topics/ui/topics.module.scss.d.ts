@@ -1,6 +1,5 @@
 // Generated from SCSS. Do not edit.
 export type Styles = {
-  actionLink: string;
   controls: string;
   dialog: string;
   dialogActions: string;

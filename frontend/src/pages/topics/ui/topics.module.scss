@@ -162,24 +162,6 @@
   gap: space(3);
   margin-top: space(5);
 }
-.actionLink {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: space(2);
-  padding: space(2.5) space(4);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-sm);
-  text-decoration: none;
-  color: var(--color-text-on-fill);
-  background: var(--color-brand-fill);
-}
-
-.actionLink:focus-visible {
-  outline: 2px solid var(--color-focus);
-  outline-offset: 3px;
-}
-
 @media (max-width: 1200px) {
   .topicGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
