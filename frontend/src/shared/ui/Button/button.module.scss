@@ -14,7 +14,7 @@
   min-height: 39px;
   padding: space(2.5) space(4);
   line-height: 1.5;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   white-space: nowrap;
   color: var(--tone-text);
   background: transparent;

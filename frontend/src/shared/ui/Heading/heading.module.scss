@@ -5,10 +5,10 @@
 .h1 {
   line-height: 1.4;
   letter-spacing: -1px;
-  font-weight: 650;
+  font-weight: var(--font-weight-bold);
   color: var(--color-text-heading);
 }
 
 .h2 {
-  font-weight: 550;
+  font-weight: var(--font-weight-semibold);
 }

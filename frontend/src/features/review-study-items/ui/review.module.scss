@@ -26,7 +26,7 @@
 .cardEyebrow {
   font-size: var(--font-size-2xs);
   letter-spacing: 1.6px;
-  font-weight: 550;
+  font-weight: var(--font-weight-medium);
   color: var(--color-text-muted);
   margin: 0 0 space(3);
 }
@@ -58,7 +58,7 @@
     display: inline-flex;
     align-items: center;
     gap: space(2);
-    font-weight: 600;
+    font-weight: var(--font-weight-semibold);
   }
 }
 
@@ -126,7 +126,7 @@
 
 .cardText {
   font-size: var(--font-size-3xl);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   line-height: 1.5;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
@@ -195,7 +195,7 @@
     font-size: var(--font-size-md);
     line-height: 1.9;
     color: var(--color-text-secondary);
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
     margin: space(5) 0 space(6);
   }
 }
@@ -228,7 +228,7 @@
   strong {
     font-size: var(--font-size-3xl);
     color: var(--color-text-strong);
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
   }
 
   span {
@@ -254,7 +254,7 @@
   h2 {
     font-size: var(--font-size-xs);
     margin: 0 0 space(3);
-    font-weight: 600;
+    font-weight: var(--font-weight-semibold);
   }
 
   p {
