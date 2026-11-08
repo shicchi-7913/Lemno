@@ -22,7 +22,7 @@ export const navigationGroups: NavigationGroup[] = [
       { label: 'home', icon: 'home' },
       { label: 'topics', icon: 'chat' },
       { label: 'vocabulary', icon: 'book', to: '/' },
-      { label: 'phrases', icon: 'layers' },
+      { label: 'phrases', icon: 'layers', to: '/phrases' },
     ],
   },
   {

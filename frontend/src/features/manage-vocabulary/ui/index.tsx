@@ -1,6 +1,6 @@
 import { type FormEvent, useId, useRef, useState } from 'react';
 
-import { errorCode, type VocabularyInput } from '@/shared/api';
+import { errorCode, type StudyKind, type VocabularyInput } from '@/shared/api';
 import { useI18n } from '@/shared/i18n';
 import { Button } from '@/shared/ui/Button';
 import { FormLabel } from '@/shared/ui/FormLabel';
@@ -8,6 +8,7 @@ import { Heading } from '@/shared/ui/Heading';
 import { Icon } from '@/shared/ui/Icon';
 import { Input } from '@/shared/ui/Input';
 import { Modal } from '@/shared/ui/Modal';
+import { Select } from '@/shared/ui/Select';
 import { Textarea } from '@/shared/ui/Textarea';
 
 import { useVocabularyMutation, type VocabularyChange, type VocabularyDialogState } from '../model';
@@ -25,6 +26,7 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
   const item = state.mode === 'create' ? undefined : state.item;
   const deleting = state.mode === 'delete';
   const [input, setInput] = useState<VocabularyInput>(() => ({
+    kind: state.mode === 'create' ? state.kind : state.item.kind,
     text: item?.text ?? '',
     explanation: item?.explanation ?? '',
     exampleText: item?.exampleText ?? '',
@@ -49,13 +51,12 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (submitting.current) return;
-
     const normalized: VocabularyInput = {
+      kind: input.kind,
       text: input.text.trim(),
       explanation: input.explanation.trim(),
       exampleText: input.exampleText.trim(),
     };
-
     if (!deleting) {
       const form = event.currentTarget;
       for (const name of ['text', 'explanation'] as const) {
@@ -66,43 +67,45 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
       }
       if (!form.reportValidity()) return;
     }
-
     submitting.current = true;
     let change: VocabularyChange;
-
     try {
       change = await mutation.mutateAsync(
         state.mode === 'delete'
-          ? { mode: 'delete', id: state.item.id }
+          ? { mode: 'delete', id: state.item.id, kind: state.item.kind }
           : state.mode === 'edit'
             ? { mode: 'edit', id: state.item.id, input: normalized }
             : { mode: 'create', input: normalized },
       );
     } catch {
-      // The mutation exposes the error while preserving the form input.
       return;
     } finally {
       submitting.current = false;
     }
-
     onComplete(change);
   }
 
   return (
     <Modal
+      className={styles.studyDialog}
       titleId={`${id}-title`}
       descriptionId={`${id}-description`}
       pending={pending}
       onDismiss={onDismiss}
       initialFocusRef={deleting ? cancelRef : wordRef}
     >
-      <form className={styles.form} onSubmit={submit} aria-busy={pending}>
+      <form onSubmit={submit} aria-busy={pending}>
         <fieldset className={styles.dialogControls} disabled={pending}>
           <div className={styles.dialogHeading}>
-            <span className={`${styles.dialogSymbol}${deleting ? ` ${styles.dangerSymbol}` : ''}`}>
-              <Icon name={deleting ? 'trash' : 'book'} size={22} />
-            </span>
+            <div>
+              {/* eslint-disable-next-line i18next/no-literal-string */}
+              <p className={styles.eyebrow}>STUDY LIBRARY</p>
+              <Heading as="h2" id={`${id}-title`} className={styles.dialogTitle}>
+                {t(deleting ? 'studyDeleteTitle' : item ? 'studyEditTitle' : 'studyCreateTitle')}
+              </Heading>
+            </div>
             <Button
+              className={styles.closeButton}
               variant="ghost"
               tone="neutral"
               iconOnly
@@ -110,21 +113,17 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
               aria-label={t('close')}
               onClick={onDismiss}
             >
-              <Icon name="close" size={16} />
+              <Icon name="close" size={18} />
             </Button>
           </div>
-          <Heading as="h2" id={`${id}-title`} className={styles.dialogTitle}>
-            {t(deleting ? 'deleteTitle' : item ? 'editTitle' : 'createTitle')}
-          </Heading>
-          <p id={`${id}-description`} className={styles.dialogDescription}>
-            {state.mode === 'delete' ? t('deleteBody', { word: state.item.text }) : t('formBody')}
-          </p>
-          {!deleting && (
+          {deleting ? (
+            <p id={`${id}-description`} className={styles.dialogDescription}>
+              {t('studyDeleteBody', { word: state.item.text })}
+            </p>
+          ) : (
             <div className={styles.fields}>
               <div className={styles.field}>
-                <FormLabel htmlFor={`${id}-text`} hint={t('required')}>
-                  {t('word')}
-                </FormLabel>
+                <FormLabel htmlFor={`${id}-text`}>{t('studyText')}</FormLabel>
                 <Input
                   ref={wordRef}
                   id={`${id}-text`}
@@ -139,34 +138,49 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
                 />
               </div>
               <div className={styles.field}>
-                <FormLabel htmlFor={`${id}-explanation`} hint={t('required')}>
-                  {t('meaning')}
-                </FormLabel>
+                <FormLabel htmlFor={`${id}-explanation`}>{t('studyMeaning')}</FormLabel>
                 <Textarea
                   id={`${id}-explanation`}
                   name="explanation"
                   maxLength={2000}
-                  rows={3}
+                  rows={1}
                   value={input.explanation}
                   onChange={(event) => changeInput('explanation', event.currentTarget)}
-                  placeholder={t('meaningPlaceholder')}
+                  placeholder={t('studyMeaningPlaceholder')}
                   required
                 />
               </div>
               <div className={styles.field}>
-                <FormLabel htmlFor={`${id}-example`} hint={t('optional')}>
-                  {t('example')}
-                </FormLabel>
+                <FormLabel htmlFor={`${id}-example`}>{t('studyExample')}</FormLabel>
                 <Textarea
                   id={`${id}-example`}
                   name="exampleText"
                   maxLength={2000}
-                  rows={2}
+                  rows={1}
                   value={input.exampleText}
                   onChange={(event) => changeInput('exampleText', event.currentTarget)}
-                  placeholder={t('examplePlaceholder')}
+                  placeholder={t('studyExamplePlaceholder')}
                 />
               </div>
+              <div className={styles.field}>
+                <FormLabel htmlFor={`${id}-kind`}>{t('studyKind')}</FormLabel>
+                <Select
+                  id={`${id}-kind`}
+                  name="kind"
+                  size="md"
+                  value={input.kind}
+                  disabled={state.mode === 'edit'}
+                  onChange={(event) =>
+                    setInput((previous) => ({ ...previous, kind: event.target.value as StudyKind }))
+                  }
+                >
+                  <option value="word">{t('vocabulary')}</option>
+                  <option value="phrase">{t('phrases')}</option>
+                </Select>
+              </div>
+              <p id={`${id}-description`} className={styles.languageNote}>
+                {t('studyLanguageNote')}
+              </p>
             </div>
           )}
           {error && (
@@ -194,7 +208,7 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
                     ? 'delete'
                     : item
                       ? 'update'
-                      : 'save',
+                      : 'studySave',
               )}
             </Button>
           </div>

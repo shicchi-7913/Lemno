@@ -1,0 +1,1 @@
+export { PhraseReviewPage } from './ui';

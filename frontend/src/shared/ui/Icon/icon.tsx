@@ -3,6 +3,12 @@ import type { CSSProperties, ReactNode } from 'react';
 import styles from './icon.module.scss';
 
 const shapes = {
+  arrow: <path d="M4 12h16m-6-6 6 6-6 6" />,
+  check: <path d="m5 12 4 4L19 6" />,
+  undo: <path d="M3 4v6h6M3 10a9 9 0 1 1 1 8" />,
+  brain: (
+    <path d="M12 5a3 3 0 0 0-6-1 4 4 0 0 0-3 6 4 4 0 0 0 1 7 4 4 0 0 0 8 2V5Zm0 0a3 3 0 0 1 6-1 4 4 0 0 1 3 6 4 4 0 0 1-1 7 4 4 0 0 1-8 2M6 9c3 0 3 3 3 3m9-3c-3 0-3 3-3 3M6 17c0-2 1-3 3-3m9 3c0-2-1-3-3-3" />
+  ),
   plus: <path d="M12 5v14M5 12h14" />,
   book: <path d="M12 5v15M12 5C8 2 4 3 2 4v15c3-2 7-1 10 1 3-2 7-3 10-1V4c-2-1-6-2-10 1Z" />,
   search: (

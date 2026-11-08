@@ -2,6 +2,23 @@ use serde::{Deserialize, Serialize};
 
 pub const DEFAULT_PROFILE_ID: &str = "default-en";
 
+#[derive(Debug, Clone, Copy, Default, Deserialize, Serialize)]
+#[serde(rename_all = "lowercase")]
+pub enum StudyKind {
+    #[default]
+    Word,
+    Phrase,
+}
+
+impl StudyKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Word => "word",
+            Self::Phrase => "phrase",
+        }
+    }
+}
+
 #[derive(Debug)]
 pub enum Error {
     Validation(&'static str),
@@ -31,14 +48,18 @@ pub struct Vocabulary {
     pub example_text: String,
     pub memory_level: i64,
     pub review_count: i64,
+    pub reviewed_today: i64,
     pub usage_count: i64,
     pub created_at: String,
     pub updated_at: String,
+    pub kind: StudyKind,
 }
 
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct VocabularyInput {
+    #[serde(default)]
+    pub kind: StudyKind,
     pub text: String,
     pub explanation: String,
     #[serde(default)]
@@ -48,6 +69,7 @@ pub struct VocabularyInput {
 impl VocabularyInput {
     pub fn normalized(self) -> Result<Self, Error> {
         let input = Self {
+            kind: self.kind,
             text: self.text.trim().to_owned(),
             explanation: self.explanation.trim().to_owned(),
             example_text: self.example_text.trim().to_owned(),
@@ -66,7 +88,7 @@ impl VocabularyInput {
 }
 
 pub trait VocabularyRepository {
-    fn list(&self, profile_id: &str) -> Result<Vec<Vocabulary>, Error>;
+    fn list(&self, profile_id: &str, kind: StudyKind) -> Result<Vec<Vocabulary>, Error>;
     fn create(&self, profile_id: &str, input: &VocabularyInput) -> Result<Vocabulary, Error>;
     fn update(
         &self,
@@ -74,5 +96,12 @@ pub trait VocabularyRepository {
         id: &str,
         input: &VocabularyInput,
     ) -> Result<Vocabulary, Error>;
-    fn delete(&self, profile_id: &str, id: &str) -> Result<(), Error>;
+    fn delete(&self, profile_id: &str, id: &str, kind: StudyKind) -> Result<(), Error>;
+    fn review(
+        &self,
+        profile_id: &str,
+        id: &str,
+        kind: StudyKind,
+        remembered: bool,
+    ) -> Result<Vocabulary, Error>;
 }

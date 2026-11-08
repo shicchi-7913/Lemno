@@ -1,5 +1,5 @@
 use lemno_application::VocabularyService;
-use lemno_domain::{DEFAULT_PROFILE_ID, Error, Vocabulary, VocabularyInput};
+use lemno_domain::{DEFAULT_PROFILE_ID, Error, StudyKind, Vocabulary, VocabularyInput};
 use lemno_infrastructure::SqliteVocabularyRepository;
 use serde::Serialize;
 use tauri::{Manager, State};
@@ -26,8 +26,13 @@ impl From<Error> for CommandError {
 }
 
 #[tauri::command]
-fn list_vocabulary(service: State<'_, Service>) -> Result<Vec<Vocabulary>, CommandError> {
-    service.list(DEFAULT_PROFILE_ID).map_err(Into::into)
+fn list_vocabulary(
+    service: State<'_, Service>,
+    kind: Option<StudyKind>,
+) -> Result<Vec<Vocabulary>, CommandError> {
+    service
+        .list(DEFAULT_PROFILE_ID, kind.unwrap_or_default())
+        .map_err(Into::into)
 }
 
 #[tauri::command]
@@ -52,8 +57,26 @@ fn update_vocabulary(
 }
 
 #[tauri::command]
-fn delete_vocabulary(service: State<'_, Service>, id: String) -> Result<(), CommandError> {
-    service.delete(DEFAULT_PROFILE_ID, &id).map_err(Into::into)
+fn delete_vocabulary(
+    service: State<'_, Service>,
+    id: String,
+    kind: Option<StudyKind>,
+) -> Result<(), CommandError> {
+    service
+        .delete(DEFAULT_PROFILE_ID, &id, kind.unwrap_or_default())
+        .map_err(Into::into)
+}
+
+#[tauri::command]
+fn review_vocabulary(
+    service: State<'_, Service>,
+    id: String,
+    kind: StudyKind,
+    remembered: bool,
+) -> Result<Vocabulary, CommandError> {
+    service
+        .review(DEFAULT_PROFILE_ID, &id, kind, remembered)
+        .map_err(Into::into)
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -71,7 +94,8 @@ pub fn run() {
             list_vocabulary,
             create_vocabulary,
             update_vocabulary,
-            delete_vocabulary
+            delete_vocabulary,
+            review_vocabulary
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
