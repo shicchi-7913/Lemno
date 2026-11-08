@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 
 import { conversationApi, type Topic, type TopicInput } from '@/shared/api';
 import { useI18n } from '@/shared/i18n';
+import { useLearningLanguage } from '@/shared/learning-language';
 import { useFormValidation } from '@/shared/model/use-form-validation';
 import { Button } from '@/shared/ui/Button';
 import { FieldError } from '@/shared/ui/FieldError';
@@ -42,6 +43,7 @@ const textFields = [
 
 export const TopicDialog = ({ mode, topic, onDismiss, onComplete }: Props) => {
   const { t } = useI18n();
+  const { language } = useLearningLanguage();
   const navigate = useNavigate();
   const notify = useToast();
   const id = useId();
@@ -77,8 +79,9 @@ export const TopicDialog = ({ mode, topic, onDismiss, onComplete }: Props) => {
   });
   const deleting = mode === 'delete';
   const starting = mode === 'start';
-  // The prompt is learning content; keep it in the target language regardless of display locale.
-  const prompt = `Let's practice English conversation.\nTopic: ${input.title}\nSituation: ${input.scenario}\nMy role: ${input.learnerRole}\nYour role: ${input.aiRole}\nGoal: ${input.objective}\nLevel: ${input.difficulty}\nPlease ask one question at a time. After our conversation, summarize expressions I used and new expressions to learn.`;
+  // Practice the selected learning language regardless of the display locale.
+  const targetLanguage = language === 'ja' ? 'Japanese' : 'English';
+  const prompt = `Let's practice ${targetLanguage} conversation.\nTopic: ${input.title}\nSituation: ${input.scenario}\nMy role: ${input.learnerRole}\nYour role: ${input.aiRole}\nGoal: ${input.objective}\nLevel: ${input.difficulty}\nPlease ask one question at a time. After our conversation, summarize expressions I used and new expressions to learn.`;
 
   async function submit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();

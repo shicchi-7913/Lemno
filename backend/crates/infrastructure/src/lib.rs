@@ -119,7 +119,12 @@ impl SqliteVocabularyRepository {
             tx.execute_batch(include_str!("../migrations/0002_conversations.sql"))
                 .map_err(storage)?;
             tx.pragma_update(None, "user_version", 2).map_err(storage)?;
-        } else if version != 2 {
+        }
+        if version < 3 {
+            tx.execute_batch(include_str!("../migrations/0003_learning_languages.sql"))
+                .map_err(storage)?;
+            tx.pragma_update(None, "user_version", 3).map_err(storage)?;
+        } else if version != 3 {
             return Err(Error::Storage("Unsupported database version".into()));
         }
         tx.commit().map_err(storage)?;
