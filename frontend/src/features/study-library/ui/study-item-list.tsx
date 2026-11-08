@@ -1,4 +1,4 @@
-import { desktopAvailable, type Vocabulary } from '@/shared/api';
+import { desktopAvailable, type StudyKind, type Vocabulary } from '@/shared/api';
 import { useI18n } from '@/shared/i18n';
 import { Button } from '@/shared/ui/Button';
 import { Icon } from '@/shared/ui/Icon';
@@ -7,7 +7,7 @@ import { Spinner } from '@/shared/ui/Spinner';
 
 import { memoryStatus } from '../model';
 
-import styles from './vocabulary-list.module.scss';
+import styles from './study-item-list.module.scss';
 
 const memoryLabelTones = {
   learning: 'warning',
@@ -15,7 +15,9 @@ const memoryLabelTones = {
   mastered: 'success',
 } as const;
 
-interface VocabularyListProps {
+interface StudyItemListProps {
+  kind: StudyKind;
+  onReview: () => void;
   items: Vocabulary[];
   total: number;
   loading: boolean;
@@ -27,7 +29,9 @@ interface VocabularyListProps {
   onDelete: (item: Vocabulary) => void;
 }
 
-export const VocabularyList = ({
+export const StudyItemList = ({
+  kind,
+  onReview,
   items,
   total,
   loading,
@@ -37,8 +41,9 @@ export const VocabularyList = ({
   onAdd,
   onEdit,
   onDelete,
-}: VocabularyListProps) => {
+}: StudyItemListProps) => {
   const { t } = useI18n();
+  const phrase = kind === 'phrase';
 
   return (
     <>
@@ -46,11 +51,11 @@ export const VocabularyList = ({
         {loading ? (
           <div className={styles.emptyState}>
             <Spinner />
-            <p role="status">{t('loading')}</p>
+            <p role="status">{t(phrase ? 'phraseLoading' : 'loading')}</p>
           </div>
         ) : failed ? (
           <div className={styles.emptyState}>
-            <p role="alert">{t('loadError')}</p>
+            <p role="alert">{t(phrase ? 'phraseLoadError' : 'loadError')}</p>
             <Button variant="outline" tone="neutral" type="button" onClick={onReload}>
               {t('retry')}
             </Button>
@@ -60,8 +65,18 @@ export const VocabularyList = ({
             <span className={styles.emptySymbol}>
               <Icon name={total ? 'search' : 'book'} size={26} />
             </span>
-            <h2>{t(total ? 'noResults' : 'emptyTitle')}</h2>
-            <p>{t(total ? 'noResultsBody' : 'emptyBody')}</p>
+            <h2>
+              {t(
+                total
+                  ? phrase
+                    ? 'phraseNoResults'
+                    : 'noResults'
+                  : phrase
+                    ? 'phraseEmptyTitle'
+                    : 'emptyTitle',
+              )}
+            </h2>
+            <p>{t(total ? 'noResultsBody' : phrase ? 'phraseEmptyBody' : 'emptyBody')}</p>
             <Button
               variant={total ? 'outline' : 'solid'}
               tone={total ? 'neutral' : 'brand'}
@@ -70,7 +85,7 @@ export const VocabularyList = ({
               onClick={total ? onReset : onAdd}
             >
               {!total && <Icon name="plus" />}
-              {t(total ? 'reset' : 'add')}
+              {t(total ? 'reset' : phrase ? 'phraseAdd' : 'add')}
             </Button>
           </div>
         ) : (
@@ -78,7 +93,7 @@ export const VocabularyList = ({
             <table>
               <thead>
                 <tr>
-                  <th scope="col">{t('wordMeaning')}</th>
+                  <th scope="col">{t(phrase ? 'phraseMeaning' : 'wordMeaning')}</th>
                   <th scope="col">{t('memory')}</th>
                   <th scope="col">{t('conversation')}</th>
                   <th scope="col">{t('reviews')}</th>
@@ -140,7 +155,13 @@ export const VocabularyList = ({
         )}
       </div>
       <div className={styles.listFooter} role="status" aria-live="polite">
-        {!loading && !failed && t('showing', { visible: items.length, total })}
+        <span>{!loading && !failed && t('showingItems', { count: items.length })}</span>
+        {!loading && !failed && total > 0 && (
+          <Button variant="ghost" tone="brand" type="button" size="xs" onClick={onReview}>
+            {t(phrase ? 'phraseReview' : 'review')}
+            <Icon name="arrow" size={16} />
+          </Button>
+        )}
       </div>
     </>
   );

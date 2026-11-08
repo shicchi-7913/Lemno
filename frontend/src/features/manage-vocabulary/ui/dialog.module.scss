@@ -1,31 +1,8 @@
 @use '../../../shared/styles/space' as *;
 
-.dialogHeading {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-}
-
-.dialogSymbol {
-  width: 42px;
-  height: 42px;
-  border-radius: var(--radius-md);
-  display: grid;
-  place-items: center;
-  color: var(--color-brand-text);
-  background: var(--color-brand-bg);
-}
-
-.form .dialogTitle {
-  margin: space(4.25) 0 space(2);
-}
-
-.form .dialogDescription {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
-  line-height: 1.9;
-  margin: 0 0 space(5.75);
-  overflow-wrap: anywhere;
+.studyDialog {
+  width: min(540px, calc(100vw - 32px));
+  padding: 0;
 }
 
 .dialogControls {
@@ -35,7 +12,34 @@
   min-width: 0;
 }
 
+.dialogHeading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: space(7);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.eyebrow {
+  font-size: var(--font-size-2xs);
+  font-weight: 550;
+  letter-spacing: 1.7px;
+  color: var(--color-text-muted);
+  margin: space(0.5) 0 space(2.5);
+}
+
+.dialogTitle {
+  margin: 0;
+}
+
+.closeButton {
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+  padding: space(2);
+}
+
 .fields {
+  padding: space(7) space(7) 0;
   display: flex;
   flex-direction: column;
   gap: space(4.5);
@@ -45,13 +49,44 @@
   display: flex;
   flex-direction: column;
   gap: space(2);
+
+  input,
+  textarea,
+  select {
+    background: var(--color-surface);
+    min-height: 42px;
+  }
+
+  textarea {
+    line-height: 1.5;
+    padding: space(2.25) space(3);
+    resize: vertical;
+  }
+}
+
+.languageNote {
+  margin: space(-0.5) 0 0;
+  padding: space(3);
+  background: var(--color-surface-muted);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+}
+
+.dialogDescription {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  line-height: 1.9;
+  margin: space(6) space(7) 0;
+  overflow-wrap: anywhere;
 }
 
 .dialogActions {
   display: flex;
-  gap: space(2.5);
+  gap: space(3);
   justify-content: flex-end;
-  margin-top: space(6.75);
+  padding: space(6) space(7) space(7);
 }
 
 .formError {
@@ -61,10 +96,16 @@
   padding: space(3);
   background: var(--color-danger-bg);
   border-radius: var(--radius-sm);
-  margin: space(4.5) 0 0;
+  margin: space(4.5) space(7) 0;
 }
 
-.dangerSymbol {
-  color: var(--color-danger-text);
-  background: var(--color-danger-bg);
+@media (max-width: 520px) {
+  .dialogHeading,
+  .dialogActions {
+    padding: space(5);
+  }
+
+  .fields {
+    padding: space(5) space(5) 0;
+  }
 }

@@ -1,2 +1,7 @@
 export { VocabularyDialog } from './ui';
-export { useVocabulary, type VocabularyChange, type VocabularyDialogState } from './model';
+export {
+  useVocabulary,
+  useVocabularyReview,
+  type VocabularyChange,
+  type VocabularyDialogState,
+} from './model';

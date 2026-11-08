@@ -1,6 +1,9 @@
 import { invoke, isTauri } from '@tauri-apps/api/core';
 
+export type StudyKind = 'word' | 'phrase';
+
 export interface Vocabulary {
+  kind: StudyKind;
   id: string;
   profileId: string;
   text: string;
@@ -8,21 +11,24 @@ export interface Vocabulary {
   exampleText: string;
   memoryLevel: number;
   reviewCount: number;
+  reviewedToday: number;
   usageCount: number;
   createdAt: string;
   updatedAt: string;
 }
 
-export type VocabularyInput = Pick<Vocabulary, 'text' | 'explanation' | 'exampleText'>;
+export type VocabularyInput = Pick<Vocabulary, 'kind' | 'text' | 'explanation' | 'exampleText'>;
 
 export const desktopAvailable = isTauri();
 
 export const vocabularyApi = {
-  list: () => invoke<Vocabulary[]>('list_vocabulary'),
+  list: (kind: StudyKind) => invoke<Vocabulary[]>('list_vocabulary', { kind }),
   create: (input: VocabularyInput) => invoke<Vocabulary>('create_vocabulary', { input }),
   update: (id: string, input: VocabularyInput) =>
     invoke<Vocabulary>('update_vocabulary', { id, input }),
-  delete: (id: string) => invoke<void>('delete_vocabulary', { id }),
+  delete: (id: string, kind: StudyKind) => invoke<void>('delete_vocabulary', { id, kind }),
+  review: (id: string, kind: StudyKind, remembered: boolean) =>
+    invoke<Vocabulary>('review_vocabulary', { id, kind, remembered }),
 };
 
 export function errorCode(error: unknown): 'validation' | 'notFound' | 'storage' {

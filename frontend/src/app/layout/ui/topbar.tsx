@@ -15,7 +15,7 @@ export const Topbar = () => {
   const { t } = useI18n();
   const { pathname } = useLocation();
   const notify = useToast();
-  const currentPage = getCurrentNavigation(pathname);
+  const currentPage = getCurrentNavigation(pathname === '/vocabulary/review' ? '/' : pathname);
 
   return (
     <>
@@ -24,7 +24,15 @@ export const Topbar = () => {
         {currentPage && (
           <>
             <Icon name="chevron" size={12} />
-            <strong>{t(currentPage.label)}</strong>
+            <strong>
+              {t(
+                pathname.endsWith('/review')
+                  ? pathname.startsWith('/phrases')
+                    ? 'phraseReviewHeading'
+                    : 'wordReviewHeading'
+                  : currentPage.label,
+              )}
+            </strong>
           </>
         )}
       </div>

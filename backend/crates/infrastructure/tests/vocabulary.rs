@@ -1,5 +1,5 @@
 use lemno_application::VocabularyService;
-use lemno_domain::{DEFAULT_PROFILE_ID, Error, VocabularyInput};
+use lemno_domain::{DEFAULT_PROFILE_ID, Error, StudyKind, VocabularyInput};
 use lemno_infrastructure::SqliteVocabularyRepository;
 use rusqlite::{Connection, params};
 use uuid::Uuid;
@@ -25,6 +25,7 @@ impl Drop for Database {
 
 fn input(text: &str, explanation: &str) -> VocabularyInput {
     VocabularyInput {
+        kind: StudyKind::Word,
         text: text.to_owned(),
         explanation: explanation.to_owned(),
         example_text: "  I really appreciate your help.  ".to_owned(),
@@ -51,7 +52,10 @@ fn persists_across_reopens_and_keeps_same_spelling_with_different_meanings() {
         assert_ne!(first.id, second.id);
         assert!(first.created_at.ends_with('Z'));
     }
-    let items = db.service().list(DEFAULT_PROFILE_ID).unwrap();
+    let items = db
+        .service()
+        .list(DEFAULT_PROFILE_ID, StudyKind::Word)
+        .unwrap();
     assert_eq!(items.len(), 2);
     assert_eq!(items[0].explanation, "土手");
 }
@@ -77,7 +81,12 @@ fn validation_rejects_blank_and_oversized_input_without_writing() {
         service.create(DEFAULT_PROFILE_ID, long_example),
         Err(Error::Validation(_))
     ));
-    assert!(service.list(DEFAULT_PROFILE_ID).unwrap().is_empty());
+    assert!(
+        service
+            .list(DEFAULT_PROFILE_ID, StudyKind::Word)
+            .unwrap()
+            .is_empty()
+    );
     assert!(
         service
             .create("missing-profile", input("word", "意味"))
@@ -133,7 +142,9 @@ fn updates_preserve_history_and_deletes_cascade_without_deleting_sessions() {
         ),
         (2, 1, 3)
     );
-    service.delete(DEFAULT_PROFILE_ID, &item.id).unwrap();
+    service
+        .delete(DEFAULT_PROFILE_ID, &item.id, StudyKind::Word)
+        .unwrap();
     for table in [
         "learning_items",
         "review_states",
@@ -170,29 +181,138 @@ fn scopes_mutations_to_profile_and_word_kind_and_handles_sql_as_text() {
             [],
         )
         .unwrap();
-    assert!(service.list("other").unwrap().is_empty());
+    assert!(service.list("other", StudyKind::Word).unwrap().is_empty());
     assert!(matches!(
         service.update("other", &item.id, input("test", "意味")),
         Err(Error::NotFound)
     ));
     assert!(matches!(
-        service.delete("other", &item.id),
+        service.delete("other", &item.id, StudyKind::Word),
         Err(Error::NotFound)
     ));
     connection.execute("INSERT INTO learning_items (id, profile_id, kind, text, explanation) VALUES ('phrase', 'default-en', 'phrase', 'thank you', 'ありがとう')", []).unwrap();
-    assert_eq!(service.list(DEFAULT_PROFILE_ID).unwrap().len(), 1);
+    assert_eq!(
+        service
+            .list(DEFAULT_PROFILE_ID, StudyKind::Word)
+            .unwrap()
+            .len(),
+        1
+    );
     assert!(matches!(
-        service.delete(DEFAULT_PROFILE_ID, "phrase"),
+        service.delete(DEFAULT_PROFILE_ID, "phrase", StudyKind::Word),
         Err(Error::NotFound)
     ));
     assert!(matches!(
         service.update(DEFAULT_PROFILE_ID, "phrase", input("test", "意味")),
         Err(Error::NotFound)
     ));
-    assert_eq!(service.list(DEFAULT_PROFILE_ID).unwrap()[0].text, item.text);
+    assert_eq!(
+        service.list(DEFAULT_PROFILE_ID, StudyKind::Word).unwrap()[0].text,
+        item.text
+    );
     connection
         .pragma_update(None, "foreign_keys", "ON")
         .unwrap();
     connection.execute("INSERT INTO conversation_sessions (id, profile_id, status) VALUES ('foreign-session', 'other', 'preparing')", []).unwrap();
     assert!(connection.execute("INSERT INTO usage_records (session_id, learning_item_id, profile_id, ai_usage_count, recorded_at) VALUES ('foreign-session', ?1, 'default-en', 1, '2026-11-07T00:00:00Z')", [&item.id]).is_err());
+}
+
+#[test]
+fn phrases_have_separate_lists_and_persist_review_results_without_changing_usage() {
+    let db = Database::new();
+    let service = db.service();
+    let word = service
+        .create(DEFAULT_PROFILE_ID, input("routine", "習慣"))
+        .unwrap();
+    let mut phrase_input = input("get used to", "〜に慣れる");
+    phrase_input.kind = StudyKind::Phrase;
+    let phrase = service
+        .create(DEFAULT_PROFILE_ID, phrase_input.clone())
+        .unwrap();
+    assert_eq!(
+        service.list(DEFAULT_PROFILE_ID, StudyKind::Word).unwrap()[0].id,
+        word.id
+    );
+    assert_eq!(
+        service.list(DEFAULT_PROFILE_ID, StudyKind::Phrase).unwrap()[0].id,
+        phrase.id
+    );
+    assert!(matches!(
+        service.review("other", &phrase.id, StudyKind::Phrase, true),
+        Err(Error::NotFound)
+    ));
+    assert!(matches!(
+        service.review(DEFAULT_PROFILE_ID, &phrase.id, StudyKind::Word, true),
+        Err(Error::NotFound)
+    ));
+    for (remembered, level, count) in [(true, 1, 1), (true, 2, 2), (true, 2, 3), (false, 0, 4)] {
+        let reviewed = service
+            .review(
+                DEFAULT_PROFILE_ID,
+                &phrase.id,
+                StudyKind::Phrase,
+                remembered,
+            )
+            .unwrap();
+        assert_eq!(
+            (
+                reviewed.memory_level,
+                reviewed.review_count,
+                reviewed.reviewed_today,
+                reviewed.usage_count
+            ),
+            (level, count, count, 0)
+        );
+    }
+    phrase_input.explanation = "新しい環境などに慣れる".into();
+    let edited = service
+        .update(DEFAULT_PROFILE_ID, &phrase.id, phrase_input)
+        .unwrap();
+    assert_eq!(edited.review_count, 4);
+    drop(service);
+    let reopened = db.service();
+    let saved = reopened
+        .list(DEFAULT_PROFILE_ID, StudyKind::Phrase)
+        .unwrap();
+    assert_eq!((saved[0].memory_level, saved[0].review_count), (0, 4));
+    assert_eq!(
+        reopened.list(DEFAULT_PROFILE_ID, StudyKind::Word).unwrap()[0].review_count,
+        0
+    );
+    reopened
+        .delete(DEFAULT_PROFILE_ID, &phrase.id, StudyKind::Phrase)
+        .unwrap();
+    assert!(
+        reopened
+            .list(DEFAULT_PROFILE_ID, StudyKind::Phrase)
+            .unwrap()
+            .is_empty()
+    );
+    let connection = Connection::open(&db.0).unwrap();
+    let records: i64 = connection
+        .query_row(
+            "SELECT COUNT(*) FROM review_records WHERE learning_item_id = ?1",
+            [&phrase.id],
+            |r| r.get(0),
+        )
+        .unwrap();
+    assert_eq!(records, 0);
+}
+
+#[test]
+fn failed_review_rolls_back_memory_state() {
+    let db = Database::new();
+    let service = db.service();
+    let item = service
+        .create(DEFAULT_PROFILE_ID, input("hello", "こんにちは"))
+        .unwrap();
+    let connection = Connection::open(&db.0).unwrap();
+    connection.execute_batch("CREATE TRIGGER fail_review BEFORE INSERT ON review_records BEGIN SELECT RAISE(ABORT, 'write failed'); END;").unwrap();
+    assert!(
+        service
+            .review(DEFAULT_PROFILE_ID, &item.id, StudyKind::Word, true)
+            .is_err()
+    );
+    let saved = service.list(DEFAULT_PROFILE_ID, StudyKind::Word).unwrap();
+    assert_eq!((saved[0].memory_level, saved[0].review_count), (0, 0));
 }

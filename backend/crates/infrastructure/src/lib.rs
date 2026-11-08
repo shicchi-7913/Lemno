@@ -1,6 +1,6 @@
 use std::{path::Path, sync::Mutex, time::Duration};
 
-use lemno_domain::{Error, Vocabulary, VocabularyInput, VocabularyRepository};
+use lemno_domain::{Error, StudyKind, Vocabulary, VocabularyInput, VocabularyRepository};
 use rusqlite::{Connection, OptionalExtension, params};
 use uuid::Uuid;
 
@@ -18,7 +18,9 @@ const SELECT: &str = "SELECT i.id, i.profile_id, i.text, i.explanation, i.exampl
     COALESCE((SELECT SUM(COALESCE(u.manual_usage_count, u.ai_usage_count))
         FROM usage_records u JOIN conversation_sessions c ON c.id = u.session_id
         WHERE u.learning_item_id = i.id AND c.status = 'recorded'), 0),
-    i.created_at, i.updated_at
+    i.created_at, i.updated_at, i.kind,
+    (SELECT COUNT(*) FROM review_records r WHERE r.learning_item_id = i.id
+        AND date(r.reviewed_at, 'localtime') = date('now', 'localtime'))
     FROM learning_items i LEFT JOIN review_states s ON s.learning_item_id = i.id";
 
 fn row_to_vocabulary(row: &rusqlite::Row<'_>) -> rusqlite::Result<Vocabulary> {
@@ -33,14 +35,24 @@ fn row_to_vocabulary(row: &rusqlite::Row<'_>) -> rusqlite::Result<Vocabulary> {
         usage_count: row.get(7)?,
         created_at: row.get(8)?,
         updated_at: row.get(9)?,
+        reviewed_today: row.get(11)?,
+        kind: match row.get::<_, String>(10)?.as_str() {
+            "phrase" => StudyKind::Phrase,
+            _ => StudyKind::Word,
+        },
     })
 }
 
-fn get(connection: &Connection, profile_id: &str, id: &str) -> Result<Vocabulary, Error> {
+fn get(
+    connection: &Connection,
+    profile_id: &str,
+    id: &str,
+    kind: StudyKind,
+) -> Result<Vocabulary, Error> {
     connection
         .query_row(
-            &format!("{SELECT} WHERE i.profile_id = ?1 AND i.id = ?2 AND i.kind = 'word'"),
-            params![profile_id, id],
+            &format!("{SELECT} WHERE i.profile_id = ?1 AND i.id = ?2 AND i.kind = ?3"),
+            params![profile_id, id, kind.as_str()],
             row_to_vocabulary,
         )
         .optional()
@@ -82,13 +94,13 @@ impl SqliteVocabularyRepository {
 }
 
 impl VocabularyRepository for SqliteVocabularyRepository {
-    fn list(&self, profile_id: &str) -> Result<Vec<Vocabulary>, Error> {
+    fn list(&self, profile_id: &str, kind: StudyKind) -> Result<Vec<Vocabulary>, Error> {
         let connection = self.connection.lock().map_err(storage)?;
         let mut statement = connection.prepare(&format!(
-            "{SELECT} WHERE i.profile_id = ?1 AND i.kind = 'word' ORDER BY i.created_at DESC, i.rowid DESC"
+            "{SELECT} WHERE i.profile_id = ?1 AND i.kind = ?2 ORDER BY i.created_at DESC, i.rowid DESC"
         )).map_err(storage)?;
         statement
-            .query_map([profile_id], row_to_vocabulary)
+            .query_map(params![profile_id, kind.as_str()], row_to_vocabulary)
             .map_err(storage)?
             .collect::<rusqlite::Result<Vec<_>>>()
             .map_err(storage)
@@ -100,13 +112,14 @@ impl VocabularyRepository for SqliteVocabularyRepository {
         let id = Uuid::new_v4().to_string();
         tx.execute(
             "INSERT INTO learning_items (id, profile_id, kind, text, explanation, example_text)
-             VALUES (?1, ?2, 'word', ?3, ?4, ?5)",
+             VALUES (?1, ?2, ?6, ?3, ?4, ?5)",
             params![
                 id,
                 profile_id,
                 input.text,
                 input.explanation,
-                input.example_text
+                input.example_text,
+                input.kind.as_str()
             ],
         )
         .map_err(storage)?;
@@ -115,7 +128,7 @@ impl VocabularyRepository for SqliteVocabularyRepository {
             [&id],
         )
         .map_err(storage)?;
-        let item = get(&tx, profile_id, &id)?;
+        let item = get(&tx, profile_id, &id, input.kind)?;
         tx.commit().map_err(storage)?;
         Ok(item)
     }
@@ -132,35 +145,75 @@ impl VocabularyRepository for SqliteVocabularyRepository {
             .execute(
                 "UPDATE learning_items SET text = ?1, explanation = ?2, example_text = ?3,
              updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
-             WHERE id = ?4 AND profile_id = ?5 AND kind = 'word'",
+             WHERE id = ?4 AND profile_id = ?5 AND kind = ?6",
                 params![
                     input.text,
                     input.explanation,
                     input.example_text,
                     id,
-                    profile_id
+                    profile_id,
+                    input.kind.as_str()
                 ],
             )
             .map_err(storage)?;
         if affected == 0 {
             return Err(Error::NotFound);
         }
-        let item = get(&tx, profile_id, id)?;
+        let item = get(&tx, profile_id, id, input.kind)?;
         tx.commit().map_err(storage)?;
         Ok(item)
     }
 
-    fn delete(&self, profile_id: &str, id: &str) -> Result<(), Error> {
+    fn delete(&self, profile_id: &str, id: &str, kind: StudyKind) -> Result<(), Error> {
         let connection = self.connection.lock().map_err(storage)?;
         let affected = connection
             .execute(
-                "DELETE FROM learning_items WHERE id = ?1 AND profile_id = ?2 AND kind = 'word'",
-                params![id, profile_id],
+                "DELETE FROM learning_items WHERE id = ?1 AND profile_id = ?2 AND kind = ?3",
+                params![id, profile_id, kind.as_str()],
             )
             .map_err(storage)?;
         if affected == 0 {
             return Err(Error::NotFound);
         }
         Ok(())
+    }
+
+    fn review(
+        &self,
+        profile_id: &str,
+        id: &str,
+        kind: StudyKind,
+        remembered: bool,
+    ) -> Result<Vocabulary, Error> {
+        let mut connection = self.connection.lock().map_err(storage)?;
+        let tx = connection
+            .transaction_with_behavior(rusqlite::TransactionBehavior::Immediate)
+            .map_err(storage)?;
+        let item = get(&tx, profile_id, id, kind)?;
+        // Memory and conversation usage remain independent. No schedule is inferred here.
+        let level = if remembered {
+            (item.memory_level + 1).min(2)
+        } else {
+            0
+        };
+        tx.execute(
+            "INSERT INTO review_states (learning_item_id, memory_level, last_reviewed_at)
+             VALUES (?1, ?2, strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+             ON CONFLICT(learning_item_id) DO UPDATE SET
+             memory_level = excluded.memory_level, last_reviewed_at = excluded.last_reviewed_at,
+             next_review_at = NULL, updated_at = excluded.last_reviewed_at",
+            params![id, level],
+        )
+        .map_err(storage)?;
+        tx.execute(
+            "INSERT INTO review_records
+             (id, learning_item_id, rating, memory_level_after, reviewed_at)
+             VALUES (?1, ?2, ?3, ?4, strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))",
+            params![Uuid::new_v4().to_string(), id, i64::from(remembered), level],
+        )
+        .map_err(storage)?;
+        let item = get(&tx, profile_id, id, kind)?;
+        tx.commit().map_err(storage)?;
+        Ok(item)
     }
 }

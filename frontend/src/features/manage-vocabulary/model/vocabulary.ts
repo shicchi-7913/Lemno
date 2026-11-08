@@ -2,19 +2,21 @@ import { queryOptions, useMutation, useQuery, useQueryClient } from '@tanstack/r
 
 import {
   desktopAvailable,
+  type StudyKind,
   type Vocabulary,
   vocabularyApi,
   type VocabularyInput,
 } from '@/shared/api';
 
-const vocabularyListOptions = queryOptions({
-  queryKey: ['vocabulary'],
-  queryFn: vocabularyApi.list,
-  enabled: desktopAvailable,
-});
+const vocabularyListOptions = (kind: StudyKind) =>
+  queryOptions({
+    queryKey: ['vocabulary', kind],
+    queryFn: () => vocabularyApi.list(kind),
+    enabled: desktopAvailable,
+  });
 
 export type VocabularyDialogState =
-  { mode: 'create' } | { mode: 'edit' | 'delete'; item: Vocabulary };
+  { mode: 'create'; kind: StudyKind } | { mode: 'edit' | 'delete'; item: Vocabulary };
 
 export type VocabularyChange =
   { kind: 'saved'; item: Vocabulary; created: boolean } | { kind: 'deleted'; id: string };
@@ -22,15 +24,15 @@ export type VocabularyChange =
 type VocabularyMutationInput =
   | { mode: 'create'; input: VocabularyInput }
   | { mode: 'edit'; id: string; input: VocabularyInput }
-  | { mode: 'delete'; id: string };
+  | { mode: 'delete'; id: string; kind: StudyKind };
 
-export function useVocabulary() {
-  return useQuery(vocabularyListOptions);
+export function useVocabulary(kind: StudyKind = 'word') {
+  return useQuery(vocabularyListOptions(kind));
 }
 
 async function mutateVocabulary(action: VocabularyMutationInput): Promise<VocabularyChange> {
   if (action.mode === 'delete') {
-    await vocabularyApi.delete(action.id);
+    await vocabularyApi.delete(action.id, action.kind);
     return { kind: 'deleted', id: action.id };
   }
 
@@ -46,8 +48,9 @@ export function useVocabularyMutation() {
 
   return useMutation({
     mutationFn: mutateVocabulary,
-    onSuccess: async (change) => {
-      const queryKey = vocabularyListOptions.queryKey;
+    onSuccess: async (change, action) => {
+      const kind = action.mode === 'delete' ? action.kind : action.input.kind;
+      const queryKey = vocabularyListOptions(kind).queryKey;
       // Prevent an older in-flight read from overwriting the saved result.
       await queryClient.cancelQueries({ queryKey });
       queryClient.setQueryData(queryKey, (previous) => {
@@ -58,6 +61,22 @@ export function useVocabularyMutation() {
           return [change.item, ...previous.filter((item) => item.id !== change.item.id)];
         return previous.map((item) => (item.id === change.item.id ? change.item : item));
       });
+      await queryClient.invalidateQueries({ queryKey });
+    },
+  });
+}
+
+export function useVocabularyReview(kind: StudyKind) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, remembered }: { id: string; remembered: boolean }) =>
+      vocabularyApi.review(id, kind, remembered),
+    onSuccess: async (item) => {
+      const queryKey = vocabularyListOptions(kind).queryKey;
+      await queryClient.cancelQueries({ queryKey });
+      queryClient.setQueryData(queryKey, (previous) =>
+        previous?.map((entry) => (entry.id === item.id ? item : entry)),
+      );
       await queryClient.invalidateQueries({ queryKey });
     },
   });

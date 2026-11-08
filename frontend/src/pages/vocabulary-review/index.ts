@@ -1,0 +1,1 @@
+export { VocabularyReviewPage } from './ui';

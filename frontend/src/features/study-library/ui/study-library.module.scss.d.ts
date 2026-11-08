@@ -1,8 +1,8 @@
 // Generated from SCSS. Do not edit.
 export type Styles = {
-  comingSoon: string;
   eyebrow: string;
   filters: string;
+  libraryPanel: string;
   listToolbar: string;
   pageHeading: string;
   previewNotice: string;
@@ -11,7 +11,6 @@ export type Styles = {
   searchField: string;
   statCard: string;
   statistics: string;
-  vocabularyPanel: string;
 };
 
 export type ClassNames = keyof Styles;

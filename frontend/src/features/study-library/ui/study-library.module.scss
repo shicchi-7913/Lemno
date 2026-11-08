@@ -49,13 +49,6 @@
   margin: 0;
 }
 
-.comingSoon {
-  border-left: 1px solid var(--color-brand-border);
-  padding-left: space(2);
-  font-size: var(--font-size-2xs);
-  font-weight: 400;
-}
-
 .statistics {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -96,7 +89,7 @@
   font-size: var(--font-size-xs);
 }
 
-.vocabularyPanel {
+.libraryPanel {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   background: var(--color-surface);

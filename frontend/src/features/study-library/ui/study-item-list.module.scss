@@ -92,6 +92,10 @@
 }
 
 .listFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: space(3);
   padding: space(3.5) space(5);
   color: var(--color-text-subtle);
   font-size: var(--font-size-2xs);
