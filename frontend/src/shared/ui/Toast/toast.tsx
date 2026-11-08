@@ -1,6 +1,6 @@
 import { createContext, type ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 
-import type { TextSize } from '../typography';
+import type { TextSize } from '../../model/typography';
 
 import sizes from '../typography.module.scss';
 import styles from './toast.module.scss';

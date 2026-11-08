@@ -81,5 +81,45 @@ export default defineConfig([
       ],
     },
   },
+  {
+    files: ['src/**/*.tsx'],
+    ignores: ['src/**/ui/**/*.tsx', 'src/app/main.tsx'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'Program',
+          message: 'Place TSX files under a ui directory. Only src/app/main.tsx is exempt.',
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/**/ui/**/*.ts'],
+    ignores: ['src/**/ui/**/*.module.scss.d.ts', 'src/shared/ui/**/index.ts'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'Program',
+          message:
+            'Only public shared/ui index.ts files and CSS Module declarations may use .ts under ui.',
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/**/*.module.scss.d.ts'],
+    ignores: ['src/**/ui/**/*.module.scss.d.ts'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'Program',
+          message: 'Place CSS Module declarations under a ui directory.',
+        },
+      ],
+    },
+  },
   prettier,
 ]);

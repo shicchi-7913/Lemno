@@ -1,6 +1,6 @@
 import type { ComponentProps } from 'react';
 
-import type { HeadingSize } from '../typography';
+import type { HeadingSize } from '../../model/typography';
 
 import sizes from '../typography.module.scss';
 import styles from './heading.module.scss';

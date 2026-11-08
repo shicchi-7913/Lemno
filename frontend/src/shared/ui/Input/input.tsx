@@ -1,6 +1,6 @@
 import type { ComponentProps } from 'react';
 
-import type { TextSize } from '../typography';
+import type { TextSize } from '../../model/typography';
 
 import sizes from '../typography.module.scss';
 import styles from './input.module.scss';
