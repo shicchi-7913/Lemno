@@ -228,7 +228,9 @@ export const ConversationRecorderPage = () => {
                 </>
               ) : (
                 <>
-                  <h2 className={styles.sectionHeading}>{t('conversationConfirmTitle')}</h2>
+                  <Heading as="h2" size="md" className={styles.sectionHeading}>
+                    {t('conversationConfirmTitle')}
+                  </Heading>
                   <dl className={styles.summary}>
                     <div>
                       <dt>{t('topics')}</dt>
@@ -244,7 +246,9 @@ export const ConversationRecorderPage = () => {
                     </div>
                   </dl>
                   <p className={styles.noteContent}>{input.notes}</p>
-                  <h2 className={styles.sectionHeading}>{t('conversationUsedExpressions')}</h2>
+                  <Heading as="h2" size="md" className={styles.sectionHeading}>
+                    {t('conversationUsedExpressions')}
+                  </Heading>
                   <p className={styles.muted}>{t('conversationUsedHint')}</p>
                   {words.isError || phrases.isError ? (
                     <div className={styles.error} role="alert">
@@ -292,7 +296,9 @@ export const ConversationRecorderPage = () => {
                       ))}
                     </div>
                   )}
-                  <h2 className={styles.sectionHeading}>{t('conversationLearnedExpressions')}</h2>
+                  <Heading as="h2" size="md" className={styles.sectionHeading}>
+                    {t('conversationLearnedExpressions')}
+                  </Heading>
                   <p className={styles.muted}>{t('conversationLearnedHint')}</p>
                   {input.learnedItems.map((item, index) => (
                     <div className={styles.learnedRow} key={index}>

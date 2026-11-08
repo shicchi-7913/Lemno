@@ -129,7 +129,9 @@ export const StudyLibrary = ({
       {!desktopAvailable && <p className={styles.previewNotice}>{t(desktopNotice)}</p>}
       <section className={styles.reviewBanner} aria-label={t(reviewTitle)}>
         <div>
-          <h2>{t(reviewTitle)}</h2>
+          <Heading as="h2" size="sm">
+            {t(reviewTitle)}
+          </Heading>
           <p>{t(reviewBody)}</p>
         </div>
         <Button

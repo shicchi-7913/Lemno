@@ -60,7 +60,9 @@ export const ConversationRecordPage = () => {
             <section className={`${styles.panel} ${styles.notesPanel}`}>
               {/* eslint-disable-next-line i18next/no-literal-string */}
               <div className={styles.eyebrow}>CONVERSATION NOTES</div>
-              <h2 className={styles.sectionHeading}>{t('conversationReflection')}</h2>
+              <Heading as="h2" size="md" className={styles.sectionHeading}>
+                {t('conversationReflection')}
+              </Heading>
               <p className={styles.noteContent}>{item.notes}</p>
               <div className={styles.badges}>
                 <span>{item.ai}</span>
@@ -68,7 +70,9 @@ export const ConversationRecordPage = () => {
               </div>
             </section>
             <section className={`${styles.panel} ${styles.expressionsPanel}`}>
-              <h2 className={styles.sectionHeading}>{t('conversationUsedExpressions')}</h2>
+              <Heading as="h2" size="md" className={styles.sectionHeading}>
+                {t('conversationUsedExpressions')}
+              </Heading>
               {item.usedItems.length ? (
                 item.usedItems.map((expression) => (
                   <Link
@@ -83,7 +87,9 @@ export const ConversationRecordPage = () => {
               ) : (
                 <p className={styles.muted}>{t('conversationNoExpressions')}</p>
               )}
-              <h2 className={styles.sectionHeading}>{t('conversationLearnedExpressions')}</h2>
+              <Heading as="h2" size="md" className={styles.sectionHeading}>
+                {t('conversationLearnedExpressions')}
+              </Heading>
               {item.learnedItems.length ? (
                 item.learnedItems.map((expression) => (
                   <Link

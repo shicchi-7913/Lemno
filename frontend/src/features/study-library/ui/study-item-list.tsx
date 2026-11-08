@@ -1,6 +1,7 @@
 import { desktopAvailable, type StudyKind, type Vocabulary } from '@/shared/api';
 import { useI18n } from '@/shared/i18n';
 import { Button } from '@/shared/ui/Button';
+import { Heading } from '@/shared/ui/Heading';
 import { Icon } from '@/shared/ui/Icon';
 import { Italic } from '@/shared/ui/Italic';
 import { Label } from '@/shared/ui/Label';
@@ -66,7 +67,7 @@ export const StudyItemList = ({
             <span className={styles.emptySymbol}>
               <Icon name={total ? 'search' : 'book'} size={26} />
             </span>
-            <h2>
+            <Heading as="h2" size="lg">
               {t(
                 total
                   ? phrase
@@ -76,7 +77,7 @@ export const StudyItemList = ({
                     ? 'phraseEmptyTitle'
                     : 'emptyTitle',
               )}
-            </h2>
+            </Heading>
             <p>{t(total ? 'noResultsBody' : phrase ? 'phraseEmptyBody' : 'emptyBody')}</p>
             <Button
               variant={total ? 'outline' : 'solid'}

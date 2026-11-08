@@ -61,10 +61,10 @@ export const ConversationHistoryPage = () => {
         ))}
       </section>
       <section className={styles.panel}>
-        <h2 className={styles.panelHeading}>
+        <Heading as="h2" size="sm" className={styles.panelHeading}>
           <Icon name="undo" size={16} />
           {t('conversationRecent')}
-        </h2>
+        </Heading>
         {history.isLoading ? (
           <p className={styles.empty}>{t('conversationLoading')}</p>
         ) : history.isError ? (
