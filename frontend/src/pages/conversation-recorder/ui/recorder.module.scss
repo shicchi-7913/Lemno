@@ -139,7 +139,7 @@
 .learnedRow {
   display: grid;
   grid-template-columns: 1fr 1fr 110px 32px;
-  align-items: center;
+  align-items: start;
   gap: space(2);
   margin-bottom: space(3);
 }

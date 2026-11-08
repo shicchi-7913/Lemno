@@ -1,9 +1,11 @@
-import { type FormEvent, useId, useRef, useState } from 'react';
+import { type SubmitEvent, useId, useRef, useState } from 'react';
 
 import { errorCode, type StudyKind, type VocabularyInput } from '@/shared/api';
 import { useI18n } from '@/shared/i18n';
+import { useFormValidation } from '@/shared/model/use-form-validation';
 import { Alert } from '@/shared/ui/Alert';
 import { Button } from '@/shared/ui/Button';
+import { FieldError } from '@/shared/ui/FieldError';
 import { FormLabel } from '@/shared/ui/FormLabel';
 import { Heading } from '@/shared/ui/Heading';
 import { Icon } from '@/shared/ui/Icon';
@@ -33,6 +35,12 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
     exampleText: item?.exampleText ?? '',
   }));
   const mutation = useVocabularyMutation();
+  const validation = useFormValidation();
+  const fields = {
+    text: validation.field('text'),
+    explanation: validation.field('explanation'),
+    exampleText: validation.field('exampleText'),
+  };
   const pending = mutation.isPending;
   const error = mutation.isError ? t(deleting ? 'deleteError' : errorCode(mutation.error)) : '';
   const submitting = useRef(false);
@@ -44,12 +52,11 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
     name: keyof VocabularyInput,
     control: HTMLInputElement | HTMLTextAreaElement,
   ) {
-    control.setCustomValidity('');
     const value = control.value;
     setInput((previous) => ({ ...previous, [name]: value }));
   }
 
-  async function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     if (submitting.current) return;
     const normalized: VocabularyInput = {
@@ -58,16 +65,7 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
       explanation: input.explanation.trim(),
       exampleText: input.exampleText.trim(),
     };
-    if (!deleting) {
-      const form = event.currentTarget;
-      for (const name of ['text', 'explanation'] as const) {
-        const control = form.elements.namedItem(name);
-        if (control instanceof HTMLInputElement || control instanceof HTMLTextAreaElement) {
-          control.setCustomValidity(normalized[name] ? '' : t('requiredError'));
-        }
-      }
-      if (!form.reportValidity()) return;
-    }
+    if (!deleting && !validation.validate(event.currentTarget)) return;
     submitting.current = true;
     let change: VocabularyChange;
     try {
@@ -95,7 +93,7 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
       onDismiss={onDismiss}
       initialFocusRef={deleting ? cancelRef : wordRef}
     >
-      <form onSubmit={submit} aria-busy={pending}>
+      <form noValidate onInput={validation.onInput} onSubmit={submit} aria-busy={pending}>
         <fieldset className={styles.dialogControls} disabled={pending}>
           <div className={styles.dialogHeading}>
             <div>
@@ -123,9 +121,9 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
               <div className={styles.field}>
                 <FormLabel htmlFor={`${id}-text`}>{t('studyText')}</FormLabel>
                 <Input
+                  {...fields.text.input}
                   ref={wordRef}
                   id={`${id}-text`}
-                  name="text"
                   maxLength={200}
                   value={input.text}
                   onChange={(event) => changeInput('text', event.currentTarget)}
@@ -134,12 +132,13 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
                   spellCheck={false}
                   required
                 />
+                <FieldError {...fields.text.error} />
               </div>
               <div className={styles.field}>
                 <FormLabel htmlFor={`${id}-explanation`}>{t('studyMeaning')}</FormLabel>
                 <Textarea
+                  {...fields.explanation.input}
                   id={`${id}-explanation`}
-                  name="explanation"
                   maxLength={2000}
                   rows={1}
                   value={input.explanation}
@@ -147,18 +146,20 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
                   placeholder={t('studyMeaningPlaceholder')}
                   required
                 />
+                <FieldError {...fields.explanation.error} />
               </div>
               <div className={styles.field}>
                 <FormLabel htmlFor={`${id}-example`}>{t('studyExample')}</FormLabel>
                 <Textarea
+                  {...fields.exampleText.input}
                   id={`${id}-example`}
-                  name="exampleText"
                   maxLength={2000}
                   rows={1}
                   value={input.exampleText}
                   onChange={(event) => changeInput('exampleText', event.currentTarget)}
                   placeholder={t('studyExamplePlaceholder')}
                 />
+                <FieldError {...fields.exampleText.error} />
               </div>
               <div className={styles.field}>
                 <FormLabel htmlFor={`${id}-kind`}>{t('studyKind')}</FormLabel>
