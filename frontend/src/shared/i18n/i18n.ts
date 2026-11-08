@@ -1,6 +1,8 @@
-import i18next from 'i18next';
 import { load } from '@tauri-apps/plugin-store';
+import i18next from 'i18next';
+
 import { desktopAvailable } from '../api';
+
 import en from './locales/en.json';
 import ja from './locales/ja.json';
 

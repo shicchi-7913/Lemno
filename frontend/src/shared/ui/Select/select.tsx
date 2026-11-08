@@ -1,7 +1,9 @@
 import type { ComponentProps } from 'react';
-import styles from './select.module.scss';
-import sizes from '../typography.module.scss';
+
 import type { TextSize } from '../typography';
+
+import sizes from '../typography.module.scss';
+import styles from './select.module.scss';
 
 type SelectProps = Omit<ComponentProps<'select'>, 'size'> & {
   size?: TextSize;

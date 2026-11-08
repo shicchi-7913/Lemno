@@ -1,7 +1,9 @@
 import type { ComponentProps } from 'react';
-import styles from './input.module.scss';
-import sizes from '../typography.module.scss';
+
 import type { TextSize } from '../typography';
+
+import sizes from '../typography.module.scss';
+import styles from './input.module.scss';
 
 type InputProps = Omit<ComponentProps<'input'>, 'size'> & {
   variant?: 'default' | 'plain';

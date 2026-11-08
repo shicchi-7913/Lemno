@@ -1,9 +1,12 @@
-import styles from './sidebar.module.scss';
 import { Fragment } from 'react';
+
 import { useI18n } from '../../../shared/i18n';
 import { Icon } from '../../../shared/ui/Icon';
 import { navigationGroups } from '../model';
+
 import { NavigationItem } from './navigation-item';
+
+import styles from './sidebar.module.scss';
 
 export const Sidebar = () => {
   const { t } = useI18n();

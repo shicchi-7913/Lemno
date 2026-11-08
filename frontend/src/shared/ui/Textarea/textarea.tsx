@@ -1,7 +1,9 @@
 import type { ComponentProps } from 'react';
-import styles from './textarea.module.scss';
-import sizes from '../typography.module.scss';
+
 import type { TextSize } from '../typography';
+
+import sizes from '../typography.module.scss';
+import styles from './textarea.module.scss';
 
 type TextareaProps = ComponentProps<'textarea'> & {
   status?: 'warning' | 'error';

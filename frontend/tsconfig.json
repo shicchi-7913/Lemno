@@ -16,7 +16,8 @@
 
     /* Linting */
     "strict": true,
-    "noUnusedLocals": true,
+    /* ESLint handles unused locals so underscore-prefixed names can be ignored. */
+    "noUnusedLocals": false,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },

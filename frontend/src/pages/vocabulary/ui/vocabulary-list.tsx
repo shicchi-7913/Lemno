@@ -1,11 +1,12 @@
-import { Button } from '../../../shared/ui/Button';
-import styles from './vocabulary-list.module.scss';
 import { desktopAvailable, type Vocabulary } from '../../../shared/api';
 import { useI18n } from '../../../shared/i18n';
+import { Button } from '../../../shared/ui/Button';
 import { Icon } from '../../../shared/ui/Icon';
 import { Label } from '../../../shared/ui/Label';
 import { Spinner } from '../../../shared/ui/Spinner';
 import { memoryStatus } from '../model';
+
+import styles from './vocabulary-list.module.scss';
 
 const memoryLabelTones = {
   learning: 'warning',

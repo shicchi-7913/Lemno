@@ -1,9 +1,12 @@
-import styles from './layout.module.scss';
 import { Outlet } from 'react-router';
+
 import { useI18n } from '../../../shared/i18n';
 import { ToastProvider } from '../../../shared/ui/Toast';
+
 import { Sidebar } from './sidebar';
 import { Topbar } from './topbar';
+
+import styles from './layout.module.scss';
 
 export const WorkspaceLayout = () => {
   const { t } = useI18n();

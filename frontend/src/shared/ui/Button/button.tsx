@@ -1,9 +1,11 @@
-import styles from './button.module.scss';
-import tones from '../tone.module.scss';
-import sizes from '../typography.module.scss';
 import type { ComponentProps } from 'react';
+
 import type { Tone } from '../tone';
 import type { TextSize } from '../typography';
+
+import tones from '../tone.module.scss';
+import sizes from '../typography.module.scss';
+import styles from './button.module.scss';
 
 type ButtonProps = ComponentProps<'button'> & {
   variant?: 'solid' | 'outline' | 'ghost';

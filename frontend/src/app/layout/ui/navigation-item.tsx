@@ -1,8 +1,10 @@
-import styles from './sidebar.module.scss';
 import { NavLink } from 'react-router';
+
 import { useI18n } from '../../../shared/i18n';
 import { Icon } from '../../../shared/ui/Icon';
 import type { NavigationEntry } from '../model';
+
+import styles from './sidebar.module.scss';
 
 export const NavigationItem = ({ label, icon, to }: NavigationEntry) => {
   const { t } = useI18n();

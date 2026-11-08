@@ -1,5 +1,6 @@
-import styles from './startup-error.module.scss';
 import { startupErrorMessage } from '../../shared/i18n';
+
+import styles from './startup-error.module.scss';
 
 export const StartupError = () => (
   <p className={styles.startupError}>

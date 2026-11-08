@@ -1,7 +1,9 @@
-import styles from './toast.module.scss';
-import sizes from '../typography.module.scss';
+import { createContext, type ReactNode, useCallback, useContext, useEffect, useState } from 'react';
+
 import type { TextSize } from '../typography';
-import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
+
+import sizes from '../typography.module.scss';
+import styles from './toast.module.scss';
 
 const ToastContext = createContext<((message: string) => void) | null>(null);
 

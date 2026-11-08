@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm styles:types && concurrently --kill-others --names styles,vite \"pnpm styles:types:watch\" \"vite\"",
-    "format": "prettier --write .",
+    "format": "pnpm lint:fix && prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint . && pnpm styles:lint",
+    "lint:fix": "eslint . --fix",
     "styles:lint": "stylelint \"src/**/*.scss\"",
     "test": "node --test \"src/**/*.test.mjs\"",
     "build": "pnpm styles:types && tsc && vite build",
@@ -16,6 +17,7 @@
     "tauri": "tauri"
   },
   "devDependencies": {
+    "@eslint/compat": "2.1.1",
     "@eslint/js": "10.0.1",
     "@tauri-apps/cli": "2.12.4",
     "@types/react": "19.3.0",
@@ -25,6 +27,7 @@
     "eslint": "10.14.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-i18next": "6.1.5",
+    "eslint-plugin-import": "2.32.0",
     "eslint-plugin-react": "7.37.5",
     "eslint-plugin-react-hooks": "7.1.1",
     "globals": "17.14.0",

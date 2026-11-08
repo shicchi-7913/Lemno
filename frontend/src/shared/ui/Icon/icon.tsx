@@ -1,5 +1,6 @@
-import styles from './icon.module.scss';
 import type { CSSProperties, ReactNode } from 'react';
+
+import styles from './icon.module.scss';
 
 const shapes = {
   plus: <path d="M12 5v14M5 12h14" />,
