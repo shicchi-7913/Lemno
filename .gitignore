@@ -12,4 +12,4 @@
 # Local quality gate state
 .agents/.gate-status/
 
-.claude/feedback/
+.agents/feedback/

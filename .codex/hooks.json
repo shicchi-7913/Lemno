@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "timeout": 10,
+            "command": "project_root=$(git rev-parse --show-toplevel) || exit 0; mise -C \"$project_root\" exec -- depgraph hook session-start --root \"$project_root\" --format text; exit 0"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "timeout": 10,
+            "command": "project_root=$(git rev-parse --show-toplevel) || exit 0; mise -C \"$project_root\" exec -- depgraph hook prompt --root \"$project_root\" --format text; exit 0"
+          }
+        ]
+      }
+    ]
+  }
+}

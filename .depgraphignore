@@ -1,6 +1,6 @@
 # Development tooling, local state, dependencies, and generated build output.
 .agents
-.claude
+.codex
 .github
 .pnpm-store
 .lemno
