@@ -84,6 +84,9 @@ jobs:
         with:
           install_args: rust
 
+      - name: Install Rust formatting component
+        run: rustup component add rustfmt
+
       - name: Check formatting across the backend workspace
         run: mise run exec -- cargo fmt --all --manifest-path backend/Cargo.toml -- --check
 
