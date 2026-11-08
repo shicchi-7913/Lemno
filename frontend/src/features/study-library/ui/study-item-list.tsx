@@ -2,6 +2,7 @@ import { desktopAvailable, type StudyKind, type Vocabulary } from '@/shared/api'
 import { useI18n } from '@/shared/i18n';
 import { Button } from '@/shared/ui/Button';
 import { Icon } from '@/shared/ui/Icon';
+import { Italic } from '@/shared/ui/Italic';
 import { Label } from '@/shared/ui/Label';
 import { Spinner } from '@/shared/ui/Spinner';
 
@@ -106,11 +107,7 @@ export const StudyItemList = ({
                     <td>
                       <strong className={styles.wordText}>{item.text}</strong>
                       <p className={styles.wordMeaning}>{item.explanation}</p>
-                      {item.exampleText && (
-                        <p className={styles.wordExample} lang="en">
-                          {item.exampleText}
-                        </p>
-                      )}
+                      {item.exampleText && <Italic lang="en">{item.exampleText}</Italic>}
                     </td>
                     <td>
                       <Label tone={memoryLabelTones[memoryStatus(item)]}>

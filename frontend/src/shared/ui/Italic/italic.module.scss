@@ -1,0 +1,11 @@
+@use '../../styles/space' as *;
+
+.italic {
+  font-size: var(--font-size-2xs);
+  color: var(--color-text-subtle);
+  font-style: italic;
+  line-height: 1.6;
+  margin: space(0.75) 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
