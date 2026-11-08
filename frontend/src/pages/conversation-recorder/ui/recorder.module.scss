@@ -118,20 +118,8 @@
   line-height: 2;
   resize: vertical;
 }
-.info {
-  display: flex;
-  align-items: center;
-  gap: space(3);
-  color: var(--color-text-secondary);
-  background: var(--color-brand-bg);
-  padding: space(4);
+.manualNote {
   margin: space(5) 0;
-  border-radius: var(--radius-lg);
-  font-size: var(--font-size-xs);
-  line-height: 1.8;
-}
-.info svg {
-  flex-shrink: 0;
 }
 .formActions {
   display: flex;

@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router';
 
 import { conversationApi, type ConversationInput, desktopAvailable } from '@/shared/api';
 import { useI18n } from '@/shared/i18n';
+import { Alert } from '@/shared/ui/Alert';
 import { Button } from '@/shared/ui/Button';
 import { FormLabel } from '@/shared/ui/FormLabel';
 import { Heading } from '@/shared/ui/Heading';
@@ -220,10 +221,9 @@ export const ConversationRecorderPage = () => {
                       </Button>
                     </p>
                   )}
-                  <p className={styles.info}>
-                    <Icon name="info" size={17} />
-                    <span>{t('conversationManualNote')}</span>
-                  </p>
+                  <div className={styles.manualNote}>
+                    <Alert type="info">{t('conversationManualNote')}</Alert>
+                  </div>
                 </>
               ) : (
                 <>

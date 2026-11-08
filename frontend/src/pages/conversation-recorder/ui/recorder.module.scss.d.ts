@@ -10,8 +10,8 @@ export type Styles = {
   field: string;
   formActions: string;
   formRow: string;
-  info: string;
   learnedRow: string;
+  manualNote: string;
   muted: string;
   noteContent: string;
   notice: string;

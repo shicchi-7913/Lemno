@@ -2,6 +2,7 @@ import { type FormEvent, useId, useRef, useState } from 'react';
 
 import { errorCode, type StudyKind, type VocabularyInput } from '@/shared/api';
 import { useI18n } from '@/shared/i18n';
+import { Alert } from '@/shared/ui/Alert';
 import { Button } from '@/shared/ui/Button';
 import { FormLabel } from '@/shared/ui/FormLabel';
 import { Heading } from '@/shared/ui/Heading';
@@ -177,9 +178,9 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
                   <option value="phrase">{t('phrases')}</option>
                 </Select>
               </div>
-              <p id={`${id}-description`} className={styles.languageNote}>
-                {t('studyLanguageNote')}
-              </p>
+              <div id={`${id}-description`} className={styles.languageNote}>
+                <Alert type="info">{t('studyLanguageNote')}</Alert>
+              </div>
             </div>
           )}
           {error && (
