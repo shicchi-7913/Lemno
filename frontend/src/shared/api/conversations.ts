@@ -1,5 +1,4 @@
-import { invoke } from '@tauri-apps/api/core';
-
+import { invokeForLearningLanguage as invoke } from './invoke';
 import type { VocabularyInput } from './vocabulary';
 
 export type TopicCategory = 'daily' | 'work' | 'travel' | 'hobby';

@@ -10,51 +10,70 @@ use crate::CommandError;
 type Service = ConversationService<SqliteVocabularyRepository>;
 
 #[tauri::command]
-pub fn list_topics(service: State<'_, Service>) -> Result<Vec<Topic>, CommandError> {
-    service.topics(DEFAULT_PROFILE_ID).map_err(Into::into)
+pub fn list_topics(
+    service: State<'_, Service>,
+    profile_id: Option<String>,
+) -> Result<Vec<Topic>, CommandError> {
+    service
+        .topics(profile_id.as_deref().unwrap_or(DEFAULT_PROFILE_ID))
+        .map_err(Into::into)
 }
 
 #[tauri::command]
 pub fn save_topic(
     service: State<'_, Service>,
+    profile_id: Option<String>,
     id: Option<String>,
     input: TopicInput,
 ) -> Result<Topic, CommandError> {
     service
-        .save_topic(DEFAULT_PROFILE_ID, id.as_deref(), input)
+        .save_topic(
+            profile_id.as_deref().unwrap_or(DEFAULT_PROFILE_ID),
+            id.as_deref(),
+            input,
+        )
         .map_err(Into::into)
 }
 
 #[tauri::command]
-pub fn delete_topic(service: State<'_, Service>, id: String) -> Result<(), CommandError> {
+pub fn delete_topic(
+    service: State<'_, Service>,
+    profile_id: Option<String>,
+    id: String,
+) -> Result<(), CommandError> {
     service
-        .delete_topic(DEFAULT_PROFILE_ID, &id)
+        .delete_topic(profile_id.as_deref().unwrap_or(DEFAULT_PROFILE_ID), &id)
         .map_err(Into::into)
 }
 
 #[tauri::command]
-pub fn list_conversations(service: State<'_, Service>) -> Result<Vec<Conversation>, CommandError> {
+pub fn list_conversations(
+    service: State<'_, Service>,
+    profile_id: Option<String>,
+) -> Result<Vec<Conversation>, CommandError> {
     service
-        .conversations(DEFAULT_PROFILE_ID)
+        .conversations(profile_id.as_deref().unwrap_or(DEFAULT_PROFILE_ID))
         .map_err(Into::into)
 }
 
 #[tauri::command]
 pub fn get_conversation(
     service: State<'_, Service>,
+    profile_id: Option<String>,
     id: String,
 ) -> Result<ConversationDetail, CommandError> {
     service
-        .conversation(DEFAULT_PROFILE_ID, &id)
+        .conversation(profile_id.as_deref().unwrap_or(DEFAULT_PROFILE_ID), &id)
         .map_err(Into::into)
 }
 
 #[tauri::command]
 pub fn record_conversation(
     service: State<'_, Service>,
+    profile_id: Option<String>,
     input: ConversationInput,
 ) -> Result<ConversationDetail, CommandError> {
     service
-        .record(DEFAULT_PROFILE_ID, input)
+        .record(profile_id.as_deref().unwrap_or(DEFAULT_PROFILE_ID), input)
         .map_err(Into::into)
 }

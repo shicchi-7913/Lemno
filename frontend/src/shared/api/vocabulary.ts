@@ -1,4 +1,6 @@
-import { invoke, isTauri } from '@tauri-apps/api/core';
+import { isTauri } from '@tauri-apps/api/core';
+
+import { invokeForLearningLanguage as invoke } from './invoke';
 
 export type StudyKind = 'word' | 'phrase';
 

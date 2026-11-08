@@ -6,6 +6,7 @@ import { Icon } from '@/shared/ui/Icon';
 
 import { navigationGroups } from '../model';
 
+import { LanguageSwitcher } from './language-switcher';
 import { NavigationItem } from './navigation-item';
 
 import styles from './sidebar.module.scss';
@@ -25,17 +26,7 @@ export const Sidebar = () => {
           <div className={styles.brandSubtitle}>{t('brandSubtitle')}</div>
         </div>
       </div>
-      <div className={styles.profileCard}>
-        <span className={styles.profileFlag} aria-hidden="true">
-          🇯🇵
-        </span>
-        <div>
-          <strong>{t('profile')}</strong>
-        </div>
-        <span className={styles.profileChevron}>
-          <Icon name="down" size={13} />
-        </span>
-      </div>
+      <LanguageSwitcher />
       <nav>
         {navigationGroups.map((group, index) => (
           <Fragment key={group.heading}>

@@ -28,7 +28,7 @@ export const navigationGroups: NavigationGroup[] = [
   {
     heading: 'EXPLORE',
     items: [
-      { label: 'profiles', icon: 'globe' },
+      { label: 'profiles', icon: 'globe', to: '/profiles' },
       { label: 'goals', icon: 'flag' },
       { label: 'integration', icon: 'spark' },
       { label: 'data', icon: 'cloud' },

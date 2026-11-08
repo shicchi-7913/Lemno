@@ -33,6 +33,11 @@
   line-height: 1.8;
 }
 
+.profileSwitcher {
+  position: relative;
+  margin-bottom: space(8);
+}
+
 .profileCard {
   display: flex;
   gap: space(3);
@@ -41,7 +46,12 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: space(3.5) space(3);
-  margin-bottom: space(8);
+  cursor: pointer;
+  list-style: none;
+}
+
+.profileCard::-webkit-details-marker {
+  display: none;
 }
 
 .profileFlag {
@@ -54,15 +64,70 @@
   font-weight: var(--font-weight-semibold);
 }
 
-.profileCard small {
-  display: block;
-  font-size: var(--font-size-2xs);
-  color: var(--color-text-muted);
-  margin-top: space(1);
-}
-
 .profileChevron {
   margin-left: auto;
+}
+
+.profileSwitcher[open] .profileChevron {
+  transform: rotate(180deg);
+}
+
+.profileMenu {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + space(2));
+  inset-inline: 0;
+  padding: space(2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: 0 space(2) space(5) var(--color-shadow);
+}
+
+.profileOption,
+.profileSettings {
+  display: flex;
+  align-items: center;
+  gap: space(2);
+  width: 100%;
+  padding: space(2.5);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-default);
+  font: inherit;
+  font-size: var(--font-size-xs);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.profileOption > :last-child:not(span) {
+  margin-left: auto;
+}
+
+.profileOption[aria-pressed='true'],
+.profileOption:hover,
+.profileSettings:hover {
+  background: var(--color-brand-bg);
+  color: var(--color-brand-text);
+}
+
+.profileOption:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.profileSettings {
+  margin-top: space(1);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.profileCard:focus-visible,
+.profileOption:focus-visible,
+.profileSettings:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
 }
 
 .navLabel {
@@ -148,7 +213,7 @@
   }
 
   .brand > div,
-  .profileCard,
+  .profileSwitcher,
   .navLabel,
   .navItem span,
   .sidebarBottom,

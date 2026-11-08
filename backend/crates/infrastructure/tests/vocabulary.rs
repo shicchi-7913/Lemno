@@ -61,6 +61,51 @@ fn persists_across_reopens_and_keeps_same_spelling_with_different_meanings() {
 }
 
 #[test]
+fn upgrading_adds_japanese_without_changing_english_learning_data() {
+    let db = Database::new();
+    let connection = Connection::open(&db.0).unwrap();
+    connection
+        .execute_batch(include_str!("../migrations/0001_initial.sql"))
+        .unwrap();
+    connection
+        .execute_batch(include_str!("../migrations/0002_conversations.sql"))
+        .unwrap();
+    connection.pragma_update(None, "user_version", 2).unwrap();
+    connection.execute("INSERT INTO learning_items (id, profile_id, kind, text, explanation) VALUES ('existing', 'default-en', 'word', 'hello', 'こんにちは')", []).unwrap();
+    drop(connection);
+
+    let service = db.service();
+    assert_eq!(
+        service.list(DEFAULT_PROFILE_ID, StudyKind::Word).unwrap()[0].id,
+        "existing"
+    );
+    assert!(
+        service
+            .list("default-ja", StudyKind::Word)
+            .unwrap()
+            .is_empty()
+    );
+    let japanese = service
+        .create("default-ja", input("こんにちは", "hello"))
+        .unwrap();
+    assert!(matches!(
+        service.delete(DEFAULT_PROFILE_ID, &japanese.id, StudyKind::Word),
+        Err(Error::NotFound)
+    ));
+    drop(service);
+
+    let reopened = db.service();
+    assert_eq!(
+        reopened.list("default-ja", StudyKind::Word).unwrap()[0].id,
+        japanese.id
+    );
+    assert_eq!(
+        reopened.list(DEFAULT_PROFILE_ID, StudyKind::Word).unwrap()[0].id,
+        "existing"
+    );
+}
+
+#[test]
 fn validation_rejects_blank_and_oversized_input_without_writing() {
     let db = Database::new();
     let service = db.service();

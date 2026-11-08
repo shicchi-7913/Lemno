@@ -30,54 +30,75 @@ impl From<Error> for CommandError {
 #[tauri::command]
 fn list_vocabulary(
     service: State<'_, Service>,
+    profile_id: Option<String>,
     kind: Option<StudyKind>,
 ) -> Result<Vec<Vocabulary>, CommandError> {
     service
-        .list(DEFAULT_PROFILE_ID, kind.unwrap_or_default())
+        .list(
+            profile_id.as_deref().unwrap_or(DEFAULT_PROFILE_ID),
+            kind.unwrap_or_default(),
+        )
         .map_err(Into::into)
 }
 
 #[tauri::command]
 fn create_vocabulary(
     service: State<'_, Service>,
+    profile_id: Option<String>,
     input: VocabularyInput,
 ) -> Result<Vocabulary, CommandError> {
     service
-        .create(DEFAULT_PROFILE_ID, input)
+        .create(profile_id.as_deref().unwrap_or(DEFAULT_PROFILE_ID), input)
         .map_err(Into::into)
 }
 
 #[tauri::command]
 fn update_vocabulary(
     service: State<'_, Service>,
+    profile_id: Option<String>,
     id: String,
     input: VocabularyInput,
 ) -> Result<Vocabulary, CommandError> {
     service
-        .update(DEFAULT_PROFILE_ID, &id, input)
+        .update(
+            profile_id.as_deref().unwrap_or(DEFAULT_PROFILE_ID),
+            &id,
+            input,
+        )
         .map_err(Into::into)
 }
 
 #[tauri::command]
 fn delete_vocabulary(
     service: State<'_, Service>,
+    profile_id: Option<String>,
     id: String,
     kind: Option<StudyKind>,
 ) -> Result<(), CommandError> {
     service
-        .delete(DEFAULT_PROFILE_ID, &id, kind.unwrap_or_default())
+        .delete(
+            profile_id.as_deref().unwrap_or(DEFAULT_PROFILE_ID),
+            &id,
+            kind.unwrap_or_default(),
+        )
         .map_err(Into::into)
 }
 
 #[tauri::command]
 fn review_vocabulary(
     service: State<'_, Service>,
+    profile_id: Option<String>,
     id: String,
     kind: StudyKind,
     remembered: bool,
 ) -> Result<Vocabulary, CommandError> {
     service
-        .review(DEFAULT_PROFILE_ID, &id, kind, remembered)
+        .review(
+            profile_id.as_deref().unwrap_or(DEFAULT_PROFILE_ID),
+            &id,
+            kind,
+            remembered,
+        )
         .map_err(Into::into)
 }
 

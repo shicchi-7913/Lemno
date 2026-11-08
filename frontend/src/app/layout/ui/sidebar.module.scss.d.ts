@@ -12,6 +12,10 @@ export type Styles = {
   profileCard: string;
   profileChevron: string;
   profileFlag: string;
+  profileMenu: string;
+  profileOption: string;
+  profileSettings: string;
+  profileSwitcher: string;
   sidebarBottom: string;
 };
 
