@@ -7,7 +7,6 @@ export type Styles = {
   pageHeading: string;
   previewNotice: string;
   reviewBanner: string;
-  reviewButton: string;
   searchField: string;
   statistics: string;
 };
