@@ -1,9 +1,10 @@
 import { useLocation } from 'react-router';
 
-import { useI18n } from '../../../shared/i18n';
-import { Avatar } from '../../../shared/ui/Avatar';
-import { Icon } from '../../../shared/ui/Icon';
-import { useToast } from '../../../shared/ui/Toast';
+import { useI18n } from '@/shared/i18n';
+import { Avatar } from '@/shared/ui/Avatar';
+import { Icon } from '@/shared/ui/Icon';
+import { useToast } from '@/shared/ui/Toast';
+
 import { getCurrentNavigation } from '../model';
 
 import { LocaleControl } from './locale-control';

@@ -1,7 +1,8 @@
 import { Fragment } from 'react';
 
-import { useI18n } from '../../../shared/i18n';
-import { Icon } from '../../../shared/ui/Icon';
+import { useI18n } from '@/shared/i18n';
+import { Icon } from '@/shared/ui/Icon';
+
 import { navigationGroups } from '../model';
 
 import { NavigationItem } from './navigation-item';

@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router';
 
-import { useI18n } from '../../../shared/i18n';
-import { ToastProvider } from '../../../shared/ui/Toast';
+import { useI18n } from '@/shared/i18n';
+import { ToastProvider } from '@/shared/ui/Toast';
 
 import { Sidebar } from './sidebar';
 import { Topbar } from './topbar';

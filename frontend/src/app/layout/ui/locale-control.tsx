@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
-import { changeLocale, useI18n } from '../../../shared/i18n';
-import { FormLabel } from '../../../shared/ui/FormLabel';
-import { Icon } from '../../../shared/ui/Icon';
-import { Select } from '../../../shared/ui/Select';
+import { changeLocale, useI18n } from '@/shared/i18n';
+import { FormLabel } from '@/shared/ui/FormLabel';
+import { Icon } from '@/shared/ui/Icon';
+import { Select } from '@/shared/ui/Select';
 
 import styles from './locale-control.module.scss';
 

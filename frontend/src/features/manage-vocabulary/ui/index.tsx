@@ -1,14 +1,15 @@
 import { type FormEvent, useId, useRef, useState } from 'react';
 
-import { errorCode, type VocabularyInput } from '../../../shared/api';
-import { useI18n } from '../../../shared/i18n';
-import { Button } from '../../../shared/ui/Button';
-import { FormLabel } from '../../../shared/ui/FormLabel';
-import { Heading } from '../../../shared/ui/Heading';
-import { Icon } from '../../../shared/ui/Icon';
-import { Input } from '../../../shared/ui/Input';
-import { Modal } from '../../../shared/ui/Modal';
-import { Textarea } from '../../../shared/ui/Textarea';
+import { errorCode, type VocabularyInput } from '@/shared/api';
+import { useI18n } from '@/shared/i18n';
+import { Button } from '@/shared/ui/Button';
+import { FormLabel } from '@/shared/ui/FormLabel';
+import { Heading } from '@/shared/ui/Heading';
+import { Icon } from '@/shared/ui/Icon';
+import { Input } from '@/shared/ui/Input';
+import { Modal } from '@/shared/ui/Modal';
+import { Textarea } from '@/shared/ui/Textarea';
+
 import { useVocabularyMutation, type VocabularyChange, type VocabularyDialogState } from '../model';
 
 import styles from './dialog.module.scss';

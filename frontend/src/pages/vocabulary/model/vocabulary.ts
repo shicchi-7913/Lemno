@@ -1,4 +1,4 @@
-import type { Vocabulary } from '../../../shared/api';
+import type { Vocabulary } from '@/shared/api';
 
 export const statuses = ['all', 'learning', 'consolidating', 'mastered'] as const;
 export type Status = (typeof statuses)[number];

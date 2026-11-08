@@ -15,6 +15,9 @@ export default defineConfig([
     files: ['**/*.{js,mjs,cjs,ts,tsx}'],
     // eslint-plugin-import 2.32 still uses token APIs removed in ESLint 10.
     plugins: { import: fixupPluginRules(importPlugin) },
+    settings: {
+      'import/internal-regex': '^@/shared/',
+    },
     rules: {
       'import/order': [
         'error',

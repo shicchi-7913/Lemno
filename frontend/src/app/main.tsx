@@ -5,8 +5,9 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { MemoryRouter, Route, Routes } from 'react-router';
 
+import { initI18n } from '@/shared/i18n';
+
 import { VocabularyPage } from '../pages/vocabulary';
-import { initI18n } from '../shared/i18n';
 
 import { WorkspaceLayout } from './layout';
 import { queryClient } from './query-client';

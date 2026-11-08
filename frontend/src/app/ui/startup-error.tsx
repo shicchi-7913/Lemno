@@ -1,4 +1,4 @@
-import { startupErrorMessage } from '../../shared/i18n';
+import { startupErrorMessage } from '@/shared/i18n';
 
 import styles from './startup-error.module.scss';
 

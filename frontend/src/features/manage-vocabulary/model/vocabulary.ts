@@ -5,7 +5,7 @@ import {
   type Vocabulary,
   vocabularyApi,
   type VocabularyInput,
-} from '../../../shared/api';
+} from '@/shared/api';
 
 const vocabularyListOptions = queryOptions({
   queryKey: ['vocabulary'],

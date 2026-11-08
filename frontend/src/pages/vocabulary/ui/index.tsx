@@ -1,19 +1,20 @@
 import { useRef, useState } from 'react';
 
+import { desktopAvailable } from '@/shared/api';
+import { useI18n } from '@/shared/i18n';
+import { Button } from '@/shared/ui/Button';
+import { Heading } from '@/shared/ui/Heading';
+import { Icon } from '@/shared/ui/Icon';
+import { Input } from '@/shared/ui/Input';
+import { useToast } from '@/shared/ui/Toast';
+import { ToggleButton } from '@/shared/ui/ToggleButton';
+
 import {
   useVocabulary,
   type VocabularyChange,
   VocabularyDialog,
   type VocabularyDialogState,
 } from '../../../features/manage-vocabulary';
-import { desktopAvailable } from '../../../shared/api';
-import { useI18n } from '../../../shared/i18n';
-import { Button } from '../../../shared/ui/Button';
-import { Heading } from '../../../shared/ui/Heading';
-import { Icon } from '../../../shared/ui/Icon';
-import { Input } from '../../../shared/ui/Input';
-import { useToast } from '../../../shared/ui/Toast';
-import { ToggleButton } from '../../../shared/ui/ToggleButton';
 import { filterVocabulary, memoryStatus, type Status, statuses } from '../model';
 
 import { VocabularyList } from './vocabulary-list';
