@@ -1,9 +1,11 @@
-import { type FormEvent, useId, useRef, useState } from 'react';
+import { type SubmitEvent, useId, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { conversationApi, type Topic, type TopicInput } from '@/shared/api';
 import { useI18n } from '@/shared/i18n';
+import { useFormValidation } from '@/shared/model/use-form-validation';
 import { Button } from '@/shared/ui/Button';
+import { FieldError } from '@/shared/ui/FieldError';
 import { FormLabel } from '@/shared/ui/FormLabel';
 import { Heading } from '@/shared/ui/Heading';
 import { Icon } from '@/shared/ui/Icon';
@@ -14,8 +16,12 @@ import { Select } from '@/shared/ui/Select';
 import { Textarea } from '@/shared/ui/Textarea';
 import { useToast } from '@/shared/ui/Toast';
 
-import { useConversationMutation } from '../../../features/conversation-workspace';
-import { categories, categoryKeys, difficulties, difficultyKeys } from '../model';
+import {
+  categoryKeys,
+  difficultyKeys,
+  useConversationMutation,
+} from '../../../features/conversation-workspace';
+import { categories, difficulties } from '../model';
 
 import styles from './topics.module.scss';
 
@@ -43,6 +49,7 @@ export const TopicDialog = ({ mode, topic, onDismiss, onComplete }: Props) => {
   const cancelRef = useRef<HTMLButtonElement>(null);
   const promptRef = useRef<HTMLTextAreaElement>(null);
   const submitting = useRef(false);
+  const validation = useFormValidation();
   const [input, setInput] = useState<TopicInput>(() =>
     topic
       ? {
@@ -73,18 +80,10 @@ export const TopicDialog = ({ mode, topic, onDismiss, onComplete }: Props) => {
   // The prompt is learning content; keep it in the target language regardless of display locale.
   const prompt = `Let's practice English conversation.\nTopic: ${input.title}\nSituation: ${input.scenario}\nMy role: ${input.learnerRole}\nYour role: ${input.aiRole}\nGoal: ${input.objective}\nLevel: ${input.difficulty}\nPlease ask one question at a time. After our conversation, summarize expressions I used and new expressions to learn.`;
 
-  async function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     if (submitting.current) return;
-    if (!deleting) {
-      for (const field of textFields) {
-        const control = event.currentTarget.elements.namedItem(field.name);
-        if (control instanceof HTMLInputElement || control instanceof HTMLTextAreaElement) {
-          control.setCustomValidity(input[field.name].trim() ? '' : t('requiredError'));
-        }
-      }
-      if (!event.currentTarget.reportValidity()) return;
-    }
+    if (!deleting && !validation.validate(event.currentTarget)) return;
     submitting.current = true;
     try {
       await mutation.mutateAsync(input);
@@ -176,27 +175,35 @@ export const TopicDialog = ({ mode, topic, onDismiss, onComplete }: Props) => {
           </Button>
         </div>
       ) : (
-        <form onSubmit={submit} aria-busy={mutation.isPending}>
+        <form
+          noValidate
+          onInput={validation.onInput}
+          onSubmit={submit}
+          aria-busy={mutation.isPending}
+        >
           <fieldset className={styles.controls} disabled={mutation.isPending}>
             {!deleting && (
               <div className={styles.dialogBody}>
-                {textFields.map((field) => (
-                  <div className={styles.field} key={field.name}>
-                    <FormLabel htmlFor={`${id}-${field.name}`}>{t(field.label)}</FormLabel>
-                    <Input
-                      id={`${id}-${field.name}`}
-                      name={field.name}
-                      ref={field.name === 'title' ? firstRef : undefined}
-                      maxLength={field.limit}
-                      required
-                      value={input[field.name]}
-                      onChange={(event) => {
-                        event.currentTarget.setCustomValidity('');
-                        setInput({ ...input, [field.name]: event.target.value });
-                      }}
-                    />
-                  </div>
-                ))}
+                {textFields.map((field) => {
+                  const validationField = validation.field(field.name);
+                  return (
+                    <div className={styles.field} key={field.name}>
+                      <FormLabel htmlFor={`${id}-${field.name}`}>{t(field.label)}</FormLabel>
+                      <Input
+                        {...validationField.input}
+                        id={`${id}-${field.name}`}
+                        ref={field.name === 'title' ? firstRef : undefined}
+                        maxLength={field.limit}
+                        required
+                        value={input[field.name]}
+                        onChange={(event) =>
+                          setInput({ ...input, [field.name]: event.target.value })
+                        }
+                      />
+                      <FieldError {...validationField.error} />
+                    </div>
+                  );
+                })}
                 <div className={styles.formRow}>
                   <div className={styles.field}>
                     <FormLabel htmlFor={`${id}-category`}>{t('topicCategory')}</FormLabel>
@@ -204,19 +211,17 @@ export const TopicDialog = ({ mode, topic, onDismiss, onComplete }: Props) => {
                       id={`${id}-category`}
                       size="sm"
                       value={input.category}
-                      onChange={(event) =>
+                      options={categories.map((value) => ({
+                        label: t(categoryKeys[value]),
+                        value,
+                      }))}
+                      onChange={(value) =>
                         setInput({
                           ...input,
-                          category: event.target.value as TopicInput['category'],
+                          category: value as TopicInput['category'],
                         })
                       }
-                    >
-                      {categories.map((value) => (
-                        <option key={value} value={value}>
-                          {t(categoryKeys[value])}
-                        </option>
-                      ))}
-                    </Select>
+                    />
                   </div>
                   <div className={styles.field}>
                     <FormLabel htmlFor={`${id}-difficulty`}>{t('topicDifficulty')}</FormLabel>
@@ -224,19 +229,17 @@ export const TopicDialog = ({ mode, topic, onDismiss, onComplete }: Props) => {
                       id={`${id}-difficulty`}
                       size="sm"
                       value={input.difficulty}
-                      onChange={(event) =>
+                      options={difficulties.map((value) => ({
+                        label: t(difficultyKeys[value]),
+                        value,
+                      }))}
+                      onChange={(value) =>
                         setInput({
                           ...input,
-                          difficulty: event.target.value as TopicInput['difficulty'],
+                          difficulty: value as TopicInput['difficulty'],
                         })
                       }
-                    >
-                      {difficulties.map((value) => (
-                        <option key={value} value={value}>
-                          {t(difficultyKeys[value])}
-                        </option>
-                      ))}
-                    </Select>
+                    />
                   </div>
                 </div>
               </div>

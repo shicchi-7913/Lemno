@@ -6,7 +6,6 @@ export type Styles = {
   detailGrid: string;
   empty: string;
   expressionsPanel: string;
-  eyebrow: string;
   fullWidth: string;
   learnedExpression: string;
   muted: string;

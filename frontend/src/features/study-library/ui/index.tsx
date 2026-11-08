@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 
 import { desktopAvailable, type StudyKind } from '@/shared/api';
 import { type t, useI18n } from '@/shared/i18n';
+import { ActionBanner } from '@/shared/ui/ActionBanner';
 import { Button } from '@/shared/ui/Button';
 import { Heading } from '@/shared/ui/Heading';
 import { Icon } from '@/shared/ui/Icon';
@@ -24,7 +25,6 @@ import styles from './study-library.module.scss';
 
 interface StudyLibraryProps {
   kind: StudyKind;
-  eyebrow: string;
   headingKey: Parameters<typeof t>[0];
   subtitle: Parameters<typeof t>[0];
   addLabel: Parameters<typeof t>[0];
@@ -38,7 +38,6 @@ interface StudyLibraryProps {
 
 export const StudyLibrary = ({
   kind,
-  eyebrow,
   headingKey,
   subtitle,
   addLabel,
@@ -108,7 +107,6 @@ export const StudyLibrary = ({
     <>
       <section className={styles.pageHeading}>
         <div>
-          <div className={styles.eyebrow}>{eyebrow}</div>
           <Heading as="h1">{t(headingKey)}</Heading>
           <p>{t(subtitle)}</p>
         </div>
@@ -127,27 +125,27 @@ export const StudyLibrary = ({
         </Button>
       </section>
       {!desktopAvailable && <p className={styles.previewNotice}>{t(desktopNotice)}</p>}
-      <section className={styles.reviewBanner} aria-label={t(reviewTitle)}>
-        <div>
-          <Heading as="h2" size="sm">
-            {t(reviewTitle)}
-          </Heading>
-          <p>{t(reviewBody)}</p>
-        </div>
-        <Button
-          variant="solid"
-          tone="brand"
-          className={styles.reviewButton}
-          size="xs"
-          type="button"
-          disabled={!desktopAvailable || loading || failed || items.length === 0}
-          onClick={onReview}
-          leftIcon={<Icon name="repeat" size={16} />}
-          rightIcon={<Icon name="arrow" size={16} />}
+      <div className={styles.reviewBanner}>
+        <ActionBanner
+          title={t(reviewTitle)}
+          action={
+            <Button
+              variant="solid"
+              tone="brand"
+              size="xs"
+              type="button"
+              disabled={!desktopAvailable || loading || failed || items.length === 0}
+              onClick={onReview}
+              leftIcon={<Icon name="repeat" size={16} />}
+              rightIcon={<Icon name="arrow" size={16} />}
+            >
+              <span>{t(reviewLabel)}</span>
+            </Button>
+          }
         >
-          <span>{t(reviewLabel)}</span>
-        </Button>
-      </section>
+          {t(reviewBody)}
+        </ActionBanner>
+      </div>
       <section className={styles.statistics} aria-label={t(headingKey)}>
         {/* eslint-disable-next-line i18next/no-literal-string */}
         {(['saved', 'reviewing', 'mastered', 'used'] as const).map((key) => (

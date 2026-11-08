@@ -95,8 +95,6 @@ export const StudyReview = ({
         {t(backLabel)}
       </Button>
       <section className={styles.pageHeading}>
-        {/* eslint-disable-next-line i18next/no-literal-string */}
-        <p className={styles.eyebrow}>— &nbsp; SPACED REPETITION</p>
         <Heading as="h1">{t(headingKey)}</Heading>
         <p>{t(introduction)}</p>
       </section>
@@ -160,7 +158,6 @@ export const StudyReview = ({
                 disabled={mutation.isPending}
                 onClick={() => setRevealed((previous) => !previous)}
               >
-                <span className={styles.cardEyebrow}>{t('rememberPrompt')}</span>
                 <strong className={styles.cardText}>
                   {revealed ? card.explanation : card.text}
                 </strong>

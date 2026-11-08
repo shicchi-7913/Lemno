@@ -1,0 +1,78 @@
+@use '../../styles/space' as *;
+
+.stepper {
+  display: flex;
+  padding: 0;
+  list-style: none;
+}
+
+:where(.stepper) {
+  margin: 0;
+}
+
+.step {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: space(3);
+  color: var(--color-text-subtle);
+  font-size: var(--font-size-xs);
+  white-space: nowrap;
+}
+
+.step::after {
+  content: '';
+  height: 1px;
+  background: var(--color-border);
+  flex: 1;
+  margin: 0 space(3);
+}
+
+.step:last-child {
+  flex: 0;
+}
+
+.step:last-child::after {
+  display: none;
+}
+
+.indicator {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: var(--radius-circle);
+  width: 32px;
+  height: 32px;
+  background: var(--color-border);
+  font-weight: var(--font-weight-semibold);
+}
+
+.active {
+  color: var(--color-text-secondary);
+}
+
+.active > .indicator {
+  background: var(--color-brand-fill);
+  color: var(--color-text-on-fill);
+}
+
+@media (max-width: 780px) {
+  .step {
+    gap: space(2);
+  }
+
+  .step::after {
+    margin: 0 space(2);
+  }
+}
+
+@media (max-width: 620px) {
+  .indicator {
+    width: 26px;
+    height: 26px;
+  }
+
+  .step {
+    font-size: var(--font-size-2xs);
+  }
+}

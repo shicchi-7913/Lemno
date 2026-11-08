@@ -1,0 +1,22 @@
+@use '../../styles/space' as *;
+
+.alert {
+  display: flex;
+  align-items: center;
+  gap: space(3);
+  color: var(--tone-text);
+  background: var(--tone-bg);
+  padding: space(4);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-xs);
+  line-height: 1.8;
+}
+
+.alert svg {
+  flex-shrink: 0;
+}
+
+.content {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}

@@ -12,13 +12,6 @@
   line-height: 1.8;
   margin: space(2.5) 0 0;
 }
-.eyebrow {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-2xs);
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: 1.4px;
-  margin-bottom: space(3);
-}
 .searchToolbar {
   display: flex;
   align-items: center;
@@ -85,7 +78,7 @@
   gap: space(2);
 }
 .field input,
-.field select,
+.field [role='combobox'],
 .field textarea {
   width: 100%;
   background: var(--color-surface);

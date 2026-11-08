@@ -10,8 +10,6 @@ export const GoalPanel = ({ reviewed }: { reviewed: number }) => {
   return (
     <aside className={styles.goalSidebar}>
       <section className={styles.goalPanel} aria-label={t('todayGoal')}>
-        {/* eslint-disable-next-line i18next/no-literal-string */}
-        <p className={styles.eyebrow}>TODAY’S GOAL</p>
         <Heading as="h2" size="md">
           {t('goalMessageTop')}
           <br />

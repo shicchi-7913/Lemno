@@ -4,7 +4,11 @@ import { Button } from '@/shared/ui/Button';
 import { Heading } from '@/shared/ui/Heading';
 import { Icon } from '@/shared/ui/Icon';
 
-import { categoryEmoji, categoryKeys, difficultyKeys } from '../model';
+import {
+  categoryEmoji,
+  categoryKeys,
+  difficultyKeys,
+} from '../../../features/conversation-workspace';
 
 import styles from './card.module.scss';
 

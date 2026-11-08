@@ -16,6 +16,14 @@
   font-weight: var(--font-weight-regular);
 }
 
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin: 0;
+  text-align: right;
+}
+
 .value {
   display: flex;
   justify-content: flex-end;
@@ -35,6 +43,17 @@
 
 .unit {
   color: var(--color-text-subtle);
+  font-size: var(--font-size-xs);
+}
+
+.icon {
+  display: block;
+  margin-bottom: space(3);
+}
+
+.description {
+  margin: space(2) 0 0;
+  color: var(--color-text-muted);
   font-size: var(--font-size-xs);
 }
 

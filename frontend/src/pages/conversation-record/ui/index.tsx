@@ -47,8 +47,6 @@ export const ConversationRecordPage = () => {
         <>
           <section className={styles.pageHeading}>
             <div>
-              {/* eslint-disable-next-line i18next/no-literal-string */}
-              <div className={styles.eyebrow}>SESSION RECORD</div>
               <Heading as="h1">{item.title || t('conversationUntitled')}</Heading>
               <p>
                 {conversationDate(item.occurredAt, locale)} · {item.ai} ·{' '}
@@ -58,8 +56,6 @@ export const ConversationRecordPage = () => {
           </section>
           <div className={styles.detailGrid}>
             <section className={`${styles.panel} ${styles.notesPanel}`}>
-              {/* eslint-disable-next-line i18next/no-literal-string */}
-              <div className={styles.eyebrow}>CONVERSATION NOTES</div>
               <Heading as="h2" size="md" className={styles.sectionHeading}>
                 {t('conversationReflection')}
               </Heading>
@@ -77,7 +73,7 @@ export const ConversationRecordPage = () => {
                 item.usedItems.map((expression) => (
                   <Link
                     key={expression.id}
-                    to={expression.kind === 'word' ? '/' : '/phrases'}
+                    to={expression.kind === 'word' ? '/vocabulary' : '/phrases'}
                     className={styles.usedExpression}
                   >
                     <Icon name="check" size={16} />
@@ -94,7 +90,7 @@ export const ConversationRecordPage = () => {
                 item.learnedItems.map((expression) => (
                   <Link
                     key={expression.id}
-                    to={expression.kind === 'word' ? '/' : '/phrases'}
+                    to={expression.kind === 'word' ? '/vocabulary' : '/phrases'}
                     className={styles.learnedExpression}
                   >
                     <Icon name="book" size={16} />
@@ -107,7 +103,7 @@ export const ConversationRecordPage = () => {
               <Button
                 className={styles.fullWidth}
                 variant="outline"
-                onClick={() => navigate('/')}
+                onClick={() => navigate('/vocabulary')}
                 rightIcon={<Icon name="arrow" size={16} />}
               >
                 {t('conversationReviewVocabulary')}

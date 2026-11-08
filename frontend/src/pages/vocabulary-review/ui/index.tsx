@@ -10,7 +10,7 @@ export const VocabularyReviewPage = () => {
       headingKey="wordReviewHeading"
       introduction="reviewIntroWords"
       backLabel="backToVocabulary"
-      onBack={() => navigate('/')}
+      onBack={() => navigate('/vocabulary')}
     />
   );
 };

@@ -20,14 +20,6 @@
   border-bottom: 1px solid var(--color-border-subtle);
 }
 
-.eyebrow {
-  font-size: var(--font-size-2xs);
-  font-weight: var(--font-weight-medium);
-  letter-spacing: 1.7px;
-  color: var(--color-text-muted);
-  margin: space(0.5) 0 space(2.5);
-}
-
 .dialogTitle {
   margin: 0;
 }
@@ -52,7 +44,7 @@
 
   input,
   textarea,
-  select {
+  [role='combobox'] {
     background: var(--color-surface);
     min-height: 42px;
   }
@@ -66,12 +58,6 @@
 
 .languageNote {
   margin: space(-0.5) 0 0;
-  padding: space(3);
-  background: var(--color-surface-muted);
-  border-radius: var(--radius-md);
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
-  line-height: 1.5;
 }
 
 .dialogDescription {

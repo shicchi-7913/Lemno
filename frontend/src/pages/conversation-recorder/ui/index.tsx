@@ -1,15 +1,19 @@
-import { type FormEvent, useRef, useState } from 'react';
+import { type SubmitEvent, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 
 import { conversationApi, type ConversationInput, desktopAvailable } from '@/shared/api';
 import { useI18n } from '@/shared/i18n';
+import { useFormValidation } from '@/shared/model/use-form-validation';
+import { Alert } from '@/shared/ui/Alert';
 import { Button } from '@/shared/ui/Button';
+import { FieldError } from '@/shared/ui/FieldError';
 import { FormLabel } from '@/shared/ui/FormLabel';
 import { Heading } from '@/shared/ui/Heading';
 import { Icon } from '@/shared/ui/Icon';
 import { IconBadge } from '@/shared/ui/IconBadge';
 import { Input } from '@/shared/ui/Input';
 import { Select } from '@/shared/ui/Select';
+import { Stepper } from '@/shared/ui/Stepper';
 import { Textarea } from '@/shared/ui/Textarea';
 
 import { useConversationMutation, useTopics } from '../../../features/conversation-workspace';
@@ -42,26 +46,24 @@ export const ConversationRecorderPage = () => {
     learnedItems: [],
   }));
   const mutation = useConversationMutation(conversationApi.record);
+  const validation = useFormValidation();
+  const fields = {
+    durationMinutes: validation.field('durationMinutes'),
+    notes: validation.field('notes'),
+  };
   const submitting = useRef(false);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const topic = topics.data?.find((value) => value.id === input.topicId);
 
   function moveTo(next: number) {
+    validation.clearErrors();
     setStep(next);
     requestAnimationFrame(() => headingRef.current?.focus());
   }
 
-  async function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
-    for (const control of Array.from(
-      event.currentTarget.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
-        'input[required], textarea[required]',
-      ),
-    )) {
-      if (control.type !== 'number')
-        control.setCustomValidity(control.value.trim() ? '' : t('requiredError'));
-    }
-    if (!event.currentTarget.reportValidity()) return;
+    if (!validation.validate(event.currentTarget)) return;
     if (step === 0) {
       moveTo(1);
       return;
@@ -92,8 +94,6 @@ export const ConversationRecorderPage = () => {
       </Button>
       <section className={styles.pageHeading}>
         <div>
-          {/* eslint-disable-next-line i18next/no-literal-string */}
-          <div className={styles.eyebrow}>AFTER YOUR CONVERSATION</div>
           <Heading as="h1" ref={headingRef} tabIndex={-1}>
             {t('conversationRecordTitle')}
           </Heading>
@@ -101,18 +101,12 @@ export const ConversationRecorderPage = () => {
         </div>
       </section>
       <div className={styles.recorder}>
-        <ol className={styles.steps} aria-label={t('conversationRecordTitle')}>
-          {steps.map((label, index) => (
-            <li
-              key={label}
-              className={index <= step ? styles.currentStep : ''}
-              aria-current={index === step ? 'step' : undefined}
-            >
-              <span>{index < step ? <Icon name="check" size={15} /> : index + 1}</span>
-              {t(label)}
-            </li>
-          ))}
-        </ol>
+        <Stepper
+          className={styles.steps}
+          steps={steps.map((label) => t(label))}
+          currentStep={step}
+          aria-label={t('conversationRecordTitle')}
+        />
         {!desktopAvailable && <p className={styles.notice}>{t('conversationDesktopOnly')}</p>}
         {step === 2 ? (
           <section className={`${styles.panel} ${styles.success}`} aria-live="polite">
@@ -129,13 +123,8 @@ export const ConversationRecorderPage = () => {
           </section>
         ) : (
           <form
-            onInput={(event) => {
-              if (
-                event.target instanceof HTMLInputElement ||
-                event.target instanceof HTMLTextAreaElement
-              )
-                event.target.setCustomValidity('');
-            }}
+            noValidate
+            onInput={validation.onInput}
             className={`${styles.panel} ${styles.recordForm}`}
             onSubmit={submit}
             aria-busy={mutation.isPending}
@@ -150,17 +139,15 @@ export const ConversationRecorderPage = () => {
                         id="record-topic"
                         size="sm"
                         value={input.topicId ?? ''}
-                        onChange={(event) =>
-                          setInput({ ...input, topicId: event.target.value || null })
-                        }
-                      >
-                        <option value="">{t('conversationNoTopic')}</option>
-                        {topics.data?.map((value) => (
-                          <option value={value.id} key={value.id}>
-                            {value.title}
-                          </option>
-                        ))}
-                      </Select>
+                        options={[
+                          { label: t('conversationNoTopic'), value: '' },
+                          ...(topics.data ?? []).map((topic) => ({
+                            label: topic.title,
+                            value: topic.id,
+                          })),
+                        ]}
+                        onChange={(value) => setInput({ ...input, topicId: value || null })}
+                      />
                     </div>
                     <div className={styles.field}>
                       <FormLabel htmlFor="record-ai">{t('conversationAI')}</FormLabel>
@@ -168,19 +155,19 @@ export const ConversationRecorderPage = () => {
                         id="record-ai"
                         size="sm"
                         value={input.ai}
-                        onChange={(event) => setInput({ ...input, ai: event.target.value })}
-                      >
-                        {/* eslint-disable-next-line i18next/no-literal-string */}
-                        <option value="ChatGPT">ChatGPT</option>
-                        {/* eslint-disable-next-line i18next/no-literal-string */}
-                        <option value="Claude Desktop">Claude Desktop</option>
-                      </Select>
+                        options={[
+                          { label: 'ChatGPT', value: 'ChatGPT' },
+                          { label: 'Claude Desktop', value: 'Claude Desktop' },
+                        ]}
+                        onChange={(value) => setInput({ ...input, ai: value })}
+                      />
                     </div>
                     <div className={styles.field}>
                       <FormLabel htmlFor="record-duration">
                         {t('conversationDurationLabel')}
                       </FormLabel>
                       <Input
+                        {...fields.durationMinutes.input}
                         id="record-duration"
                         type="number"
                         min={1}
@@ -193,24 +180,23 @@ export const ConversationRecorderPage = () => {
                           setInput({ ...input, durationMinutes: event.target.valueAsNumber })
                         }
                       />
+                      <FieldError {...fields.durationMinutes.error} />
                     </div>
                   </div>
                   <div className={styles.field}>
                     <FormLabel htmlFor="record-notes">{t('conversationNotesLabel')}</FormLabel>
                     <Textarea
+                      {...fields.notes.input}
                       id="record-notes"
-                      name="notes"
                       size="sm"
                       rows={8}
                       maxLength={20000}
                       required
                       placeholder={t('conversationNotesPlaceholder')}
                       value={input.notes}
-                      onChange={(event) => {
-                        event.target.setCustomValidity('');
-                        setInput({ ...input, notes: event.target.value });
-                      }}
+                      onChange={(event) => setInput({ ...input, notes: event.target.value })}
                     />
+                    <FieldError {...fields.notes.error} />
                   </div>
                   {topics.isError && (
                     <p className={styles.error} role="alert">
@@ -220,10 +206,9 @@ export const ConversationRecorderPage = () => {
                       </Button>
                     </p>
                   )}
-                  <p className={styles.info}>
-                    <Icon name="info" size={17} />
-                    <span>{t('conversationManualNote')}</span>
-                  </p>
+                  <div className={styles.manualNote}>
+                    <Alert type="info">{t('conversationManualNote')}</Alert>
+                  </div>
                 </>
               ) : (
                 <>
@@ -299,71 +284,87 @@ export const ConversationRecorderPage = () => {
                     {t('conversationLearnedExpressions')}
                   </Heading>
                   <p className={styles.muted}>{t('conversationLearnedHint')}</p>
-                  {input.learnedItems.map((item, index) => (
-                    <div className={styles.learnedRow} key={index}>
-                      <Input
-                        required
-                        maxLength={200}
-                        placeholder={t('studyText')}
-                        aria-label={t('studyText')}
-                        value={item.text}
-                        onChange={(event) =>
-                          setInput({
-                            ...input,
-                            learnedItems: input.learnedItems.map((value, i) =>
-                              i === index ? { ...value, text: event.target.value } : value,
-                            ),
-                          })
-                        }
-                      />
-                      <Input
-                        required
-                        maxLength={2000}
-                        placeholder={t('studyMeaning')}
-                        aria-label={t('studyMeaning')}
-                        value={item.explanation}
-                        onChange={(event) =>
-                          setInput({
-                            ...input,
-                            learnedItems: input.learnedItems.map((value, i) =>
-                              i === index ? { ...value, explanation: event.target.value } : value,
-                            ),
-                          })
-                        }
-                      />
-                      <Select
-                        aria-label={t('studyKind')}
-                        value={item.kind}
-                        onChange={(event) =>
-                          setInput({
-                            ...input,
-                            learnedItems: input.learnedItems.map((value, i) =>
-                              i === index
-                                ? { ...value, kind: event.target.value as 'word' | 'phrase' }
-                                : value,
-                            ),
-                          })
-                        }
-                      >
-                        <option value="word">{t('vocabulary')}</option>
-                        <option value="phrase">{t('phrases')}</option>
-                      </Select>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        iconOnly
-                        aria-label={t('deleteItem', { word: item.text })}
-                        onClick={() =>
-                          setInput({
-                            ...input,
-                            learnedItems: input.learnedItems.filter((_, i) => i !== index),
-                          })
-                        }
-                      >
-                        <Icon name="close" size={16} />
-                      </Button>
-                    </div>
-                  ))}
+                  {input.learnedItems.map((item, index) => {
+                    const text = validation.field(`learnedItems.${index}.text`);
+                    const explanation = validation.field(`learnedItems.${index}.explanation`);
+                    return (
+                      <div className={styles.learnedRow} key={index}>
+                        <div className={styles.field}>
+                          <Input
+                            {...text.input}
+                            required
+                            maxLength={200}
+                            placeholder={t('studyText')}
+                            aria-label={t('studyText')}
+                            value={item.text}
+                            onChange={(event) =>
+                              setInput({
+                                ...input,
+                                learnedItems: input.learnedItems.map((value, i) =>
+                                  i === index ? { ...value, text: event.target.value } : value,
+                                ),
+                              })
+                            }
+                          />
+                          <FieldError {...text.error} />
+                        </div>
+                        <div className={styles.field}>
+                          <Input
+                            {...explanation.input}
+                            required
+                            maxLength={2000}
+                            placeholder={t('studyMeaning')}
+                            aria-label={t('studyMeaning')}
+                            value={item.explanation}
+                            onChange={(event) =>
+                              setInput({
+                                ...input,
+                                learnedItems: input.learnedItems.map((value, i) =>
+                                  i === index
+                                    ? { ...value, explanation: event.target.value }
+                                    : value,
+                                ),
+                              })
+                            }
+                          />
+                          <FieldError {...explanation.error} />
+                        </div>
+                        <Select
+                          aria-label={t('studyKind')}
+                          value={item.kind}
+                          options={[
+                            { label: t('vocabulary'), value: 'word' },
+                            { label: t('phrases'), value: 'phrase' },
+                          ]}
+                          onChange={(selectedKind) =>
+                            setInput({
+                              ...input,
+                              learnedItems: input.learnedItems.map((value, i) =>
+                                i === index
+                                  ? { ...value, kind: selectedKind as 'word' | 'phrase' }
+                                  : value,
+                              ),
+                            })
+                          }
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          iconOnly
+                          aria-label={t('deleteItem', { word: item.text })}
+                          onClick={() => {
+                            validation.clearErrors();
+                            setInput({
+                              ...input,
+                              learnedItems: input.learnedItems.filter((_, i) => i !== index),
+                            });
+                          }}
+                        >
+                          <Icon name="close" size={16} />
+                        </Button>
+                      </div>
+                    );
+                  })}
                   <Button
                     type="button"
                     variant="outline"

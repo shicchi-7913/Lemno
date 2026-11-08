@@ -4,7 +4,6 @@ import { StudyLibrary } from '../../../features/study-library';
 
 const phraseLibrary = {
   kind: 'phrase',
-  eyebrow: '—   YOUR EXPRESSIONS',
   headingKey: 'phraseTitle',
   subtitle: 'phraseSubtitle',
   addLabel: 'phraseAdd',
@@ -20,7 +19,7 @@ export const PhrasePage = () => {
     <StudyLibrary
       {...phraseLibrary}
       onReview={() => navigate('/phrases/review')}
-      onOpenLibrary={(kind) => navigate(kind === 'phrase' ? '/phrases' : '/')}
+      onOpenLibrary={(kind) => navigate(kind === 'phrase' ? '/phrases' : '/vocabulary')}
     />
   );
 };

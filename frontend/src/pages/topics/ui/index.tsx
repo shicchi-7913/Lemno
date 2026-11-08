@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { useSearchParams } from 'react-router';
 
 import { desktopAvailable, type Topic, type TopicCategory } from '@/shared/api';
 import { useI18n } from '@/shared/i18n';
@@ -8,8 +9,12 @@ import { Icon } from '@/shared/ui/Icon';
 import { Input } from '@/shared/ui/Input';
 import { ToggleButton } from '@/shared/ui/ToggleButton';
 
-import { ConversationTabs, useTopics } from '../../../features/conversation-workspace';
-import { categories, categoryKeys } from '../model';
+import {
+  categoryKeys,
+  ConversationTabs,
+  useTopics,
+} from '../../../features/conversation-workspace';
+import { categories } from '../model';
 
 import { Card } from './card';
 import { TopicDialog } from './topic-dialog';
@@ -19,6 +24,7 @@ import styles from './topics.module.scss';
 export const TopicsPage = () => {
   const { t } = useI18n();
   const topics = useTopics();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<TopicCategory | 'all'>('all');
   const [dialog, setDialog] = useState<{
@@ -27,6 +33,18 @@ export const TopicsPage = () => {
   } | null>(null);
   const addRef = useRef<HTMLButtonElement>(null);
   const items = topics.data ?? [];
+  const requestedTopic = items.find((item) => item.id === searchParams.get('start'));
+  const activeDialog =
+    dialog ?? (requestedTopic ? { mode: 'start' as const, topic: requestedTopic } : null);
+
+  function closeDialog() {
+    setDialog(null);
+    if (searchParams.has('start')) {
+      const next = new URLSearchParams(searchParams);
+      next.delete('start');
+      setSearchParams(next, { replace: true });
+    }
+  }
   const visible = items.filter(
     (topic) =>
       (category === 'all' || topic.category === category) &&
@@ -39,8 +57,6 @@ export const TopicsPage = () => {
     <>
       <section className={styles.pageHeading}>
         <div>
-          {/* eslint-disable-next-line i18next/no-literal-string */}
-          <div className={styles.eyebrow}>— &nbsp; CONVERSATION LIBRARY</div>
           <Heading as="h1">{t('topics')}</Heading>
           <p>{t('topicSubtitle')}</p>
         </div>
@@ -117,13 +133,13 @@ export const TopicsPage = () => {
           ))}
         </div>
       )}
-      {dialog && (
+      {activeDialog && (
         <TopicDialog
-          mode={dialog.mode}
-          topic={dialog.topic}
-          onDismiss={() => setDialog(null)}
+          mode={activeDialog.mode}
+          topic={activeDialog.topic}
+          onDismiss={closeDialog}
           onComplete={() => {
-            setDialog(null);
+            closeDialog();
             setQuery('');
             setCategory('all');
             requestAnimationFrame(() => addRef.current?.focus());

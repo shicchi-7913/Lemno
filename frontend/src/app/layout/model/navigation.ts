@@ -19,9 +19,9 @@ export const navigationGroups: NavigationGroup[] = [
   {
     heading: 'WORKSPACE',
     items: [
-      { label: 'home', icon: 'home' },
+      { label: 'home', icon: 'home', to: '/' },
       { label: 'topics', icon: 'chat', to: '/topics' },
-      { label: 'vocabulary', icon: 'book', to: '/' },
+      { label: 'vocabulary', icon: 'book', to: '/vocabulary' },
       { label: 'phrases', icon: 'layers', to: '/phrases' },
     ],
   },

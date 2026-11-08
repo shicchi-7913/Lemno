@@ -10,6 +10,7 @@ import { initI18n } from '@/shared/i18n';
 import { ConversationHistoryPage } from '../pages/conversation-history';
 import { ConversationRecordPage } from '../pages/conversation-record';
 import { ConversationRecorderPage } from '../pages/conversation-recorder';
+import { HomePage } from '../pages/home';
 import { PhraseReviewPage } from '../pages/phrase-review';
 import { PhrasePage } from '../pages/phrases';
 import { TopicsPage } from '../pages/topics';
@@ -31,7 +32,8 @@ async function start(): Promise<void> {
           <MemoryRouter>
             <Routes>
               <Route element={<WorkspaceLayout />}>
-                <Route index element={<VocabularyPage />} />
+                <Route index element={<HomePage />} />
+                <Route path="vocabulary" element={<VocabularyPage />} />
                 <Route path="topics" element={<TopicsPage />} />
                 <Route path="topics/history" element={<ConversationHistoryPage />} />
                 <Route path="conversations/new" element={<ConversationRecorderPage />} />

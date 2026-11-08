@@ -8,7 +8,6 @@ export type Styles = {
   dialogHeading: string;
   empty: string;
   error: string;
-  eyebrow: string;
   field: string;
   filters: string;
   formRow: string;

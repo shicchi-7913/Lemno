@@ -4,13 +4,11 @@ export type Styles = {
   backButton: string;
   backChevron: string;
   cardExample: string;
-  cardEyebrow: string;
   cardHint: string;
   cardText: string;
   cardToolbar: string;
   completeSymbol: string;
   error: string;
-  eyebrow: string;
   flashcard: string;
   goalHint: string;
   goalPanel: string;

@@ -1,0 +1,45 @@
+@use '../../styles/space' as *;
+
+.banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: space(4.5);
+  padding: space(4.75) space(5);
+  border: 1px solid var(--color-brand-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-brand-bg);
+  color: var(--color-brand-text);
+}
+
+.content {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.title {
+  margin: 0 0 space(1.5);
+  color: inherit;
+  font-weight: var(--font-weight-semibold);
+}
+
+.description {
+  font-size: var(--font-size-xs);
+  line-height: 1.7;
+}
+
+.action {
+  flex-shrink: 0;
+}
+
+@media (max-width: 780px) {
+  .banner {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: space(4.5);
+  }
+
+  .action {
+    align-self: flex-end;
+  }
+}

@@ -1,4 +1,4 @@
-// Shared by Input and Textarea. Native validation uses the same error palette.
+// Shared by Input and Textarea. Validation state is set explicitly by the form.
 @mixin status {
   &[data-status='warning'] {
     border-color: var(--color-warning-text);
@@ -7,11 +7,10 @@
   }
 
   &[data-status='error'],
-  &[aria-invalid='true'],
-  &:user-invalid {
-    border-color: var(--color-danger-text);
-    background: var(--color-danger-bg);
-    --control-focus-color: var(--color-danger-text);
+  &[aria-invalid='true'] {
+    border-color: var(--color-danger-border);
+    background: var(--color-surface-input);
+    --control-focus-color: var(--color-danger-border);
   }
 
   &:disabled {

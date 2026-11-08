@@ -15,7 +15,7 @@ export const Topbar = () => {
   const { t } = useI18n();
   const { pathname } = useLocation();
   const notify = useToast();
-  const currentPage = getCurrentNavigation(pathname === '/vocabulary/review' ? '/' : pathname);
+  const currentPage = getCurrentNavigation(pathname);
 
   return (
     <>

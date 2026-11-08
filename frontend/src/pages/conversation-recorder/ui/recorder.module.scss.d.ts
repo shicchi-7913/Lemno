@@ -3,15 +3,13 @@ export type Styles = {
   backButton: string;
   contained: string;
   controls: string;
-  currentStep: string;
   error: string;
   expressionChoices: string;
-  eyebrow: string;
   field: string;
   formActions: string;
   formRow: string;
-  info: string;
   learnedRow: string;
+  manualNote: string;
   muted: string;
   noteContent: string;
   notice: string;

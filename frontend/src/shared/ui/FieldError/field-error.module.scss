@@ -1,0 +1,17 @@
+@use '../../styles/space' as *;
+
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: space(1.5);
+  margin: 0;
+  color: var(--color-danger-text);
+  font-size: var(--font-size-xs);
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.error svg {
+  flex-shrink: 0;
+  margin-top: space(0.75);
+}

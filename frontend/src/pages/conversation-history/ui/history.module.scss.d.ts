@@ -2,7 +2,6 @@
 export type Styles = {
   contained: string;
   empty: string;
-  eyebrow: string;
   historyRow: string;
   notice: string;
   pageHeading: string;

@@ -6,7 +6,6 @@ export type Styles = {
   dialogDescription: string;
   dialogHeading: string;
   dialogTitle: string;
-  eyebrow: string;
   field: string;
   fields: string;
   formError: string;
