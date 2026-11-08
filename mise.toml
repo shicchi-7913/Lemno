@@ -29,9 +29,19 @@ dir = "{{ config_root }}"
 run = "depgraph watch --root ."
 
 [tasks.format]
-description = "Run ESLint on the frontend"
-dir = "{{ config_root }}/frontend"
-run = "pnpm run format"
+description = "Format all frontend and backend code"
+dir = "{{ config_root }}"
+run = [
+  "pnpm --dir frontend run format",
+  "cargo fmt --all --manifest-path backend/Cargo.toml",
+]
+
+[tasks.exec]
+description = "Run a command with the project toolchain"
+dir = "{{ config_root }}"
+quiet = true
+raw = true
+run = "exec"
 
 [tasks.eslint]
 description = "Run ESLint on the frontend"
@@ -39,11 +49,16 @@ dir = "{{ config_root }}/frontend"
 run = "pnpm run lint"
 
 [tasks.check]
-description = "Check TypeScript and Rust"
-dir = "{{ config_root }}/frontend"
+description = "Check formatting, lint, tests, and builds across the project"
+dir = "{{ config_root }}"
 run = [
-  "pnpm exec tsc --noEmit",
-  "cargo check --locked --manifest-path ../backend/Cargo.toml",
+  "pnpm --dir frontend run format:check",
+  "pnpm --dir frontend run lint",
+  "pnpm --dir frontend run test",
+  "pnpm --dir frontend run build",
+  "cargo fmt --all --manifest-path backend/Cargo.toml -- --check",
+  "cargo check --workspace --locked --manifest-path backend/Cargo.toml",
+  "cargo test --workspace --locked --manifest-path backend/Cargo.toml",
 ]
 
 [tasks.build]

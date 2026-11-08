@@ -1,13 +1,15 @@
-use lemno_application::VocabularyService;
+use lemno_application::{ConversationService, VocabularyService};
 use lemno_domain::{DEFAULT_PROFILE_ID, Error, StudyKind, Vocabulary, VocabularyInput};
 use lemno_infrastructure::SqliteVocabularyRepository;
 use serde::Serialize;
 use tauri::{Manager, State};
 
+mod conversation;
+
 type Service = VocabularyService<SqliteVocabularyRepository>;
 
 #[derive(Serialize)]
-struct CommandError {
+pub(crate) struct CommandError {
     code: &'static str,
 }
 
@@ -17,7 +19,7 @@ impl From<Error> for CommandError {
             Error::Validation(_) => "validation",
             Error::NotFound => "notFound",
             Error::Storage(message) => {
-                eprintln!("Vocabulary storage error: {message}");
+                eprintln!("Lemno storage error: {message}");
                 "storage"
             }
         };
@@ -88,6 +90,9 @@ pub fn run() {
             std::fs::create_dir_all(&data_dir)?;
             let repository = SqliteVocabularyRepository::open(data_dir.join("lemno.sqlite3"))?;
             app.manage(VocabularyService(repository));
+            app.manage(ConversationService(SqliteVocabularyRepository::open(
+                data_dir.join("lemno.sqlite3"),
+            )?));
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -95,7 +100,13 @@ pub fn run() {
             create_vocabulary,
             update_vocabulary,
             delete_vocabulary,
-            review_vocabulary
+            review_vocabulary,
+            conversation::list_topics,
+            conversation::save_topic,
+            conversation::delete_topic,
+            conversation::list_conversations,
+            conversation::get_conversation,
+            conversation::record_conversation
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

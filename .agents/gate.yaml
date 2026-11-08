@@ -1,19 +1,75 @@
 policy: false
 
 rules:
-  # CI runs pnpm run lint; check.sh scopes ESLint and runs the same styles:lint.
+  # Same Prettier check as frontend CI, scoped to changed files.
   - match:
-      - "frontend/src/**/*.{ts,tsx,scss}"
-      - "frontend/*.{json,yaml,ts,js,md}"
+      - "frontend/**/*.{ts,tsx,js,mjs,cjs,json,scss,yaml,md}"
     run:
-      - name: apps-lint
-        cmd: bash ".agents/scripts/check.sh" lint
-      - name: format
-        cmd: bash ".agents/scripts/check.sh" format
+      - name: frontend-format
+        cmd: |
+          set -eu
+          eval "set -- $CLAUDE_GATE_FILES"
+          for file do
+            [ -f "$file" ] || continue
+            mise run exec -- pnpm --dir frontend exec prettier --check -- "$CLAUDE_PROJECT_DIR/$file"
+          done
     run_checks:
-      - build
+      - frontend-build
 
-  # depgraph's quality gate compares new findings with the session baseline.
+  # Same ESLint rules as frontend CI, scoped to changed source/config files.
+  - match:
+      - "frontend/**/*.{ts,tsx,js,mjs,cjs}"
+    run:
+      - name: frontend-lint
+        cmd: |
+          set -eu
+          eval "set -- $CLAUDE_GATE_FILES"
+          for file do
+            [ -f "$file" ] || continue
+            mise run exec -- pnpm --dir frontend exec eslint -- "$CLAUDE_PROJECT_DIR/$file"
+          done
+    run_checks:
+      - frontend-build
+
+  # Same Stylelint rules as frontend CI, scoped to changed stylesheets.
+  - match: "frontend/src/**/*.scss"
+    run:
+      - name: frontend-styles-lint
+        cmd: |
+          set -eu
+          eval "set -- $CLAUDE_GATE_FILES"
+          for file do
+            [ -f "$file" ] || continue
+            mise run exec -- pnpm --dir frontend exec stylelint "$CLAUDE_PROJECT_DIR/$file"
+          done
+    run_checks:
+      - frontend-build
+
+  # stdin avoids traversing unchanged Rust modules; diff fails on formatting changes.
+  - match:
+      - "backend/**/*.rs"
+      - "backend/**/Cargo.toml"
+      - "backend/Cargo.lock"
+      - "backend/tauri.conf.json"
+      - "backend/capabilities/*.json"
+    timeout: 60
+    run:
+      - name: rust-format-check
+        cmd: |
+          set -eu
+          eval "set -- $CLAUDE_GATE_FILES"
+          formatted=$(mktemp)
+          trap 'rm -f "$formatted"' EXIT
+          for file do
+            case "$file" in *.rs) ;; *) continue ;; esac
+            [ -f "$file" ] || continue
+            mise run exec -- rustfmt --edition 2024 --emit stdout < "$file" > "$formatted"
+            diff -u "$file" "$formatted"
+          done
+    run_checks:
+      - backend-build
+
+  # Keep the existing architectural regression check.
   - match:
       - "frontend/**/*.{ts,tsx,js,jsx,mjs,cjs,json,yaml,yml}"
       - ".depgraph.yml"
@@ -22,12 +78,20 @@ rules:
     timeout: 60
     run:
       - name: depgraph
-        cmd: mise exec -- depgraph gate --root .
+        cmd: mise run exec -- depgraph gate --root .
 
+# Whole-project builds run once at the end for each affected side.
 consistency_checks:
-  # Same frontend build as CI, including SCSS type generation and TypeScript.
-  - name: build
+  - name: frontend-build
     run:
-      - name: build
-        cmd: bash ".agents/scripts/check.sh" build
+      - name: frontend-build
+        cmd: mise run exec -- pnpm --dir frontend run build
+        files: false
+        timeout: 600
+
+  - name: backend-build
+    run:
+      - name: backend-build
+        cmd: mise run exec -- cargo build --workspace --locked --manifest-path backend/Cargo.toml
+        files: false
         timeout: 600

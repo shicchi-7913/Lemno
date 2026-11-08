@@ -3,6 +3,21 @@ import type { CSSProperties, ReactNode } from 'react';
 import styles from './icon.module.scss';
 
 const shapes = {
+  clock: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3 2" />
+    </>
+  ),
+  headphones: <path d="M4 14v-3a8 8 0 0 1 16 0v3M4 13H3v7h4v-7H4Zm16 0h1v7h-4v-7h3Z" />,
+  info: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 11v6M12 7h.01" />
+    </>
+  ),
+  external: <path d="M7 17 17 7M7 7h10v10" />,
+  back: <path d="M20 12H4m6-6-6 6 6 6" />,
   arrow: <path d="M4 12h16m-6-6 6 6-6 6" />,
   check: <path d="m5 12 4 4L19 6" />,
   undo: <path d="M3 4v6h6M3 10a9 9 0 1 1 1 8" />,

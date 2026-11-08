@@ -20,7 +20,7 @@ export const navigationGroups: NavigationGroup[] = [
     heading: 'WORKSPACE',
     items: [
       { label: 'home', icon: 'home' },
-      { label: 'topics', icon: 'chat' },
+      { label: 'topics', icon: 'chat', to: '/topics' },
       { label: 'vocabulary', icon: 'book', to: '/' },
       { label: 'phrases', icon: 'layers', to: '/phrases' },
     ],
@@ -33,13 +33,17 @@ export const navigationGroups: NavigationGroup[] = [
       { label: 'integration', icon: 'spark' },
       { label: 'data', icon: 'cloud' },
       { label: 'prepare', icon: 'edit' },
-      { label: 'records', icon: 'book' },
+      { label: 'records', icon: 'book', to: '/conversations/new' },
       { label: 'guide', icon: 'spark' },
     ],
   },
 ];
 
 export function getCurrentNavigation(pathname: string) {
+  if (pathname === '/topics/history') return { label: 'conversationHistory' } as const;
+  if (pathname.startsWith('/conversations/') && pathname !== '/conversations/new') {
+    return { label: 'conversationDetail' } as const;
+  }
   return navigationGroups
     .flatMap((group) => group.items)
     .find((item) => item.to && matchPath({ path: item.to, end: item.to === '/' }, pathname));

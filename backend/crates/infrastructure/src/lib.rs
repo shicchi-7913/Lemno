@@ -4,6 +4,8 @@ use lemno_domain::{Error, StudyKind, Vocabulary, VocabularyInput, VocabularyRepo
 use rusqlite::{Connection, OptionalExtension, params};
 use uuid::Uuid;
 
+mod conversation;
+
 pub struct SqliteVocabularyRepository {
     connection: Mutex<Connection>,
 }
@@ -60,6 +62,35 @@ fn get(
         .ok_or(Error::NotFound)
 }
 
+fn create_vocabulary_in(
+    connection: &Connection,
+    profile_id: &str,
+    input: &VocabularyInput,
+) -> Result<Vocabulary, Error> {
+    let id = Uuid::new_v4().to_string();
+    connection
+        .execute(
+            "INSERT INTO learning_items (id, profile_id, kind, text, explanation, example_text)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
+            params![
+                id,
+                profile_id,
+                input.kind.as_str(),
+                input.text,
+                input.explanation,
+                input.example_text
+            ],
+        )
+        .map_err(storage)?;
+    connection
+        .execute(
+            "INSERT INTO review_states (learning_item_id) VALUES (?1)",
+            [&id],
+        )
+        .map_err(storage)?;
+    get(connection, profile_id, &id, input.kind)
+}
+
 impl SqliteVocabularyRepository {
     pub fn open(path: impl AsRef<Path>) -> Result<Self, Error> {
         let mut connection = Connection::open(path).map_err(storage)?;
@@ -83,7 +114,12 @@ impl SqliteVocabularyRepository {
             tx.execute_batch(include_str!("../migrations/0001_initial.sql"))
                 .map_err(storage)?;
             tx.pragma_update(None, "user_version", 1).map_err(storage)?;
-        } else if version != 1 {
+        }
+        if version < 2 {
+            tx.execute_batch(include_str!("../migrations/0002_conversations.sql"))
+                .map_err(storage)?;
+            tx.pragma_update(None, "user_version", 2).map_err(storage)?;
+        } else if version != 2 {
             return Err(Error::Storage("Unsupported database version".into()));
         }
         tx.commit().map_err(storage)?;
@@ -109,26 +145,7 @@ impl VocabularyRepository for SqliteVocabularyRepository {
     fn create(&self, profile_id: &str, input: &VocabularyInput) -> Result<Vocabulary, Error> {
         let mut connection = self.connection.lock().map_err(storage)?;
         let tx = connection.transaction().map_err(storage)?;
-        let id = Uuid::new_v4().to_string();
-        tx.execute(
-            "INSERT INTO learning_items (id, profile_id, kind, text, explanation, example_text)
-             VALUES (?1, ?2, ?6, ?3, ?4, ?5)",
-            params![
-                id,
-                profile_id,
-                input.text,
-                input.explanation,
-                input.example_text,
-                input.kind.as_str()
-            ],
-        )
-        .map_err(storage)?;
-        tx.execute(
-            "INSERT INTO review_states (learning_item_id) VALUES (?1)",
-            [&id],
-        )
-        .map_err(storage)?;
-        let item = get(&tx, profile_id, &id, input.kind)?;
+        let item = create_vocabulary_in(&tx, profile_id, input)?;
         tx.commit().map_err(storage)?;
         Ok(item)
     }
