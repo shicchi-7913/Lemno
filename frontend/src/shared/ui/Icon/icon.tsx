@@ -3,6 +3,19 @@ import type { CSSProperties, ReactNode } from 'react';
 import styles from './icon.module.scss';
 
 const shapes = {
+  flame: <path d="M12 3c2 5 7 6 7 12a7 7 0 0 1-14 0c0-3 2-5 4-7 0 3 1 4 2 4 2-2 2-5 1-9Z" />,
+  circleCheck: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="m8 12 3 3 5-6" />
+    </>
+  ),
+  calendar: (
+    <>
+      <rect x="3" y="5" width="18" height="16" rx="2" />
+      <path d="M7 3v4M17 3v4M3 10h18M7 14h2M12 14h2M7 17h2M12 17h2" />
+    </>
+  ),
   clock: (
     <>
       <circle cx="12" cy="12" r="9" />

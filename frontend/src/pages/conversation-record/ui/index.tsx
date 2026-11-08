@@ -73,7 +73,7 @@ export const ConversationRecordPage = () => {
                 item.usedItems.map((expression) => (
                   <Link
                     key={expression.id}
-                    to={expression.kind === 'word' ? '/' : '/phrases'}
+                    to={expression.kind === 'word' ? '/vocabulary' : '/phrases'}
                     className={styles.usedExpression}
                   >
                     <Icon name="check" size={16} />
@@ -90,7 +90,7 @@ export const ConversationRecordPage = () => {
                 item.learnedItems.map((expression) => (
                   <Link
                     key={expression.id}
-                    to={expression.kind === 'word' ? '/' : '/phrases'}
+                    to={expression.kind === 'word' ? '/vocabulary' : '/phrases'}
                     className={styles.learnedExpression}
                   >
                     <Icon name="book" size={16} />
@@ -103,7 +103,7 @@ export const ConversationRecordPage = () => {
               <Button
                 className={styles.fullWidth}
                 variant="outline"
-                onClick={() => navigate('/')}
+                onClick={() => navigate('/vocabulary')}
                 rightIcon={<Icon name="arrow" size={16} />}
               >
                 {t('conversationReviewVocabulary')}

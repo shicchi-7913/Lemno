@@ -1,6 +1,9 @@
 // Generated from SCSS. Do not edit.
 export type Styles = {
   card: string;
+  content: string;
+  description: string;
+  icon: string;
   label: string;
   unit: string;
   value: string;

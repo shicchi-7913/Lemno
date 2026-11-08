@@ -19,7 +19,7 @@ export const PhrasePage = () => {
     <StudyLibrary
       {...phraseLibrary}
       onReview={() => navigate('/phrases/review')}
-      onOpenLibrary={(kind) => navigate(kind === 'phrase' ? '/phrases' : '/')}
+      onOpenLibrary={(kind) => navigate(kind === 'phrase' ? '/phrases' : '/vocabulary')}
     />
   );
 };

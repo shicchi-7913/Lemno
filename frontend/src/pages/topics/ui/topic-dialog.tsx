@@ -16,8 +16,12 @@ import { Select } from '@/shared/ui/Select';
 import { Textarea } from '@/shared/ui/Textarea';
 import { useToast } from '@/shared/ui/Toast';
 
-import { useConversationMutation } from '../../../features/conversation-workspace';
-import { categories, categoryKeys, difficulties, difficultyKeys } from '../model';
+import {
+  categoryKeys,
+  difficultyKeys,
+  useConversationMutation,
+} from '../../../features/conversation-workspace';
+import { categories, difficulties } from '../model';
 
 import styles from './topics.module.scss';
 
