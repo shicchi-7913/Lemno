@@ -65,17 +65,6 @@
   flex-shrink: 0;
   color: var(--color-text-subtle);
 }
-.sessionIcon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-lg);
-  color: var(--color-brand-text);
-  background: var(--color-brand-bg);
-}
 .sessionText {
   min-width: 0;
   flex: 1;

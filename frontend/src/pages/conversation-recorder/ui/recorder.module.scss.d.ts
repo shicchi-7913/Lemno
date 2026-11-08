@@ -20,7 +20,6 @@ export type Styles = {
   recorder: string;
   recordForm: string;
   sectionHeading: string;
-  sessionIcon: string;
   steps: string;
   success: string;
   summary: string;

@@ -7,6 +7,7 @@ import { Button } from '@/shared/ui/Button';
 import { FormLabel } from '@/shared/ui/FormLabel';
 import { Heading } from '@/shared/ui/Heading';
 import { Icon } from '@/shared/ui/Icon';
+import { IconBadge } from '@/shared/ui/IconBadge';
 import { Input } from '@/shared/ui/Input';
 import { Select } from '@/shared/ui/Select';
 import { Textarea } from '@/shared/ui/Textarea';
@@ -115,9 +116,7 @@ export const ConversationRecorderPage = () => {
         {!desktopAvailable && <p className={styles.notice}>{t('conversationDesktopOnly')}</p>}
         {step === 2 ? (
           <section className={`${styles.panel} ${styles.success}`} aria-live="polite">
-            <span className={styles.sessionIcon}>
-              <Icon name="check" size={28} />
-            </span>
+            <IconBadge name="check" size={48} iconScale={0.58} />
             <Heading as="h2">{t('conversationSaved')}</Heading>
             <p>{t('conversationSavedBody')}</p>
             <Button onClick={() => navigate(`/conversations/${input.id}`)}>

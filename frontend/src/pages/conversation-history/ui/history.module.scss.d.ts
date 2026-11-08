@@ -8,7 +8,6 @@ export type Styles = {
   pageHeading: string;
   panel: string;
   panelHeading: string;
-  sessionIcon: string;
   sessionMeta: string;
   sessionText: string;
   statistics: string;

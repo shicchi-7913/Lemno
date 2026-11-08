@@ -6,6 +6,7 @@ import { useI18n } from '@/shared/i18n';
 import { Button } from '@/shared/ui/Button';
 import { Heading } from '@/shared/ui/Heading';
 import { Icon } from '@/shared/ui/Icon';
+import { IconBadge } from '@/shared/ui/IconBadge';
 import { StatCard } from '@/shared/ui/StatCard';
 
 import { conversationDate, ConversationTabs } from '../../../features/conversation-workspace';
@@ -88,9 +89,7 @@ export const ConversationHistoryPage = () => {
         ) : (
           items.map((item) => (
             <Link className={styles.historyRow} key={item.id} to={`/conversations/${item.id}`}>
-              <span className={styles.sessionIcon}>
-                <Icon name="headphones" size={23} />
-              </span>
+              <IconBadge name="headphones" size={48} />
               <div className={styles.sessionText}>
                 <Heading as="h3" size="md">
                   {item.title || t('conversationUntitled')}
