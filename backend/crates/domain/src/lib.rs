@@ -1,5 +1,8 @@
 use serde::{Deserialize, Serialize};
 
+mod conversation;
+pub use conversation::*;
+
 pub const DEFAULT_PROFILE_ID: &str = "default-en";
 
 #[derive(Debug, Clone, Copy, Default, Deserialize, Serialize)]

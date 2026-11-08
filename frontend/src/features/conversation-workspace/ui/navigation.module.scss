@@ -1,0 +1,31 @@
+@use '../../../shared/styles/space' as *;
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: space(6);
+}
+.tabs a {
+  display: flex;
+  align-items: center;
+  gap: space(2);
+  padding: space(3.5) space(5);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.tabs a.activeTab {
+  color: var(--color-brand-text);
+  border-color: var(--color-brand-fill);
+  font-weight: var(--font-weight-semibold);
+}
+.tabs a:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+@media (max-width: 620px) {
+  .tabs a {
+    padding: space(3) space(4);
+  }
+}

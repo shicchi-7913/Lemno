@@ -6,6 +6,7 @@ import { Button } from '@/shared/ui/Button';
 import { Heading } from '@/shared/ui/Heading';
 import { Icon } from '@/shared/ui/Icon';
 import { Input } from '@/shared/ui/Input';
+import { StatCard } from '@/shared/ui/StatCard';
 import { useToast } from '@/shared/ui/Toast';
 import { ToggleButton } from '@/shared/ui/ToggleButton';
 
@@ -128,7 +129,9 @@ export const StudyLibrary = ({
       {!desktopAvailable && <p className={styles.previewNotice}>{t(desktopNotice)}</p>}
       <section className={styles.reviewBanner} aria-label={t(reviewTitle)}>
         <div>
-          <h2>{t(reviewTitle)}</h2>
+          <Heading as="h2" size="sm">
+            {t(reviewTitle)}
+          </Heading>
           <p>{t(reviewBody)}</p>
         </div>
         <Button
@@ -148,13 +151,12 @@ export const StudyLibrary = ({
       <section className={styles.statistics} aria-label={t(headingKey)}>
         {/* eslint-disable-next-line i18next/no-literal-string */}
         {(['saved', 'reviewing', 'mastered', 'used'] as const).map((key) => (
-          <div className={styles.statCard} key={key}>
-            <h2>{t(key)}</h2>
-            <p>
-              <strong data-stat={key}>{loading || failed ? '—' : stats[key]}</strong>
-              <span>{t('itemUnit')}</span>
-            </p>
-          </div>
+          <StatCard
+            key={key}
+            label={t(key)}
+            value={<span data-stat={key}>{loading || failed ? '—' : stats[key]}</span>}
+            unit={t('itemUnit')}
+          />
         ))}
       </section>
       <section className={styles.libraryPanel} aria-label={t(headingKey)}>

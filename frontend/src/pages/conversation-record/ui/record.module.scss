@@ -1,0 +1,151 @@
+@use '../../../shared/styles/space' as *;
+
+.contained {
+  max-width: 1250px;
+  margin: 0 auto;
+}
+.pageHeading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: space(5);
+  margin-bottom: space(7);
+}
+.pageHeading p {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.8;
+  margin: space(2.5) 0 0;
+}
+.eyebrow {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 1.4px;
+  margin-bottom: space(3);
+}
+.panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.backButton {
+  padding: 0;
+  margin-bottom: space(5);
+  font-size: var(--font-size-xs);
+}
+.sectionHeading {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  margin: 0 0 space(5);
+}
+.noteContent {
+  padding: space(5);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-muted);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: 2;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 0 0 space(6);
+}
+.detailGrid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: space(5);
+}
+.notesPanel,
+.expressionsPanel {
+  padding: space(7);
+}
+.notesPanel {
+  min-height: 316px;
+}
+.badges {
+  display: flex;
+  gap: space(3);
+}
+.badges span {
+  color: var(--color-brand-text);
+  background: var(--color-brand-bg);
+  font-size: var(--font-size-2xs);
+  padding: space(1.5) space(3);
+  border-radius: var(--radius-pill);
+}
+.badges span + span {
+  color: var(--color-info-text);
+  background: var(--color-info-bg);
+}
+.usedExpression,
+.learnedExpression {
+  display: flex;
+  align-items: center;
+  gap: space(2);
+  text-decoration: none;
+  padding: space(3);
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-md);
+  margin-bottom: space(3);
+  overflow-wrap: anywhere;
+}
+.usedExpression {
+  background: var(--color-brand-bg);
+  color: var(--color-brand-text);
+}
+.learnedExpression {
+  background: var(--color-info-bg);
+  color: var(--color-info-text);
+}
+.expressionsPanel .sectionHeading:not(:first-child) {
+  margin-top: space(8);
+}
+.fullWidth {
+  width: 100%;
+  margin-top: space(4);
+}
+.empty {
+  padding: space(10) space(5);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.8;
+}
+.empty h3 {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+}
+.notice,
+.muted {
+  font-size: var(--font-size-xs);
+  line-height: 1.8;
+  color: var(--color-text-muted);
+  margin: 0 0 space(5);
+}
+
+.usedExpression:focus-visible,
+.learnedExpression:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+@media (max-width: 1200px) {
+  .detailGrid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 780px) {
+  .pageHeading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .pageHeading > button {
+    align-self: flex-end;
+  }
+
+  .notesPanel,
+  .expressionsPanel {
+    padding: space(5);
+  }
+}

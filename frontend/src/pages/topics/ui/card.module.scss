@@ -1,0 +1,91 @@
+@use '../../../shared/styles/space' as *;
+.card {
+  display: flex;
+  flex-direction: column;
+  min-height: 272px;
+  padding: space(5);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+}
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: space(3);
+}
+.topicEmoji {
+  display: grid;
+  place-items: center;
+  width: 68px;
+  height: 68px;
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-3xl);
+}
+.daily {
+  background: var(--color-warning-bg);
+}
+.work {
+  background: var(--color-info-bg);
+}
+.travel,
+.hobby {
+  background: var(--color-brand-bg);
+}
+.duration {
+  display: flex;
+  align-items: center;
+  gap: space(1);
+  color: var(--color-text-subtle);
+  font-size: var(--font-size-2xs);
+}
+.topicMeta {
+  display: flex;
+  align-items: center;
+  gap: space(2);
+  margin: space(4) 0 space(2);
+  font-size: var(--font-size-2xs);
+  color: var(--color-text-secondary);
+}
+.card h2 button {
+  display: inline-flex;
+  align-items: center;
+  gap: space(1);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.topicDescription {
+  font-size: var(--font-size-xs);
+  line-height: 1.9;
+  color: var(--color-text-muted);
+  margin: space(3) 0 space(8);
+}
+.cardActions {
+  margin-top: auto;
+  padding-top: space(2);
+  border-top: 1px solid var(--color-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.cardActions > div {
+  display: flex;
+}
+.cardActions > div button {
+  color: var(--color-text-subtle);
+}
+
+.card h2 button:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+@media (max-width: 620px) {
+  .card {
+    min-height: 250px;
+  }
+}

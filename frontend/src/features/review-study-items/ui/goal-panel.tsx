@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
 
 import { useI18n } from '@/shared/i18n';
+import { Heading } from '@/shared/ui/Heading';
 
 import styles from './review.module.scss';
 
@@ -11,11 +12,11 @@ export const GoalPanel = ({ reviewed }: { reviewed: number }) => {
       <section className={styles.goalPanel} aria-label={t('todayGoal')}>
         {/* eslint-disable-next-line i18next/no-literal-string */}
         <p className={styles.eyebrow}>TODAY’S GOAL</p>
-        <h2>
+        <Heading as="h2" size="md">
           {t('goalMessageTop')}
           <br />
           {t('goalMessageBottom')}
-        </h2>
+        </Heading>
         <div
           className={styles.goalRing}
           style={{ '--goal-progress': `${Math.min(reviewed / 5, 1) * 100}%` } as CSSProperties}
@@ -32,7 +33,7 @@ export const GoalPanel = ({ reviewed }: { reviewed: number }) => {
         <p className={styles.goalHint}>{t('goalHint')}</p>
       </section>
       <section className={styles.usageReminder}>
-        <h2>{t('usageReminderTitle')}</h2>
+        <Heading as="h2">{t('usageReminderTitle')}</Heading>
         <p>{t('usageReminderBody')}</p>
       </section>
     </aside>

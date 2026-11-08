@@ -62,6 +62,15 @@ export default defineConfig([
           destructuredArrayIgnorePattern: '^_',
         },
       ],
+      'react/forbid-elements': [
+        'error',
+        {
+          forbid: ['h1', 'h2', 'h3', 'h4', 'h5'].map((element) => ({
+            element,
+            message: 'Use the shared Heading component instead.',
+          })),
+        },
+      ],
       'react/no-multi-comp': 'error',
       'react/function-component-definition': [
         'error',

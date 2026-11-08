@@ -7,8 +7,12 @@ import { MemoryRouter, Route, Routes } from 'react-router';
 
 import { initI18n } from '@/shared/i18n';
 
+import { ConversationHistoryPage } from '../pages/conversation-history';
+import { ConversationRecordPage } from '../pages/conversation-record';
+import { ConversationRecorderPage } from '../pages/conversation-recorder';
 import { PhraseReviewPage } from '../pages/phrase-review';
 import { PhrasePage } from '../pages/phrases';
+import { TopicsPage } from '../pages/topics';
 import { VocabularyPage } from '../pages/vocabulary';
 import { VocabularyReviewPage } from '../pages/vocabulary-review';
 
@@ -28,6 +32,10 @@ async function start(): Promise<void> {
             <Routes>
               <Route element={<WorkspaceLayout />}>
                 <Route index element={<VocabularyPage />} />
+                <Route path="topics" element={<TopicsPage />} />
+                <Route path="topics/history" element={<ConversationHistoryPage />} />
+                <Route path="conversations/new" element={<ConversationRecorderPage />} />
+                <Route path="conversations/:id" element={<ConversationRecordPage />} />
                 <Route path="phrases" element={<PhrasePage />} />
                 <Route path="phrases/review" element={<PhraseReviewPage />} />
                 <Route path="vocabulary/review" element={<VocabularyReviewPage />} />
