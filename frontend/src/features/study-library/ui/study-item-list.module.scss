@@ -17,7 +17,7 @@
   padding: space(4) space(5);
   font-size: var(--font-size-xs);
   color: var(--color-text-subtle);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 
 .tableScroll th:first-child {
@@ -53,7 +53,7 @@
 
 .wordText {
   font-size: var(--font-size-md);
-  font-weight: 450;
+  font-weight: var(--font-weight-medium);
   color: var(--color-text-strong);
   overflow-wrap: anywhere;
 }
@@ -63,16 +63,6 @@
   color: var(--color-text-muted);
   line-height: 1.7;
   margin: space(1) 0 0;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
-
-.wordExample {
-  font-size: var(--font-size-2xs);
-  color: var(--color-text-subtle);
-  font-style: italic;
-  line-height: 1.6;
-  margin: space(0.75) 0 0;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
@@ -129,7 +119,7 @@
 
 .emptyState h2 {
   font-size: var(--font-size-lg);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   margin: 0;
   color: var(--color-text-secondary);
 }

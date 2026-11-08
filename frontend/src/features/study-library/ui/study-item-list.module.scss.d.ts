@@ -7,7 +7,6 @@ export type Styles = {
   rowActions: string;
   tableScroll: string;
   usageCount: string;
-  wordExample: string;
   wordMeaning: string;
   wordText: string;
 };

@@ -86,10 +86,12 @@ export const StudyReview = ({
         size="xs"
         type="button"
         onClick={onBack}
+        leftIcon={
+          <span className={styles.backChevron}>
+            <Icon name="chevron" size={14} />
+          </span>
+        }
       >
-        <span className={styles.backChevron}>
-          <Icon name="chevron" size={14} />
-        </span>
         {t(backLabel)}
       </Button>
       <section className={styles.pageHeading}>
@@ -182,8 +184,8 @@ export const StudyReview = ({
                   onClick={() => {
                     void rate(false);
                   }}
+                  leftIcon={<Icon name="undo" size={16} />}
                 >
-                  <Icon name="undo" size={16} />
                   {t('again')}
                 </Button>
                 <Button
@@ -194,8 +196,8 @@ export const StudyReview = ({
                   onClick={() => {
                     void rate(true);
                   }}
+                  leftIcon={<Icon name="check" size={16} />}
                 >
-                  <Icon name="check" size={16} />
                   {t('remembered')}
                 </Button>
               </div>

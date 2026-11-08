@@ -14,7 +14,7 @@
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
 }
 
 * {

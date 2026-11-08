@@ -2,6 +2,7 @@ import { desktopAvailable, type StudyKind, type Vocabulary } from '@/shared/api'
 import { useI18n } from '@/shared/i18n';
 import { Button } from '@/shared/ui/Button';
 import { Icon } from '@/shared/ui/Icon';
+import { Italic } from '@/shared/ui/Italic';
 import { Label } from '@/shared/ui/Label';
 import { Spinner } from '@/shared/ui/Spinner';
 
@@ -83,8 +84,8 @@ export const StudyItemList = ({
               type="button"
               disabled={!total && !desktopAvailable}
               onClick={total ? onReset : onAdd}
+              leftIcon={!total && <Icon name="plus" />}
             >
-              {!total && <Icon name="plus" />}
               {t(total ? 'reset' : phrase ? 'phraseAdd' : 'add')}
             </Button>
           </div>
@@ -106,11 +107,7 @@ export const StudyItemList = ({
                     <td>
                       <strong className={styles.wordText}>{item.text}</strong>
                       <p className={styles.wordMeaning}>{item.explanation}</p>
-                      {item.exampleText && (
-                        <p className={styles.wordExample} lang="en">
-                          {item.exampleText}
-                        </p>
-                      )}
+                      {item.exampleText && <Italic lang="en">{item.exampleText}</Italic>}
                     </td>
                     <td>
                       <Label tone={memoryLabelTones[memoryStatus(item)]}>
@@ -131,9 +128,8 @@ export const StudyItemList = ({
                           aria-label={t('editItem', { word: item.text })}
                           title={t('edit')}
                           onClick={() => onEdit(item)}
-                        >
-                          <Icon name="edit" size={16} />
-                        </Button>
+                          leftIcon={<Icon name="edit" size={16} />}
+                        />
                         <Button
                           variant="ghost"
                           tone="danger"
@@ -142,9 +138,8 @@ export const StudyItemList = ({
                           aria-label={t('deleteItem', { word: item.text })}
                           title={t('delete')}
                           onClick={() => onDelete(item)}
-                        >
-                          <Icon name="trash" size={16} />
-                        </Button>
+                          leftIcon={<Icon name="trash" size={16} />}
+                        />
                       </div>
                     </td>
                   </tr>
@@ -157,9 +152,15 @@ export const StudyItemList = ({
       <div className={styles.listFooter} role="status" aria-live="polite">
         <span>{!loading && !failed && t('showingItems', { count: items.length })}</span>
         {!loading && !failed && total > 0 && (
-          <Button variant="ghost" tone="brand" type="button" size="xs" onClick={onReview}>
+          <Button
+            variant="ghost"
+            tone="brand"
+            type="button"
+            size="xs"
+            onClick={onReview}
+            rightIcon={<Icon name="arrow" size={16} />}
+          >
             {t(phrase ? 'phraseReview' : 'review')}
-            <Icon name="arrow" size={16} />
           </Button>
         )}
       </div>

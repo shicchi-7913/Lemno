@@ -42,6 +42,7 @@ export default {
         'var(--font-size-#{$size})',
       ],
       font: ['inherit'],
+      'font-weight': ['/^var\\(--font-weight-(?:regular|medium|semibold|bold)\\)$/'],
       // Include physical and logical corner properties as well as the shorthand.
       '/^border(?:-[a-z]+)*-radius$/': ['0', '/^var\\(--radius-(?:sm|md|lg|xl|pill|circle)\\)$/'],
     },
