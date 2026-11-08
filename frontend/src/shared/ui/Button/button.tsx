@@ -1,4 +1,4 @@
-import type { ComponentProps } from 'react';
+import type { ComponentProps, ReactNode } from 'react';
 
 import type { Tone } from '../../model/tone';
 import type { TextSize } from '../../model/typography';
@@ -11,6 +11,8 @@ type ButtonProps = ComponentProps<'button'> & {
   variant?: 'solid' | 'outline' | 'ghost';
   tone?: Tone;
   iconOnly?: boolean;
+  leftIcon?: ReactNode;
+  rightIcon?: ReactNode;
   size?: TextSize;
 };
 
@@ -18,6 +20,9 @@ export const Button = ({
   variant = 'solid',
   tone = 'brand',
   iconOnly = false,
+  leftIcon,
+  rightIcon,
+  children,
   size = 'sm',
   className = '',
   ...props
@@ -25,5 +30,9 @@ export const Button = ({
   <button
     {...props}
     className={`${styles.button} ${styles[variant]} ${tones[tone]} ${sizes[`size-${size}`]} ${iconOnly ? styles.iconOnly : ''} ${className}`}
-  />
+  >
+    {leftIcon}
+    {children}
+    {rightIcon}
+  </button>
 );

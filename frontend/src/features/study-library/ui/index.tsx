@@ -120,8 +120,8 @@ export const StudyLibrary = ({
           disabled={!desktopAvailable || loading || failed}
           title={desktopAvailable ? undefined : t(desktopNotice)}
           onClick={() => setDialog({ mode: 'create', kind })}
+          leftIcon={<Icon name="plus" />}
         >
-          <Icon name="plus" />
           {t(addLabel)}
         </Button>
       </section>
@@ -139,10 +139,10 @@ export const StudyLibrary = ({
           type="button"
           disabled={!desktopAvailable || loading || failed || items.length === 0}
           onClick={onReview}
+          leftIcon={<Icon name="repeat" size={16} />}
+          rightIcon={<Icon name="arrow" size={16} />}
         >
-          <Icon name="repeat" size={16} />
           <span>{t(reviewLabel)}</span>
-          <Icon name="arrow" size={16} />
         </Button>
       </section>
       <section className={styles.statistics} aria-label={t(headingKey)}>

@@ -112,9 +112,8 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
               type="button"
               aria-label={t('close')}
               onClick={onDismiss}
-            >
-              <Icon name="close" size={18} />
-            </Button>
+              leftIcon={<Icon name="close" size={18} />}
+            />
           </div>
           {deleting ? (
             <p id={`${id}-description`} className={styles.dialogDescription}>

@@ -83,8 +83,8 @@ export const StudyItemList = ({
               type="button"
               disabled={!total && !desktopAvailable}
               onClick={total ? onReset : onAdd}
+              leftIcon={!total && <Icon name="plus" />}
             >
-              {!total && <Icon name="plus" />}
               {t(total ? 'reset' : phrase ? 'phraseAdd' : 'add')}
             </Button>
           </div>
@@ -131,9 +131,8 @@ export const StudyItemList = ({
                           aria-label={t('editItem', { word: item.text })}
                           title={t('edit')}
                           onClick={() => onEdit(item)}
-                        >
-                          <Icon name="edit" size={16} />
-                        </Button>
+                          leftIcon={<Icon name="edit" size={16} />}
+                        />
                         <Button
                           variant="ghost"
                           tone="danger"
@@ -142,9 +141,8 @@ export const StudyItemList = ({
                           aria-label={t('deleteItem', { word: item.text })}
                           title={t('delete')}
                           onClick={() => onDelete(item)}
-                        >
-                          <Icon name="trash" size={16} />
-                        </Button>
+                          leftIcon={<Icon name="trash" size={16} />}
+                        />
                       </div>
                     </td>
                   </tr>
@@ -157,9 +155,15 @@ export const StudyItemList = ({
       <div className={styles.listFooter} role="status" aria-live="polite">
         <span>{!loading && !failed && t('showingItems', { count: items.length })}</span>
         {!loading && !failed && total > 0 && (
-          <Button variant="ghost" tone="brand" type="button" size="xs" onClick={onReview}>
+          <Button
+            variant="ghost"
+            tone="brand"
+            type="button"
+            size="xs"
+            onClick={onReview}
+            rightIcon={<Icon name="arrow" size={16} />}
+          >
             {t(phrase ? 'phraseReview' : 'review')}
-            <Icon name="arrow" size={16} />
           </Button>
         )}
       </div>
