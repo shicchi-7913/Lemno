@@ -1,5 +1,6 @@
 import { Fragment } from 'react';
 
+import appIcon from '@/shared/assets/app-icon.png';
 import { useI18n } from '@/shared/i18n';
 import { Icon } from '@/shared/ui/Icon';
 
@@ -15,9 +16,7 @@ export const Sidebar = () => {
   return (
     <>
       <div className={styles.brand}>
-        <span className={styles.brandSymbol}>
-          <Icon name="sun" size={24} />
-        </span>
+        <img className={styles.brandSymbol} src={appIcon} alt="" width={40} height={40} />
         <div>
           {/* eslint-disable-next-line i18next/no-literal-string -- Keep the product name unchanged across locales. */}
           <div className={styles.brandName}>

@@ -10,11 +10,9 @@
 .brandSymbol {
   width: 40px;
   height: 40px;
-  border-radius: var(--radius-lg);
-  background: var(--color-brand-bg);
-  color: var(--color-brand-text);
-  display: grid;
-  place-items: center;
+  flex-shrink: 0;
+  display: block;
+  object-fit: contain;
 }
 
 .brandName {
