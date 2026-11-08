@@ -1,0 +1,90 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.release.tag_name }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build (${{ matrix.asset }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-latest
+            target: aarch64-apple-darwin
+            bundles: dmg
+            asset: darwin_arm64
+          - runner: macos-latest
+            target: x86_64-apple-darwin
+            bundles: dmg
+            asset: darwin_amd64
+          - runner: windows-latest
+            target: x86_64-pc-windows-msvc
+            bundles: nsis
+            asset: windows_amd64
+          - runner: windows-latest
+            target: aarch64-pc-windows-msvc
+            bundles: nsis
+            asset: windows_arm64
+    env:
+      TAURI_APP_PATH: ${{ github.workspace }}/backend
+      TAURI_FRONTEND_PATH: ${{ github.workspace }}/frontend
+    steps:
+      - name: Check out release tag
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.release.tag_name }}
+          persist-credentials: false
+
+      - name: Set up Node.js, pnpm, and Rust
+        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
+        with:
+          install_args: node pnpm rust
+
+      - name: Install Rust target
+        run: rustup target add ${{ matrix.target }}
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: pnpm install --frozen-lockfile
+
+      - name: Build and upload release assets
+        uses: tauri-apps/tauri-action@1deb371b0cd8bd54025b384f1cd735e725c4060f # v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          # Discover backend/tauri.conf.json from the repository root while
+          # using the CLI and build scripts installed in frontend/.
+          projectPath: .
+          tauriScript: pnpm --dir frontend tauri
+          args: --target ${{ matrix.target }} --bundles ${{ matrix.bundles }} -- --locked
+          releaseId: ${{ github.event.release.id }}
+          releaseAssetNamePattern: Lemno_[version]_${{ matrix.asset }}[ext]
+          uploadUpdaterJson: false
+
+  checksums:
+    name: Upload checksums
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Generate and upload SHA-256 checksums
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          gh release download "$RELEASE_TAG" --pattern 'Lemno_*' --dir dist
+          cd dist
+          sha256sum -- * > ../checksums.txt
+          gh release upload "$RELEASE_TAG" ../checksums.txt --clobber
