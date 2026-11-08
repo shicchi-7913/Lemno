@@ -9,6 +9,8 @@
     "format:check": "prettier --check .",
     "lint": "eslint . && pnpm styles:lint",
     "lint:fix": "eslint . --fix",
+    "depgraph:scan": "mise exec -- depgraph scan --root ..",
+    "depgraph:watch": "mise run depgraph",
     "styles:lint": "stylelint \"src/**/*.scss\"",
     "test": "node --test \"src/**/*.test.mjs\"",
     "build": "pnpm styles:types && tsc && vite build",

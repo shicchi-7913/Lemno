@@ -2,6 +2,7 @@
 rust = "1.99.1"
 node = "24.22.2"
 pnpm = "11.28.11"
+"github:nonchan7720/depgraph" = "0.1.8"
 
 [env]
 TAURI_APP_PATH = "{{ config_root }}/backend"
@@ -21,6 +22,11 @@ run = "pnpm install --lockfile-only --no-frozen-lockfile"
 description = "Run the Tauri desktop app in development mode"
 dir = "{{ config_root }}/frontend"
 run = "pnpm run tauri dev"
+
+[tasks.depgraph]
+description = "Watch the repository dependency graph with depgraph"
+dir = "{{ config_root }}"
+run = "depgraph watch --root ."
 
 [tasks.format]
 description = "Run ESLint on the frontend"

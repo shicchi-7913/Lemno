@@ -1,0 +1,9 @@
+# Development tooling, local state, dependencies, and generated build output.
+.agents
+.claude
+.github
+.pnpm-store
+.lemno
+frontend/node_modules
+frontend/dist
+backend

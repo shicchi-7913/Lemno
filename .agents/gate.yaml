@@ -13,6 +13,17 @@ rules:
     run_checks:
       - build
 
+  # depgraph's quality gate compares new findings with the session baseline.
+  - match:
+      - "frontend/**/*.{ts,tsx,js,jsx,mjs,cjs,json,yaml,yml}"
+      - ".depgraph.yml"
+      - ".depgraphignore"
+      - "mise.toml"
+    timeout: 60
+    run:
+      - name: depgraph
+        cmd: mise exec -- depgraph gate --root .
+
 consistency_checks:
   # Same frontend build as CI, including SCSS type generation and TypeScript.
   - name: build
