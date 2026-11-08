@@ -6,7 +6,6 @@ export type Styles = {
   currentStep: string;
   error: string;
   expressionChoices: string;
-  eyebrow: string;
   field: string;
   formActions: string;
   formRow: string;

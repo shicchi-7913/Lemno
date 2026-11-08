@@ -39,8 +39,6 @@ export const TopicsPage = () => {
     <>
       <section className={styles.pageHeading}>
         <div>
-          {/* eslint-disable-next-line i18next/no-literal-string */}
-          <div className={styles.eyebrow}>— &nbsp; CONVERSATION LIBRARY</div>
           <Heading as="h1">{t('topics')}</Heading>
           <p>{t('topicSubtitle')}</p>
         </div>

@@ -4,7 +4,6 @@ import { StudyLibrary } from '../../../features/study-library';
 
 const vocabularyLibrary = {
   kind: 'word',
-  eyebrow: '—   YOUR VOCABULARY',
   headingKey: 'title',
   subtitle: 'subtitle',
   addLabel: 'add',

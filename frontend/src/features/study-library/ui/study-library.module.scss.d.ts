@@ -1,6 +1,5 @@
 // Generated from SCSS. Do not edit.
 export type Styles = {
-  eyebrow: string;
   filters: string;
   libraryPanel: string;
   listToolbar: string;

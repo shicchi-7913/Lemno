@@ -8,14 +8,6 @@
   margin-bottom: space(7);
 }
 
-.eyebrow {
-  font-size: var(--font-size-2xs);
-  font-weight: var(--font-weight-medium);
-  letter-spacing: 1.7px;
-  color: var(--color-text-muted);
-  margin-bottom: space(3);
-}
-
 .pageHeading p {
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
@@ -101,10 +93,6 @@
   .pageHeading {
     align-items: flex-start;
   }
-
-  .pageHeading > button {
-    margin-top: space(7.5);
-  }
 }
 
 @media (max-width: 520px) {
@@ -115,7 +103,6 @@
   }
 
   .pageHeading > button {
-    margin-top: 0;
     align-self: flex-end;
   }
 

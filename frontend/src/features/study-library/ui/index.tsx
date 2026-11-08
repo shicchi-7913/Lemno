@@ -25,7 +25,6 @@ import styles from './study-library.module.scss';
 
 interface StudyLibraryProps {
   kind: StudyKind;
-  eyebrow: string;
   headingKey: Parameters<typeof t>[0];
   subtitle: Parameters<typeof t>[0];
   addLabel: Parameters<typeof t>[0];
@@ -39,7 +38,6 @@ interface StudyLibraryProps {
 
 export const StudyLibrary = ({
   kind,
-  eyebrow,
   headingKey,
   subtitle,
   addLabel,
@@ -109,7 +107,6 @@ export const StudyLibrary = ({
     <>
       <section className={styles.pageHeading}>
         <div>
-          <div className={styles.eyebrow}>{eyebrow}</div>
           <Heading as="h1">{t(headingKey)}</Heading>
           <p>{t(subtitle)}</p>
         </div>

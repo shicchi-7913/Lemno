@@ -99,8 +99,6 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
         <fieldset className={styles.dialogControls} disabled={pending}>
           <div className={styles.dialogHeading}>
             <div>
-              {/* eslint-disable-next-line i18next/no-literal-string */}
-              <p className={styles.eyebrow}>STUDY LIBRARY</p>
               <Heading as="h2" id={`${id}-title`} className={styles.dialogTitle}>
                 {t(deleting ? 'studyDeleteTitle' : item ? 'studyEditTitle' : 'studyCreateTitle')}
               </Heading>

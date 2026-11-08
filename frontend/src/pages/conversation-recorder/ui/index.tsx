@@ -93,8 +93,6 @@ export const ConversationRecorderPage = () => {
       </Button>
       <section className={styles.pageHeading}>
         <div>
-          {/* eslint-disable-next-line i18next/no-literal-string */}
-          <div className={styles.eyebrow}>AFTER YOUR CONVERSATION</div>
           <Heading as="h1" ref={headingRef} tabIndex={-1}>
             {t('conversationRecordTitle')}
           </Heading>

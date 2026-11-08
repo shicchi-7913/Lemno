@@ -122,7 +122,6 @@
   "reviewIntroPhrases": "フレーズ帳に登録したフレーズを復習します。",
   "reviewIntroWords": "単語帳に登録した単語を復習します。",
   "flashcards": "フラッシュカード",
-  "rememberPrompt": "CAN YOU REMEMBER?",
   "revealHint": "カードをクリックして意味を見る",
   "hideHint": "カードをクリックして単語・フレーズに戻る",
   "again": "もう一度",

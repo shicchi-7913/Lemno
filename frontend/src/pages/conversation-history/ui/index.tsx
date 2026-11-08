@@ -41,8 +41,6 @@ export const ConversationHistoryPage = () => {
     <div className={styles.contained}>
       <section className={styles.pageHeading}>
         <div>
-          {/* eslint-disable-next-line i18next/no-literal-string */}
-          <div className={styles.eyebrow}>CONVERSATION HISTORY</div>
           <Heading as="h1">{t('conversationHistory')}</Heading>
           <p>{t('conversationHistorySubtitle')}</p>
         </div>

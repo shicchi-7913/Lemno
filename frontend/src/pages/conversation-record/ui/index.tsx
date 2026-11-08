@@ -47,8 +47,6 @@ export const ConversationRecordPage = () => {
         <>
           <section className={styles.pageHeading}>
             <div>
-              {/* eslint-disable-next-line i18next/no-literal-string */}
-              <div className={styles.eyebrow}>SESSION RECORD</div>
               <Heading as="h1">{item.title || t('conversationUntitled')}</Heading>
               <p>
                 {conversationDate(item.occurredAt, locale)} · {item.ai} ·{' '}
@@ -58,8 +56,6 @@ export const ConversationRecordPage = () => {
           </section>
           <div className={styles.detailGrid}>
             <section className={`${styles.panel} ${styles.notesPanel}`}>
-              {/* eslint-disable-next-line i18next/no-literal-string */}
-              <div className={styles.eyebrow}>CONVERSATION NOTES</div>
               <Heading as="h2" size="md" className={styles.sectionHeading}>
                 {t('conversationReflection')}
               </Heading>

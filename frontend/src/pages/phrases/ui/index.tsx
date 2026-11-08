@@ -4,7 +4,6 @@ import { StudyLibrary } from '../../../features/study-library';
 
 const phraseLibrary = {
   kind: 'phrase',
-  eyebrow: '—   YOUR EXPRESSIONS',
   headingKey: 'phraseTitle',
   subtitle: 'phraseSubtitle',
   addLabel: 'phraseAdd',
