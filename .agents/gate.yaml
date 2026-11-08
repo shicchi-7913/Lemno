@@ -4,7 +4,7 @@ rules:
   # CI runs pnpm run lint; check.sh scopes ESLint and runs the same styles:lint.
   - match:
       - "frontend/src/**/*.{ts,tsx,scss}"
-      - "frontend/*.{json,yaml,ts,js}"
+      - "frontend/*.{json,yaml,ts,js,md}"
     run:
       - name: apps-lint
         cmd: bash ".agents/scripts/check.sh" lint
@@ -12,6 +12,17 @@ rules:
         cmd: bash ".agents/scripts/check.sh" format
     run_checks:
       - build
+
+  # depgraph's quality gate compares new findings with the session baseline.
+  - match:
+      - "frontend/**/*.{ts,tsx,js,jsx,mjs,cjs,json,yaml,yml}"
+      - ".depgraph.yml"
+      - ".depgraphignore"
+      - "mise.toml"
+    timeout: 60
+    run:
+      - name: depgraph
+        cmd: mise exec -- depgraph gate --root .
 
 consistency_checks:
   # Same frontend build as CI, including SCSS type generation and TypeScript.

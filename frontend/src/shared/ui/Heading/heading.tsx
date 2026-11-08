@@ -1,7 +1,9 @@
 import type { ComponentProps } from 'react';
-import styles from './heading.module.scss';
+
+import type { HeadingSize } from '../../model/typography';
+
 import sizes from '../typography.module.scss';
-import type { HeadingSize } from '../typography';
+import styles from './heading.module.scss';
 
 type HeadingProps = ComponentProps<'h1'> & {
   as: 'h1' | 'h2';

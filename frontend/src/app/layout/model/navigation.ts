@@ -1,7 +1,8 @@
 import type { ComponentProps } from 'react';
 import { matchPath } from 'react-router';
-import type { t } from '../../../shared/i18n';
-import type { Icon } from '../../../shared/ui/Icon';
+
+import type { t } from '@/shared/i18n';
+import type { Icon } from '@/shared/ui/Icon';
 
 export interface NavigationEntry {
   label: Parameters<typeof t>[0];

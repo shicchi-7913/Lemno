@@ -1,6 +1,8 @@
+import { fixupPluginRules } from '@eslint/compat';
 import { defineConfig } from 'eslint/config';
 import prettier from 'eslint-config-prettier/flat';
 import i18next from 'eslint-plugin-i18next';
+import importPlugin from 'eslint-plugin-import';
 import react from 'eslint-plugin-react';
 import reactPackage from 'react/package.json' with { type: 'json' };
 import tseslint from 'typescript-eslint';
@@ -10,15 +12,56 @@ export default defineConfig([
     ignores: ['dist/**'],
   },
   {
-    files: ['src/**/*.{ts,tsx}'],
+    files: ['**/*.{js,mjs,cjs,ts,tsx}'],
+    // eslint-plugin-import 2.32 still uses token APIs removed in ESLint 10.
+    plugins: { import: fixupPluginRules(importPlugin) },
+    settings: {
+      'import/internal-regex': '^@/shared/',
+    },
+    rules: {
+      'import/order': [
+        'error',
+        {
+          groups: ['builtin', 'external', 'internal', 'parent', ['sibling', 'index']],
+          'newlines-between': 'always',
+          alphabetize: { order: 'asc', caseInsensitive: true },
+          named: { import: true, types: 'mixed' },
+          pathGroups: [
+            {
+              pattern: '*.module.{css,scss,sass}',
+              patternOptions: { matchBase: true },
+              group: 'index',
+              position: 'after',
+            },
+          ],
+          pathGroupsExcludedImportTypes: ['builtin', 'external'],
+          distinctGroup: true,
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/**/*.{ts,tsx}', 'vite.config.ts'],
     languageOptions: {
       parser: tseslint.parser,
     },
-    plugins: { i18next, react },
+    plugins: { '@typescript-eslint': tseslint.plugin, i18next, react },
     settings: {
       react: { version: reactPackage.version },
     },
     rules: {
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          varsIgnorePattern: '^_',
+          args: 'all',
+          argsIgnorePattern: '^_',
+          caughtErrors: 'all',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+        },
+      ],
       'react/no-multi-comp': 'error',
       'react/function-component-definition': [
         'error',
@@ -34,6 +77,46 @@ export default defineConfig([
           'jsx-attributes': {
             include: ['^(placeholder|title|alt|aria-label)$'],
           },
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/**/*.tsx'],
+    ignores: ['src/**/ui/**/*.tsx', 'src/app/main.tsx'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'Program',
+          message: 'Place TSX files under a ui directory. Only src/app/main.tsx is exempt.',
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/**/ui/**/*.ts'],
+    ignores: ['src/**/ui/**/*.module.scss.d.ts', 'src/shared/ui/**/index.ts'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'Program',
+          message:
+            'Only public shared/ui index.ts files and CSS Module declarations may use .ts under ui.',
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/**/*.module.scss.d.ts'],
+    ignores: ['src/**/ui/**/*.module.scss.d.ts'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'Program',
+          message: 'Place CSS Module declarations under a ui directory.',
         },
       ],
     },

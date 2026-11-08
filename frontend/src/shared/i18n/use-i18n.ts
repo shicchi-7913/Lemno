@@ -1,5 +1,6 @@
-import { useSyncExternalStore } from 'react';
 import i18next from 'i18next';
+import { useSyncExternalStore } from 'react';
+
 import { currentLocale, t } from './i18n';
 
 function subscribe(onChange: () => void): () => void {

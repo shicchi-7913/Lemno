@@ -1,9 +1,11 @@
-import styles from './locale-control.module.scss';
 import { useState } from 'react';
-import { changeLocale, useI18n } from '../../../shared/i18n';
-import { Icon } from '../../../shared/ui/Icon';
-import { FormLabel } from '../../../shared/ui/FormLabel';
-import { Select } from '../../../shared/ui/Select';
+
+import { changeLocale, useI18n } from '@/shared/i18n';
+import { FormLabel } from '@/shared/ui/FormLabel';
+import { Icon } from '@/shared/ui/Icon';
+import { Select } from '@/shared/ui/Select';
+
+import styles from './locale-control.module.scss';
 
 export const LocaleControl = ({ onError }: { onError: (message: string) => void }) => {
   const { t, locale } = useI18n();

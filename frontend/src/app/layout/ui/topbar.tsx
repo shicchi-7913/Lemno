@@ -1,11 +1,15 @@
-import styles from './topbar.module.scss';
 import { useLocation } from 'react-router';
-import { useI18n } from '../../../shared/i18n';
-import { Avatar } from '../../../shared/ui/Avatar';
-import { Icon } from '../../../shared/ui/Icon';
-import { useToast } from '../../../shared/ui/Toast';
-import { LocaleControl } from './locale-control';
+
+import { useI18n } from '@/shared/i18n';
+import { Avatar } from '@/shared/ui/Avatar';
+import { Icon } from '@/shared/ui/Icon';
+import { useToast } from '@/shared/ui/Toast';
+
 import { getCurrentNavigation } from '../model';
+
+import { LocaleControl } from './locale-control';
+
+import styles from './topbar.module.scss';
 
 export const Topbar = () => {
   const { t } = useI18n();

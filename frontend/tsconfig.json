@@ -8,6 +8,9 @@
 
     /* Bundler mode */
     "moduleResolution": "bundler",
+    "paths": {
+      "@/shared/*": ["./src/shared/*"]
+    },
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -16,7 +19,8 @@
 
     /* Linting */
     "strict": true,
-    "noUnusedLocals": true,
+    /* ESLint handles unused locals so underscore-prefixed names can be ignored. */
+    "noUnusedLocals": false,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },

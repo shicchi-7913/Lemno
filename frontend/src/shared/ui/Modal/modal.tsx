@@ -1,5 +1,6 @@
+import { type ReactNode, type RefObject, useLayoutEffect, useRef } from 'react';
+
 import styles from './modal.module.scss';
-import { useLayoutEffect, useRef, type ReactNode, type RefObject } from 'react';
 
 interface ModalProps {
   children: ReactNode;

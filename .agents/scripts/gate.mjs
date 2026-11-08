@@ -1,5 +1,6 @@
 import {
   existsSync,
+  lstatSync,
   readFileSync,
   realpathSync,
   statSync,
@@ -208,7 +209,9 @@ function skip(label, reason) {
 function checkFiles(tool) {
   const labelTask = tool === "eslint" ? "lint" : "format";
   const eligible = files.filter(file =>
-    tool === "eslint" ? codeExt.test(file) : formatExt.test(file)
+    tool === "eslint"
+      ? codeExt.test(file)
+      : formatExt.test(file) && !lstatSync(file).isSymbolicLink()
   );
 
   const groups = new Map();

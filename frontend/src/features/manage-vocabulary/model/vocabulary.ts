@@ -1,10 +1,11 @@
 import { queryOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
 import {
   desktopAvailable,
-  vocabularyApi,
   type Vocabulary,
+  vocabularyApi,
   type VocabularyInput,
-} from '../../../shared/api';
+} from '@/shared/api';
 
 const vocabularyListOptions = queryOptions({
   queryKey: ['vocabulary'],

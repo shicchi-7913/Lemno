@@ -1,9 +1,11 @@
 import type { ComponentProps } from 'react';
-import styles from './label.module.scss';
+
+import type { Tone } from '../../model/tone';
+import type { TextSize } from '../../model/typography';
+
 import tones from '../tone.module.scss';
 import sizes from '../typography.module.scss';
-import type { Tone } from '../tone';
-import type { TextSize } from '../typography';
+import styles from './label.module.scss';
 
 type LabelProps = ComponentProps<'span'> & {
   tone?: Tone;
