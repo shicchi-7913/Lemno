@@ -33,14 +33,15 @@ export const LocaleControl = ({ onError }: { onError: (message: string) => void 
         id="locale"
         aria-label={t('locale')}
         value={locale}
+        options={[
+          { label: t('languageJapanese'), value: 'ja' },
+          { label: t('languageEnglish'), value: 'en' },
+        ]}
         disabled={savingLocale}
-        onChange={(event) => {
-          void selectLocale(event.currentTarget.value);
+        onChange={(value) => {
+          void selectLocale(value);
         }}
-      >
-        <option value="ja">{t('languageJapanese')}</option>
-        <option value="en">{t('languageEnglish')}</option>
-      </Select>
+      />
     </div>
   );
 };

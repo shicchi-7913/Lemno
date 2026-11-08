@@ -78,7 +78,7 @@
   gap: space(2);
 }
 .field input,
-.field select,
+.field [role='combobox'],
 .field textarea {
   width: 100%;
   background: var(--color-surface);

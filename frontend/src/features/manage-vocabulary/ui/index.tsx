@@ -167,14 +167,15 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
                   name="kind"
                   size="md"
                   value={input.kind}
+                  options={[
+                    { label: t('vocabulary'), value: 'word' },
+                    { label: t('phrases'), value: 'phrase' },
+                  ]}
                   disabled={state.mode === 'edit'}
-                  onChange={(event) =>
-                    setInput((previous) => ({ ...previous, kind: event.target.value as StudyKind }))
+                  onChange={(value) =>
+                    setInput((previous) => ({ ...previous, kind: value as StudyKind }))
                   }
-                >
-                  <option value="word">{t('vocabulary')}</option>
-                  <option value="phrase">{t('phrases')}</option>
-                </Select>
+                />
               </div>
               <div id={`${id}-description`} className={styles.languageNote}>
                 <Alert type="info">{t('studyLanguageNote')}</Alert>

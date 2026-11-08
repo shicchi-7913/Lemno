@@ -149,17 +149,15 @@ export const ConversationRecorderPage = () => {
                         id="record-topic"
                         size="sm"
                         value={input.topicId ?? ''}
-                        onChange={(event) =>
-                          setInput({ ...input, topicId: event.target.value || null })
-                        }
-                      >
-                        <option value="">{t('conversationNoTopic')}</option>
-                        {topics.data?.map((value) => (
-                          <option value={value.id} key={value.id}>
-                            {value.title}
-                          </option>
-                        ))}
-                      </Select>
+                        options={[
+                          { label: t('conversationNoTopic'), value: '' },
+                          ...(topics.data ?? []).map((topic) => ({
+                            label: topic.title,
+                            value: topic.id,
+                          })),
+                        ]}
+                        onChange={(value) => setInput({ ...input, topicId: value || null })}
+                      />
                     </div>
                     <div className={styles.field}>
                       <FormLabel htmlFor="record-ai">{t('conversationAI')}</FormLabel>
@@ -167,13 +165,12 @@ export const ConversationRecorderPage = () => {
                         id="record-ai"
                         size="sm"
                         value={input.ai}
-                        onChange={(event) => setInput({ ...input, ai: event.target.value })}
-                      >
-                        {/* eslint-disable-next-line i18next/no-literal-string */}
-                        <option value="ChatGPT">ChatGPT</option>
-                        {/* eslint-disable-next-line i18next/no-literal-string */}
-                        <option value="Claude Desktop">Claude Desktop</option>
-                      </Select>
+                        options={[
+                          { label: 'ChatGPT', value: 'ChatGPT' },
+                          { label: 'Claude Desktop', value: 'Claude Desktop' },
+                        ]}
+                        onChange={(value) => setInput({ ...input, ai: value })}
+                      />
                     </div>
                     <div className={styles.field}>
                       <FormLabel htmlFor="record-duration">
@@ -332,20 +329,21 @@ export const ConversationRecorderPage = () => {
                       <Select
                         aria-label={t('studyKind')}
                         value={item.kind}
-                        onChange={(event) =>
+                        options={[
+                          { label: t('vocabulary'), value: 'word' },
+                          { label: t('phrases'), value: 'phrase' },
+                        ]}
+                        onChange={(selectedKind) =>
                           setInput({
                             ...input,
                             learnedItems: input.learnedItems.map((value, i) =>
                               i === index
-                                ? { ...value, kind: event.target.value as 'word' | 'phrase' }
+                                ? { ...value, kind: selectedKind as 'word' | 'phrase' }
                                 : value,
                             ),
                           })
                         }
-                      >
-                        <option value="word">{t('vocabulary')}</option>
-                        <option value="phrase">{t('phrases')}</option>
-                      </Select>
+                      />
                       <Button
                         type="button"
                         variant="ghost"

@@ -44,7 +44,7 @@
 
   input,
   textarea,
-  select {
+  [role='combobox'] {
     background: var(--color-surface);
     min-height: 42px;
   }

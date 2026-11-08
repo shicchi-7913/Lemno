@@ -204,19 +204,17 @@ export const TopicDialog = ({ mode, topic, onDismiss, onComplete }: Props) => {
                       id={`${id}-category`}
                       size="sm"
                       value={input.category}
-                      onChange={(event) =>
+                      options={categories.map((value) => ({
+                        label: t(categoryKeys[value]),
+                        value,
+                      }))}
+                      onChange={(value) =>
                         setInput({
                           ...input,
-                          category: event.target.value as TopicInput['category'],
+                          category: value as TopicInput['category'],
                         })
                       }
-                    >
-                      {categories.map((value) => (
-                        <option key={value} value={value}>
-                          {t(categoryKeys[value])}
-                        </option>
-                      ))}
-                    </Select>
+                    />
                   </div>
                   <div className={styles.field}>
                     <FormLabel htmlFor={`${id}-difficulty`}>{t('topicDifficulty')}</FormLabel>
@@ -224,19 +222,17 @@ export const TopicDialog = ({ mode, topic, onDismiss, onComplete }: Props) => {
                       id={`${id}-difficulty`}
                       size="sm"
                       value={input.difficulty}
-                      onChange={(event) =>
+                      options={difficulties.map((value) => ({
+                        label: t(difficultyKeys[value]),
+                        value,
+                      }))}
+                      onChange={(value) =>
                         setInput({
                           ...input,
-                          difficulty: event.target.value as TopicInput['difficulty'],
+                          difficulty: value as TopicInput['difficulty'],
                         })
                       }
-                    >
-                      {difficulties.map((value) => (
-                        <option key={value} value={value}>
-                          {t(difficultyKeys[value])}
-                        </option>
-                      ))}
-                    </Select>
+                    />
                   </div>
                 </div>
               </div>
