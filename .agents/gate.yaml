@@ -4,7 +4,7 @@ rules:
   # CI runs pnpm run lint; check.sh scopes ESLint and runs the same styles:lint.
   - match:
       - "frontend/src/**/*.{ts,tsx,scss}"
-      - "frontend/*.{json,yaml,ts,js}"
+      - "frontend/*.{json,yaml,ts,js,md}"
     run:
       - name: apps-lint
         cmd: bash ".agents/scripts/check.sh" lint
