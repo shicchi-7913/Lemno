@@ -9,14 +9,12 @@ import styles from './icon-badge.module.scss';
 type IconBadgeProps = Omit<ComponentProps<'span'>, 'children'> & {
   name: ComponentProps<typeof Icon>['name'];
   size?: number;
-  iconScale?: number;
   tone?: Tone;
 };
 
 export const IconBadge = ({
   name,
   size = 48,
-  iconScale = 0.48,
   tone = 'brand',
   className = '',
   style,
@@ -27,6 +25,6 @@ export const IconBadge = ({
     className={`${styles.badge} ${tones[tone]} ${className}`}
     style={{ ...style, '--icon-badge-size': `${size}px` } as CSSProperties}
   >
-    <Icon name={name} size={Math.round(size * iconScale)} />
+    <Icon name={name} size={Math.round(size * 0.48)} />
   </span>
 );

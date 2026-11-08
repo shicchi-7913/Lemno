@@ -116,7 +116,7 @@ export const ConversationRecorderPage = () => {
         {!desktopAvailable && <p className={styles.notice}>{t('conversationDesktopOnly')}</p>}
         {step === 2 ? (
           <section className={`${styles.panel} ${styles.success}`} aria-live="polite">
-            <IconBadge name="check" size={48} iconScale={0.58} />
+            <IconBadge name="check" size={48} />
             <Heading as="h2">{t('conversationSaved')}</Heading>
             <p>{t('conversationSavedBody')}</p>
             <Button onClick={() => navigate(`/conversations/${input.id}`)}>
