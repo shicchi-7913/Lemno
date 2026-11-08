@@ -45,6 +45,41 @@ rules:
     run_checks:
       - frontend-build
 
+  # Use the CI test script, limited to edited tests or sibling tests of edited sources.
+  - match: "frontend/src/**/*.{ts,tsx}"
+    run:
+      - name: frontend-test
+        cmd: |
+          set -eu
+          eval "set -- $CLAUDE_GATE_FILES"
+          tests=$(mktemp)
+          trap 'rm -f "$tests"' EXIT
+          for file do
+            case "$file" in
+              *.test.ts|*.test.tsx)
+                if [ -f "$file" ]; then
+                  printf '%s\n' "$file" >> "$tests"
+                fi
+                ;;
+              *)
+                for test_file in "${file%.*}.test.ts" "${file%.*}.test.tsx"; do
+                  [ -f "$test_file" ] || continue
+                  printf '%s\n' "$test_file" >> "$tests"
+                done
+                ;;
+            esac
+          done
+          sort -u "$tests" -o "$tests"
+          set --
+          while IFS= read -r test_file; do
+            set -- "$@" "$CLAUDE_PROJECT_DIR/$test_file"
+          done < "$tests"
+          [ "$#" -gt 0 ] || exit 0
+          mise run exec -- pnpm --dir frontend run test --passWithNoTests "$@"
+        timeout: 60
+    run_checks:
+      - frontend-build
+
   # stdin avoids traversing unchanged Rust modules; diff fails on formatting changes.
   - match:
       - "backend/**/*.rs"
