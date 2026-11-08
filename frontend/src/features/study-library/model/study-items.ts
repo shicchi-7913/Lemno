@@ -8,7 +8,11 @@ export function memoryStatus(item: Vocabulary): Exclude<Status, 'all'> {
   return item.memoryLevel >= 2 ? 'mastered' : item.memoryLevel === 1 ? 'consolidating' : 'learning';
 }
 
-export function filterStudyItems(items: Vocabulary[], query: string, status: Status): Vocabulary[] {
+export function filterStudyItems(
+  items: readonly Vocabulary[],
+  query: string,
+  status: Status,
+): Vocabulary[] {
   const normalized = query.normalize('NFKC').trim().toLocaleLowerCase();
   return items.filter(
     (item) =>

@@ -35,7 +35,7 @@ export function conversationActivity(items: Conversation[], now: Date) {
   return { streak, days };
 }
 
-export function practiceCandidates(items: Vocabulary[]): Vocabulary[] {
+export function practiceCandidates(items: readonly Vocabulary[]): Vocabulary[] {
   return items
     .slice()
     .sort(
