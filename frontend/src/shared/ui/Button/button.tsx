@@ -2,6 +2,7 @@ import type { ComponentProps, ReactNode } from 'react';
 
 import type { Tone } from '../../model/tone';
 import type { TextSize } from '../../model/typography';
+import { ButtonBase } from '../ButtonBase';
 
 import tones from '../tone.module.scss';
 import sizes from '../typography.module.scss';
@@ -27,12 +28,12 @@ export const Button = ({
   className = '',
   ...props
 }: ButtonProps) => (
-  <button
+  <ButtonBase
     {...props}
     className={`${styles.button} ${styles[variant]} ${tones[tone]} ${sizes[`size-${size}`]} ${iconOnly ? styles.iconOnly : ''} ${className}`}
   >
     {leftIcon}
     {children}
     {rightIcon}
-  </button>
+  </ButtonBase>
 );

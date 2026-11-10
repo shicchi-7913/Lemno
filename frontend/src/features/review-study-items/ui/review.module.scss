@@ -12,14 +12,10 @@
 }
 
 .pageHeading {
-  margin-bottom: space(7);
+  --heading-description-gap: #{space(2.5)};
+  --heading-description-line-height: 1.7;
 
-  > p:last-child {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-muted);
-    margin: space(2.5) 0 0;
-    line-height: 1.7;
-  }
+  margin-bottom: space(7);
 }
 
 .reviewLayout {
@@ -31,10 +27,7 @@
 
 .reviewPanel,
 .goalPanel {
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface);
-  padding: space(7);
+  --surface-padding: #{space(7)};
 }
 
 .cardToolbar {
@@ -290,7 +283,7 @@
 
   .reviewPanel,
   .goalPanel {
-    padding: space(5);
+    --surface-padding: #{space(5)};
   }
 }
 
@@ -308,7 +301,7 @@
 
 @media (max-width: 520px) {
   .reviewPanel {
-    padding: space(4);
+    --surface-padding: #{space(4)};
   }
 
   .flashcard {

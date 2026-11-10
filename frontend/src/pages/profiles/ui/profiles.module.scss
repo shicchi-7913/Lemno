@@ -6,22 +6,13 @@
 }
 
 .heading {
+  --heading-eyebrow-gap: #{space(3)};
+  --heading-eyebrow-color: var(--color-text-subtle);
+  --heading-eyebrow-spacing: 1.4px;
+  --heading-eyebrow-line-height: normal;
+  --heading-description-gap: #{space(3)};
+
   margin-bottom: space(7);
-}
-
-.eyebrow {
-  margin: 0 0 space(3);
-  color: var(--color-text-subtle);
-  font-size: var(--font-size-2xs);
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: 1.4px;
-}
-
-.description {
-  margin: space(3) 0 0;
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
-  line-height: 1.8;
 }
 
 .grid {
@@ -34,10 +25,6 @@
   display: flex;
   flex-direction: column;
   min-height: 260px;
-  padding: space(6);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface);
 }
 
 .cardTop {
@@ -48,21 +35,13 @@
 }
 
 .flag {
-  display: grid;
-  place-items: center;
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-lg);
-  background: var(--color-brand-bg);
   font-size: var(--font-size-2xl);
 }
 
 .badge {
-  padding: space(1.5) space(3);
-  border-radius: var(--radius-pill);
-  color: var(--color-success-text);
-  background: var(--color-success-bg);
-  font-size: var(--font-size-2xs);
+  --label-padding: #{space(1.5) space(3)};
+  --label-line-height: normal;
+
   font-weight: var(--font-weight-semibold);
 }
 
@@ -79,16 +58,7 @@
 }
 
 .note {
-  display: flex;
-  align-items: center;
-  gap: space(3);
-  padding: space(4);
   margin: space(4) 0 0;
-  border-radius: var(--radius-lg);
-  color: var(--color-success-text);
-  background: var(--color-success-bg);
-  font-size: var(--font-size-xs);
-  line-height: 1.8;
 }
 
 @media (max-width: 1100px) {

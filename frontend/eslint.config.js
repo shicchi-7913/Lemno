@@ -7,6 +7,53 @@ import react from 'eslint-plugin-react';
 import reactPackage from 'react/package.json' with { type: 'json' };
 import tseslint from 'typescript-eslint';
 
+const nativeElements = {
+  h1: 'Heading',
+  h2: 'Heading',
+  h3: 'Heading',
+  h4: 'Heading',
+  h5: 'Heading',
+  input: 'Input, Checkbox, or HiddenInput',
+  select: 'Select',
+  option: 'Select',
+  optgroup: 'Select',
+  textarea: 'Textarea',
+  button: 'Button, ToggleButton, or ButtonBase',
+  label: 'FormLabel',
+  dialog: 'Modal',
+  svg: 'Icon',
+};
+
+const forbidNativeElements = (allowed = []) => [
+  'error',
+  {
+    forbid: Object.entries(nativeElements)
+      .filter(([element]) => !allowed.includes(element))
+      .map(([element, component]) => ({
+        element,
+        message: `Use the shared ${component} component instead.`,
+      })),
+  },
+];
+
+const nativeElementImplementations = [
+  {
+    files: [
+      'src/shared/ui/Input/input.tsx',
+      'src/shared/ui/Checkbox/checkbox.tsx',
+      'src/shared/ui/HiddenInput/hidden-input.tsx',
+    ],
+    elements: ['input'],
+  },
+  { files: ['src/shared/ui/ButtonBase/button-base.tsx'], elements: ['button'] },
+  { files: ['src/shared/ui/Select/select.tsx'], elements: ['select', 'option', 'optgroup'] },
+  { files: ['src/shared/ui/Textarea/textarea.tsx'], elements: ['textarea'] },
+  { files: ['src/shared/ui/FormLabel/form-label.tsx'], elements: ['label'] },
+  { files: ['src/shared/ui/Modal/modal.tsx'], elements: ['dialog'] },
+  { files: ['src/shared/ui/Icon/icon.tsx'], elements: ['svg'] },
+  { files: ['src/shared/ui/Heading/heading.tsx'], elements: ['h1', 'h2', 'h3', 'h4', 'h5'] },
+];
+
 export default defineConfig([
   {
     ignores: ['dist/**'],
@@ -62,15 +109,7 @@ export default defineConfig([
           destructuredArrayIgnorePattern: '^_',
         },
       ],
-      'react/forbid-elements': [
-        'error',
-        {
-          forbid: ['h1', 'h2', 'h3', 'h4', 'h5'].map((element) => ({
-            element,
-            message: 'Use the shared Heading component instead.',
-          })),
-        },
-      ],
+      'react/forbid-elements': forbidNativeElements(),
       'react/no-multi-comp': 'error',
       'react/function-component-definition': [
         'error',
@@ -90,6 +129,13 @@ export default defineConfig([
       ],
     },
   },
+  // Only each primitive's implementation may render its native element.
+  ...nativeElementImplementations.map(({ files, elements }) => ({
+    files,
+    rules: {
+      'react/forbid-elements': forbidNativeElements(elements),
+    },
+  })),
   {
     files: ['src/**/*.tsx'],
     ignores: ['src/**/ui/**/*.tsx', 'src/app/main.tsx'],

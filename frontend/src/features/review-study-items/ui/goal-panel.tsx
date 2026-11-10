@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 
 import { useI18n } from '@/shared/i18n';
 import { Heading } from '@/shared/ui/Heading';
+import { Surface } from '@/shared/ui/Surface';
 
 import styles from './review.module.scss';
 
@@ -9,7 +10,7 @@ export const GoalPanel = ({ reviewed }: { reviewed: number }) => {
   const { t } = useI18n();
   return (
     <aside className={styles.goalSidebar}>
-      <section className={styles.goalPanel} aria-label={t('todayGoal')}>
+      <Surface as="section" className={styles.goalPanel} aria-label={t('todayGoal')}>
         <Heading as="h2" size="md">
           {t('goalMessageTop')}
           <br />
@@ -29,7 +30,7 @@ export const GoalPanel = ({ reviewed }: { reviewed: number }) => {
           <span>{t('cardsReviewed')}</span>
         </div>
         <p className={styles.goalHint}>{t('goalHint')}</p>
-      </section>
+      </Surface>
       <section className={styles.usageReminder}>
         <Heading as="h2">{t('usageReminderTitle')}</Heading>
         <p>{t('usageReminderBody')}</p>

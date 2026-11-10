@@ -8,7 +8,6 @@ export type Styles = {
   activityLevel3: string;
   answer: string;
   bottomGrid: string;
-  daily: string;
   date: string;
   description: string;
   empty: string;
@@ -20,7 +19,6 @@ export type Styles = {
   heroDescription: string;
   heroIllustration: string;
   heroTitle: string;
-  hobby: string;
   home: string;
   orbit: string;
   orbitInner: string;
@@ -40,10 +38,8 @@ export type Styles = {
   topicMeta: string;
   topicRow: string;
   topicText: string;
-  travel: string;
   welcome: string;
   welcomeSun: string;
-  work: string;
   workflowDescription: string;
   workflowNote: string;
 };

@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import type { Topic } from '@/shared/api';
 import { useI18n } from '@/shared/i18n';
 import { Icon } from '@/shared/ui/Icon';
+import { IconBadge } from '@/shared/ui/IconBadge';
 
 import {
   categoryEmoji,
@@ -11,6 +12,13 @@ import {
 } from '../../../features/conversation-workspace';
 
 import styles from './home.module.scss';
+
+const categoryTones = {
+  daily: 'danger',
+  work: 'info',
+  travel: 'success',
+  hobby: 'success',
+} as const;
 
 export const TopicList = ({ items, loading }: { items: Topic[]; loading: boolean }) => {
   const { t } = useI18n();
@@ -24,9 +32,14 @@ export const TopicList = ({ items, loading }: { items: Topic[]; loading: boolean
           className={styles.topicRow}
           to={`/topics?start=${encodeURIComponent(topic.id)}`}
         >
-          <span className={`${styles.topicEmoji} ${styles[topic.category]}`} aria-hidden="true">
+          <IconBadge
+            className={styles.topicEmoji}
+            tone={categoryTones[topic.category]}
+            size={60}
+            aria-hidden="true"
+          >
             {categoryEmoji[topic.category]}
-          </span>
+          </IconBadge>
           <div className={styles.topicText}>
             <p className={styles.topicMeta}>
               {t(categoryKeys[topic.category])} · {t(difficultyKeys[topic.difficulty])}

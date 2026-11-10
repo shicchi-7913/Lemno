@@ -4,8 +4,6 @@ export type Styles = {
   badge: string;
   card: string;
   cardTop: string;
-  description: string;
-  eyebrow: string;
   flag: string;
   grid: string;
   heading: string;

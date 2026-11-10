@@ -124,11 +124,9 @@
   padding: space(3);
   border-radius: var(--radius-sm);
   background: var(--color-surface-muted);
+  color: var(--color-text-default);
   font-size: var(--font-size-sm);
   overflow-wrap: anywhere;
-}
-.expressionChoices input {
-  accent-color: var(--color-brand-fill);
 }
 .expressionChoices small {
   display: block;

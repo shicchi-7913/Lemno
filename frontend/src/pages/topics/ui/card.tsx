@@ -1,6 +1,7 @@
 import type { Topic } from '@/shared/api';
 import { useI18n } from '@/shared/i18n';
 import { Button } from '@/shared/ui/Button';
+import { ButtonBase } from '@/shared/ui/ButtonBase';
 import { Heading } from '@/shared/ui/Heading';
 import { Icon } from '@/shared/ui/Icon';
 
@@ -43,10 +44,10 @@ export const Card = ({ topic, onStart, onEdit, onDelete }: CardProps) => {
         {t(difficultyKeys[topic.difficulty])}
       </p>
       <Heading as="h2" size="md">
-        <button type="button" onClick={onStart}>
+        <ButtonBase type="button" onClick={onStart}>
           {topic.title}
           <Icon name="external" size={13} />
-        </button>
+        </ButtonBase>
       </Heading>
       <p className={styles.topicDescription}>{topic.scenario}</p>
       <div className={styles.cardActions}>

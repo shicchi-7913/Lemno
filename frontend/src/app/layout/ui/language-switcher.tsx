@@ -7,6 +7,7 @@ import {
   learningLanguages,
   useLearningLanguage,
 } from '@/shared/learning-language';
+import { ButtonBase } from '@/shared/ui/ButtonBase';
 import { Icon } from '@/shared/ui/Icon';
 import { useToast } from '@/shared/ui/Toast';
 
@@ -62,7 +63,7 @@ export const LanguageSwitcher = () => {
       <div className={styles.profileMenu}>
         <div role="group" aria-label={t('learningLanguage')}>
           {learningLanguages.map((item) => (
-            <button
+            <ButtonBase
               key={item.code}
               type="button"
               className={styles.profileOption}
@@ -81,7 +82,7 @@ export const LanguageSwitcher = () => {
               <span aria-hidden="true">{item.flag}</span>
               <span>{t(item.title)}</span>
               {item.code === language && <Icon name="check" size={14} />}
-            </button>
+            </ButtonBase>
           ))}
         </div>
         <Link

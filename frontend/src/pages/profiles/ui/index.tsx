@@ -4,8 +4,9 @@ import {
   learningLanguages,
   useLearningLanguage,
 } from '@/shared/learning-language';
+import { Alert } from '@/shared/ui/Alert';
 import { Button } from '@/shared/ui/Button';
-import { Heading } from '@/shared/ui/Heading';
+import { HeadingGroup } from '@/shared/ui/HeadingGroup';
 import { Icon } from '@/shared/ui/Icon';
 import { useToast } from '@/shared/ui/Toast';
 
@@ -20,11 +21,14 @@ export const ProfilesPage = () => {
 
   return (
     <div className={styles.page}>
-      <section className={styles.heading}>
-        <p className={styles.eyebrow}>{t('profilesEyebrow')}</p>
-        <Heading as="h1">{t('profiles')}</Heading>
-        <p className={styles.description}>{t('profilesDescription')}</p>
-      </section>
+      <HeadingGroup
+        as="h1"
+        className={styles.heading}
+        eyebrow={t('profilesEyebrow')}
+        title={t('profiles')}
+        description={t('profilesDescription')}
+        descriptionSize="sm"
+      />
       <div className={styles.grid} role="group" aria-label={t('learningLanguage')}>
         {learningLanguages.map((item) => (
           <LanguageCard
@@ -52,10 +56,9 @@ export const ProfilesPage = () => {
           />
         ))}
       </div>
-      <p className={styles.note}>
-        <Icon name="info" size={17} />
+      <Alert type="success" className={styles.note}>
         {t('profilesLanguageNote')}
-      </p>
+      </Alert>
     </div>
   );
 };
