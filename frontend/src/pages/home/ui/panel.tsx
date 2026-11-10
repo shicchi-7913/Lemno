@@ -1,6 +1,7 @@
 import { type ReactNode, useId } from 'react';
 
-import { Heading } from '@/shared/ui/Heading';
+import { HeadingGroup } from '@/shared/ui/HeadingGroup';
+import { Surface } from '@/shared/ui/Surface';
 
 import styles from './home.module.scss';
 
@@ -15,18 +16,18 @@ interface Props {
 export const Panel = ({ eyebrow, title, description, action, children }: Props) => {
   const id = useId();
   return (
-    <section className={styles.panel} aria-labelledby={id}>
-      <div className={styles.panelHeader}>
-        <div>
-          <p className={styles.eyebrow}>{eyebrow}</p>
-          <Heading as="h2" size="md" id={id}>
-            {title}
-          </Heading>
-          {description && <p className={styles.description}>{description}</p>}
-        </div>
-        {action}
-      </div>
+    <Surface as="section" className={styles.panel} aria-labelledby={id}>
+      <HeadingGroup
+        as="h2"
+        size="md"
+        headingId={id}
+        className={styles.panelHeader}
+        eyebrow={eyebrow}
+        title={title}
+        description={description}
+        action={action}
+      />
       {children}
-    </section>
+    </Surface>
   );
 };

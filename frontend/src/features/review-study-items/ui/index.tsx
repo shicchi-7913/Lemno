@@ -4,8 +4,10 @@ import { desktopAvailable, type StudyKind, type Vocabulary } from '@/shared/api'
 import { type t, useI18n } from '@/shared/i18n';
 import { Button } from '@/shared/ui/Button';
 import { Heading } from '@/shared/ui/Heading';
+import { HeadingGroup } from '@/shared/ui/HeadingGroup';
 import { Icon } from '@/shared/ui/Icon';
 import { Spinner } from '@/shared/ui/Spinner';
+import { Surface } from '@/shared/ui/Surface';
 
 import { useVocabulary, useVocabularyReview } from '../../manage-vocabulary';
 
@@ -94,12 +96,16 @@ export const StudyReview = ({
       >
         {t(backLabel)}
       </Button>
-      <section className={styles.pageHeading}>
-        <Heading as="h1">{t(headingKey)}</Heading>
-        <p>{t(introduction)}</p>
-      </section>
+      <HeadingGroup
+        as="h1"
+        className={styles.pageHeading}
+        title={t(headingKey)}
+        description={t(introduction)}
+        descriptionSize="sm"
+      />
       <div className={styles.reviewLayout}>
-        <section
+        <Surface
+          as="section"
           className={styles.reviewPanel}
           aria-label={t('flashcards')}
           aria-busy={loading || mutation.isPending}
@@ -247,7 +253,7 @@ export const StudyReview = ({
             </p>
           )}
           <p className={styles.separationNote}>{t('reviewSeparationNote')}</p>
-        </section>
+        </Surface>
         <GoalPanel reviewed={reviewedToday} />
       </div>
     </>

@@ -1,0 +1,8 @@
+@use '../../styles/space' as *;
+
+.card {
+  padding: var(--surface-padding, space(6));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
