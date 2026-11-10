@@ -1,6 +1,7 @@
 import type { ComponentProps } from 'react';
 
 import type { TextSize } from '../../model/typography';
+import { ButtonBase } from '../ButtonBase';
 
 import sizes from '../typography.module.scss';
 import styles from './toggle-button.module.scss';
@@ -17,7 +18,7 @@ export const ToggleButton = ({
   className = '',
   ...props
 }: ToggleButtonProps) => (
-  <button
+  <ButtonBase
     {...props}
     type={type}
     aria-pressed={pressed}

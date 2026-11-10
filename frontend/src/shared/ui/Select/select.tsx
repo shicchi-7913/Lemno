@@ -9,6 +9,8 @@ import {
 } from 'react';
 
 import type { TextSize } from '../../model/typography';
+import { ButtonBase } from '../ButtonBase';
+import { HiddenInput } from '../HiddenInput';
 import { Icon } from '../Icon';
 
 import sizes from '../typography.module.scss';
@@ -169,8 +171,8 @@ export const Select = ({
 
   return (
     <>
-      {name && <input type="hidden" name={name} value={value} disabled={disabled} />}
-      <button
+      {name && <HiddenInput name={name} value={value} disabled={disabled} />}
+      <ButtonBase
         {...props}
         ref={triggerRef}
         type="button"
@@ -198,7 +200,7 @@ export const Select = ({
       >
         <span className={styles.value}>{options[selectedIndex]?.label}</span>
         <Icon name="down" size={14} className={styles.chevron} />
-      </button>
+      </ButtonBase>
       <div
         ref={menuRef}
         id={listId}

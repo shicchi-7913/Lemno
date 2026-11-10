@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router';
 
 import { useI18n } from '@/shared/i18n';
+import { ButtonBase } from '@/shared/ui/ButtonBase';
 import { Icon } from '@/shared/ui/Icon';
 
 import type { NavigationEntry } from '../model';
@@ -29,8 +30,8 @@ export const NavigationItem = ({ label, icon, to }: NavigationEntry) => {
   }
 
   return (
-    <button type="button" className={styles.navItem} disabled title={t('soon')}>
+    <ButtonBase type="button" className={styles.navItem} disabled title={t('soon')}>
       {content}
-    </button>
+    </ButtonBase>
   );
 };

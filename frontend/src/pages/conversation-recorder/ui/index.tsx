@@ -6,6 +6,7 @@ import { useI18n } from '@/shared/i18n';
 import { useFormValidation } from '@/shared/model/use-form-validation';
 import { Alert } from '@/shared/ui/Alert';
 import { Button } from '@/shared/ui/Button';
+import { Checkbox } from '@/shared/ui/Checkbox';
 import { FieldError } from '@/shared/ui/FieldError';
 import { FormLabel } from '@/shared/ui/FormLabel';
 import { Heading } from '@/shared/ui/Heading';
@@ -255,9 +256,8 @@ export const ConversationRecorderPage = () => {
                   ) : (
                     <div className={styles.expressionChoices}>
                       {items.map((item) => (
-                        <label key={item.id}>
-                          <input
-                            type="checkbox"
+                        <FormLabel key={item.id}>
+                          <Checkbox
                             disabled={
                               input.usedItemIds.length >= 100 &&
                               !input.usedItemIds.includes(item.id)
@@ -276,7 +276,7 @@ export const ConversationRecorderPage = () => {
                             {item.text}
                             <small>{item.explanation}</small>
                           </span>
-                        </label>
+                        </FormLabel>
                       ))}
                     </div>
                   )}

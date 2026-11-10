@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { desktopAvailable, type StudyKind, type Vocabulary } from '@/shared/api';
 import { type t, useI18n } from '@/shared/i18n';
 import { Button } from '@/shared/ui/Button';
+import { ButtonBase } from '@/shared/ui/ButtonBase';
 import { Heading } from '@/shared/ui/Heading';
 import { HeadingGroup } from '@/shared/ui/HeadingGroup';
 import { Icon } from '@/shared/ui/Icon';
@@ -154,7 +155,7 @@ export const StudyReview = ({
             </div>
           ) : card ? (
             <>
-              <button
+              <ButtonBase
                 ref={cardRef}
                 type="button"
                 className={styles.flashcard}
@@ -176,7 +177,7 @@ export const StudyReview = ({
                 <span className={styles.watermark}>
                   <Icon name="sun" size={200} />
                 </span>
-              </button>
+              </ButtonBase>
               <div className={styles.ratingActions}>
                 <Button
                   className={styles.againButton}
