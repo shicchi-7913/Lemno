@@ -156,10 +156,7 @@ export const ConversationRecorderPage = () => {
                         id="record-ai"
                         size="sm"
                         value={input.ai}
-                        options={[
-                          { label: 'ChatGPT', value: 'ChatGPT' },
-                          { label: 'Claude Desktop', value: 'Claude Desktop' },
-                        ]}
+                        options={[{ label: 'ChatGPT', value: 'ChatGPT' }]}
                         onChange={(value) => setInput({ ...input, ai: value })}
                       />
                     </div>

@@ -3,7 +3,7 @@ use lemno_domain::{Error, StudyKind, Vocabulary, VocabularyInput, VocabularyRepo
 mod conversation;
 pub use conversation::ConversationService;
 
-/// Shared entry point for desktop commands and a future MCP adapter.
+/// Shared entry point for desktop commands and the MCP adapter.
 pub struct VocabularyService<R>(pub R);
 
 impl<R: VocabularyRepository> VocabularyService<R> {

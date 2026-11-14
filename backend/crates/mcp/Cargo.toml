@@ -1,0 +1,16 @@
+[package]
+name = "lemno-mcp"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+lemno-domain = { path = "../domain" }
+lemno-application = { path = "../application" }
+lemno-infrastructure = { path = "../infrastructure" }
+rmcp = { version = "=3.10.0", default-features = false, features = ["server", "client", "transport-io", "transport-child-process"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["rt-multi-thread", "time"] }
+
+[dev-dependencies]
+uuid = { version = "1", features = ["v4"] }

@@ -20,12 +20,18 @@ tauri-build = { version = "=2.7.4", features = [] }
 tauri = { version = "=2.12.5", features = [] }
 tauri-plugin-store = "2"
 serde = { version = "1", features = ["derive"] }
+toml_edit = "=0.25.19"
+uuid = { version = "1", features = ["v4"] }
 lemno-domain = { path = "crates/domain" }
 lemno-application = { path = "crates/application" }
 lemno-infrastructure = { path = "crates/infrastructure" }
+lemno-mcp = { path = "crates/mcp" }
+
+[dev-dependencies]
+tokio = { version = "1", features = ["rt-multi-thread"] }
 
 [workspace]
-members = ["crates/domain", "crates/application", "crates/infrastructure"]
+members = ["crates/domain", "crates/application", "crates/infrastructure", "crates/mcp"]
 resolver = "2"
 
 # Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration

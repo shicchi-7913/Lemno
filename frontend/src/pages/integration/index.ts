@@ -1,0 +1,1 @@
+export { IntegrationPage } from './ui';

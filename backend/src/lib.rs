@@ -5,6 +5,7 @@ use serde::Serialize;
 use tauri::{Manager, State};
 
 mod conversation;
+mod mcp;
 
 type Service = VocabularyService<SqliteVocabularyRepository>;
 
@@ -25,6 +26,32 @@ impl From<Error> for CommandError {
         };
         Self { code }
     }
+}
+
+#[tauri::command]
+async fn open_chatgpt_app(prompt: String) -> Result<(), &'static str> {
+    tauri::async_runtime::spawn_blocking(move || {
+        #[cfg(target_os = "macos")]
+        {
+            let mut url = tauri::Url::parse("codex://new").map_err(|_| "chatgptLaunchFailed")?;
+            url.query_pairs_mut().append_pair("prompt", &prompt);
+            let status = std::process::Command::new("/usr/bin/open")
+                .args(["-a", "ChatGPT", url.as_str()])
+                .status()
+                .map_err(|_| "chatgptLaunchFailed")?;
+            if status.success() {
+                Ok(())
+            } else {
+                Err("chatgptLaunchFailed")
+            }
+        }
+        #[cfg(not(target_os = "macos"))]
+        {
+            Err("chatgptLaunchUnsupported")
+        }
+    })
+    .await
+    .map_err(|_| "chatgptLaunchFailed")?
 }
 
 #[tauri::command]
@@ -114,9 +141,20 @@ pub fn run() {
             app.manage(ConversationService(SqliteVocabularyRepository::open(
                 data_dir.join("lemno.sqlite3"),
             )?));
+            app.manage(mcp::McpConnection {
+                executable: std::env::current_exe()?,
+                database: data_dir.join("lemno.sqlite3"),
+                codex_config:
+                    match std::env::var_os("CODEX_HOME").filter(|path| !path.is_empty()) {
+                        Some(path) => std::path::PathBuf::from(path),
+                        None => app.path().home_dir()?.join(".codex"),
+                    }
+                    .join("config.toml"),
+            });
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
+            open_chatgpt_app,
             list_vocabulary,
             create_vocabulary,
             update_vocabulary,
@@ -127,7 +165,9 @@ pub fn run() {
             conversation::delete_topic,
             conversation::list_conversations,
             conversation::get_conversation,
-            conversation::record_conversation
+            conversation::record_conversation,
+            mcp::get_codex_status,
+            mcp::connect_codex
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

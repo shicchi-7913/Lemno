@@ -1,5 +1,8 @@
 policy: false
 
+session_start:
+  - { name: depgraph, timeout: 10, cmd: "command -v depgraph >/dev/null || exit 0; depgraph hook session-start --format text" }
+
 rules:
   # Same Prettier check as frontend CI, scoped to changed files.
   - match:
