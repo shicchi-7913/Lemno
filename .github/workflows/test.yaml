@@ -68,7 +68,7 @@ jobs:
         run: pnpm run ${{ matrix.check }}
 
   backend:
-    name: Backend (format check)
+    name: Backend (format and architecture checks)
     needs: changes
     if: needs.changes.outputs.backend == 'true'
     runs-on: ubuntu-latest
@@ -89,6 +89,9 @@ jobs:
 
       - name: Check formatting across the backend workspace
         run: mise run exec -- cargo fmt --all --manifest-path backend/Cargo.toml -- --check
+
+      - name: Check Rust layer dependencies
+        run: mise run architecture
 
   required_ci:
     name: required_ci
@@ -124,10 +127,10 @@ jobs:
 
           case "$BACKEND_RELEVANT:$BACKEND_RESULT" in
             true:success)
-              echo 'Backend formatting check passed; no formatting differences.' >> "$GITHUB_STEP_SUMMARY"
+              echo 'Backend formatting and architecture checks passed.' >> "$GITHUB_STEP_SUMMARY"
               ;;
             false:skipped)
-              echo 'No backend changes; backend formatting check was not required.' >> "$GITHUB_STEP_SUMMARY"
+              echo 'No backend changes; backend checks were not required.' >> "$GITHUB_STEP_SUMMARY"
               ;;
             *)
               echo "::error::Unexpected backend CI result: relevant=$BACKEND_RELEVANT, result=$BACKEND_RESULT."

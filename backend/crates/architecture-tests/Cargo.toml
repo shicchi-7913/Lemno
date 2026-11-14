@@ -1,0 +1,8 @@
+[package]
+name = "lemno-architecture-tests"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[dev-dependencies]
+rust_arkitect = "0.3.7"

@@ -107,6 +107,20 @@ rules:
     run_checks:
       - backend-build
 
+  # Same Rust layer dependency check as backend CI, without building Tauri.
+  - match:
+      - "backend/**/*.rs"
+      - "backend/**/Cargo.toml"
+      - "backend/Cargo.lock"
+      - "mise.toml"
+      - ".github/workflows/test.yaml"
+      - ".agents/gate.yaml"
+    timeout: 120
+    run:
+      - name: rust-architecture
+        cmd: mise run architecture
+        files: false
+
   # Keep the existing architectural regression check.
   - match:
       - "frontend/**/*.{ts,tsx,js,jsx,mjs,cjs,json,yaml,yml}"
