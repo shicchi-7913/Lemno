@@ -37,7 +37,7 @@
     "postcss-scss": "4.0.9",
     "prettier": "3.9.10",
     "sass": "1.108.0",
-    "sass-embedded": "1.108.0",
+    "sass-embedded": "1.108.2",
     "stylelint": "18.0.0",
     "typed-scss-modules": "8.1.1",
     "typescript": "6.0.3",
