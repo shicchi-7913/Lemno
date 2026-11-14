@@ -2,7 +2,7 @@
 rust = "1.99.1"
 node = "24.22.2"
 pnpm = "11.28.11"
-"github:nonchan7720/depgraph" = "0.1.8"
+"github:nonchan7720/depgraph" = "0.1.14"
 
 [env]
 TAURI_APP_PATH = "{{ config_root }}/backend"
