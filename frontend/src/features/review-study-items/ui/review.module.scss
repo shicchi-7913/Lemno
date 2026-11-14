@@ -171,10 +171,8 @@
   text-align: center;
 
   h2 {
-    font-size: var(--font-size-md);
     line-height: 1.9;
     color: var(--color-text-secondary);
-    font-weight: var(--font-weight-medium);
     margin: 0 0 space(6);
   }
 }
@@ -231,9 +229,7 @@
   color: var(--color-text-muted);
 
   h2 {
-    font-size: var(--font-size-xs);
     margin: 0 0 space(3);
-    font-weight: var(--font-weight-semibold);
   }
 
   p {

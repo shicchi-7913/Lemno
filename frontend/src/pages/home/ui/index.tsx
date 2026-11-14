@@ -169,10 +169,6 @@ export const HomePage = () => {
         </Panel>
         <Panel eyebrow={t('homeWorkflowEyebrow')} title={t('homeWorkflowTitle')}>
           <p className={styles.workflowDescription}>{t('homeWorkflowDescription')}</p>
-          <Link className={styles.outlineLink} to="/conversations/new">
-            <Icon name="plus" size={16} />
-            {t('conversationAdd')}
-          </Link>
           <p className={styles.workflowNote}>
             <Icon name="circleCheck" size={12} />
             {t('homeWorkflowNote')}

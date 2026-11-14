@@ -33,7 +33,7 @@ export const navigationGroups: NavigationGroup[] = [
 
 export function getCurrentNavigation(pathname: string) {
   if (pathname === '/topics/history') return { label: 'conversationHistory' } as const;
-  if (pathname.startsWith('/conversations/') && pathname !== '/conversations/new') {
+  if (pathname.startsWith('/conversations/')) {
     return { label: 'conversationDetail' } as const;
   }
   return navigationGroups

@@ -33,6 +33,7 @@ export default {
     'color-named': 'never',
     'rule-selector-property-disallowed-list': {
       '/\\bsvg\\b/': ['width', 'height'],
+      '/(?<![\\w.#-])h[1-5](?![\\w-])/i': ['font-size', 'font-weight'],
     },
     'declaration-property-value-allowed-list': {
       'font-size': [

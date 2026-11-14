@@ -32,7 +32,9 @@ export const GoalPanel = ({ reviewed }: { reviewed: number }) => {
         <p className={styles.goalHint}>{t('goalHint')}</p>
       </Surface>
       <section className={styles.usageReminder}>
-        <Heading as="h2">{t('usageReminderTitle')}</Heading>
+        <Heading as="h2" size="sm">
+          {t('usageReminderTitle')}
+        </Heading>
         <p>{t('usageReminderBody')}</p>
       </section>
     </aside>

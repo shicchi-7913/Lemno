@@ -1,11 +1,11 @@
 import { invoke } from '@tauri-apps/api/core';
 import { type SubmitEvent, useId, useRef, useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import { conversationApi, desktopAvailable, type Topic, type TopicInput } from '@/shared/api';
 import { useI18n } from '@/shared/i18n';
 import { useLearningLanguage } from '@/shared/learning-language';
 import { useFormValidation } from '@/shared/model/use-form-validation';
+import { Alert } from '@/shared/ui/Alert';
 import { Button } from '@/shared/ui/Button';
 import { FieldError } from '@/shared/ui/FieldError';
 import { FormLabel } from '@/shared/ui/FormLabel';
@@ -44,7 +44,6 @@ const textFields = [
 export const TopicDialog = ({ mode, topic, onDismiss, onComplete }: Props) => {
   const { t } = useI18n();
   const { language } = useLearningLanguage();
-  const navigate = useNavigate();
   const notify = useToast();
   const id = useId();
   const firstRef = useRef<HTMLInputElement>(null);
@@ -148,8 +147,12 @@ export const TopicDialog = ({ mode, topic, onDismiss, onComplete }: Props) => {
             rows={10}
             readOnly
             aria-label={t('topicPromptTitle')}
+            aria-describedby={`${id}-requirements`}
             value={prompt}
           />
+          <Alert type="warn" id={`${id}-requirements`}>
+            {t('topicPromptRequirements')}
+          </Alert>
           <div className={styles.dialogActions}>
             <Button
               variant="outline"
@@ -181,14 +184,6 @@ export const TopicDialog = ({ mode, topic, onDismiss, onComplete }: Props) => {
               {t('topicOpenChatGPT')}
             </Button>
           </div>
-          <Button
-            className={styles.fullWidth}
-            variant="outline"
-            onClick={() => navigate(`/conversations/new?topic=${topic?.id ?? ''}`)}
-          >
-            {t('records')}
-            <Icon name="arrow" size={16} />
-          </Button>
         </div>
       ) : (
         <form

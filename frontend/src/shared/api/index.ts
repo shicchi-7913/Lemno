@@ -10,7 +10,6 @@ export {
   conversationApi,
   type Conversation,
   type ConversationDetail,
-  type ConversationInput,
   type Topic,
   type TopicCategory,
   type TopicDifficulty,
