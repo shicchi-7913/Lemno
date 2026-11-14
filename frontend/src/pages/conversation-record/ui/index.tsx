@@ -9,6 +9,8 @@ import { Icon } from '@/shared/ui/Icon';
 
 import { conversationDate } from '../../../features/conversation-workspace';
 
+import { LearningCandidates } from './learning-candidates';
+
 import styles from './record.module.scss';
 
 export const ConversationRecordPage = () => {
@@ -19,6 +21,8 @@ export const ConversationRecordPage = () => {
     queryKey: ['conversations', id],
     queryFn: () => conversationApi.detail(id),
     enabled: desktopAvailable && !!id,
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: 'always',
   });
   const item = record.data;
   return (
@@ -54,6 +58,9 @@ export const ConversationRecordPage = () => {
               </p>
             </div>
           </section>
+          {item.pendingItems.length > 0 && (
+            <LearningCandidates id={item.id} items={item.pendingItems} />
+          )}
           <div className={styles.detailGrid}>
             <section className={`${styles.panel} ${styles.notesPanel}`}>
               <Heading as="h2" size="md" className={styles.sectionHeading}>

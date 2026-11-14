@@ -102,6 +102,7 @@ pub struct Conversation {
     pub duration_minutes: i64,
     pub notes: String,
     pub occurred_at: String,
+    pub pending_candidate_count: i64,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -114,11 +115,20 @@ pub struct Expression {
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
+pub struct LearningCandidate {
+    pub id: String,
+    #[serde(flatten)]
+    pub input: VocabularyInput,
+}
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct ConversationDetail {
     #[serde(flatten)]
     pub conversation: Conversation,
     pub used_items: Vec<Expression>,
     pub learned_items: Vec<Expression>,
+    pub pending_items: Vec<LearningCandidate>,
 }
 
 pub trait ConversationRepository {
@@ -136,5 +146,12 @@ pub trait ConversationRepository {
         &self,
         profile_id: &str,
         input: &ConversationInput,
+    ) -> Result<ConversationDetail, Error>;
+    fn resolve_candidate(
+        &self,
+        profile_id: &str,
+        session_id: &str,
+        candidate_id: &str,
+        register: bool,
     ) -> Result<ConversationDetail, Error>;
 }

@@ -2,6 +2,14 @@
 export type Styles = {
   backButton: string;
   badges: string;
+  candidate: string;
+  candidateActions: string;
+  candidateContent: string;
+  candidateDescription: string;
+  candidateExample: string;
+  candidateHeading: string;
+  candidateList: string;
+  candidates: string;
   contained: string;
   detailGrid: string;
   empty: string;

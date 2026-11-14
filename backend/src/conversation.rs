@@ -77,3 +77,21 @@ pub fn record_conversation(
         .record(profile_id.as_deref().unwrap_or(DEFAULT_PROFILE_ID), input)
         .map_err(Into::into)
 }
+
+#[tauri::command]
+pub fn resolve_conversation_candidate(
+    service: State<'_, Service>,
+    profile_id: Option<String>,
+    id: String,
+    candidate_id: String,
+    register: bool,
+) -> Result<ConversationDetail, CommandError> {
+    service
+        .resolve_candidate(
+            profile_id.as_deref().unwrap_or(DEFAULT_PROFILE_ID),
+            &id,
+            &candidate_id,
+            register,
+        )
+        .map_err(Into::into)
+}

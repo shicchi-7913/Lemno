@@ -119,6 +119,69 @@
   outline-offset: 3px;
 }
 
+.candidates {
+  display: grid;
+  gap: space(4);
+  padding: space(7);
+  margin-bottom: space(5);
+}
+
+.candidateDescription {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.8;
+}
+
+.candidateList {
+  display: grid;
+  gap: space(4);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.candidate {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: space(4);
+  padding: space(4);
+  background: var(--color-surface-muted);
+  border-radius: var(--radius-md);
+}
+
+.candidateContent {
+  display: grid;
+  gap: space(2);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.candidateHeading,
+.candidateActions {
+  display: flex;
+  align-items: center;
+  gap: space(3);
+  flex-wrap: wrap;
+}
+
+.candidateContent p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.candidateContent .candidateExample {
+  color: var(--color-text-muted);
+}
+
+.candidateActions {
+  flex-shrink: 0;
+}
+
 @media (max-width: 1200px) {
   .detailGrid {
     grid-template-columns: 1fr;
@@ -134,7 +197,13 @@
   }
 
   .notesPanel,
-  .expressionsPanel {
+  .expressionsPanel,
+  .candidates {
     padding: space(5);
+  }
+
+  .candidate {
+    align-items: stretch;
+    flex-direction: column;
   }
 }

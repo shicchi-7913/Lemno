@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use lemno_application::VocabularyService;
+use lemno_application::{ConversationService, VocabularyService};
 use lemno_domain::StudyKind;
 use lemno_infrastructure::SqliteVocabularyRepository;
 use lemno_mcp::{ConnectionConfig, LearningServer, run_cli};
@@ -104,7 +104,9 @@ fn protocol_round_trip_follows_selected_language_without_reconnecting() {
             let saved = saved.structured_content.unwrap();
             assert_eq!(saved["notes"], "Practiced hobbies.");
             assert_eq!(saved["usedItems"].as_array().unwrap().len(), 1);
-            assert_eq!(saved["learnedItems"].as_array().unwrap().len(), 1);
+            assert_eq!(saved["learnedItems"], json!([]));
+            assert_eq!(saved["pendingItems"].as_array().unwrap().len(), 1);
+            assert_eq!(saved["pendingCandidateCount"], 1);
         }
         let phrases = call(&client, "list_vocabulary", json!({"kind": "phrase"})).await;
         assert_eq!(
@@ -117,7 +119,7 @@ fn protocol_round_trip_follows_selected_language_without_reconnecting() {
                 .as_array()
                 .unwrap()
                 .len(),
-            1
+            0
         );
         let history = call(&client, "list_conversations", json!({})).await;
         assert_eq!(
@@ -132,7 +134,7 @@ fn protocol_round_trip_follows_selected_language_without_reconnecting() {
         database.select_language("ja");
         let foreign = call(&client, "get_conversation", json!({"id": "mcp-session-1"})).await;
         assert_eq!(foreign.is_error, Some(true));
-        let foreign = call(&client, "record_conversation", record).await;
+        let foreign = call(&client, "record_conversation", record.clone()).await;
         assert_eq!(foreign.is_error, Some(true));
         let empty = call(&client, "list_vocabulary", json!({})).await;
         assert_eq!(empty.structured_content.unwrap()["items"], json!([]));
@@ -150,13 +152,39 @@ fn protocol_round_trip_follows_selected_language_without_reconnecting() {
         let detail = call(&client, "get_conversation", json!({"id": "mcp-session-1"})).await;
         assert_eq!(detail.is_error, Some(false));
         let words = call(&client, "list_vocabulary", json!({})).await;
+        assert_eq!(words.structured_content.unwrap()["items"], json!([]));
+        let repo = VocabularyService(SqliteVocabularyRepository::open(&database.0).unwrap());
+        assert_eq!(repo.list("default-en", StudyKind::Word).unwrap().len(), 0);
+        assert_eq!(repo.list("default-ja", StudyKind::Word).unwrap().len(), 1);
+        // Candidate registration is a desktop action, never part of the MCP save.
+        let conversations =
+            ConversationService(SqliteVocabularyRepository::open(&database.0).unwrap());
+        let detail = conversations
+            .conversation("default-en", "mcp-session-1")
+            .unwrap();
+        conversations
+            .resolve_candidate(
+                "default-en",
+                "mcp-session-1",
+                &detail.pending_items[0].id,
+                true,
+            )
+            .unwrap();
+        let words = call(&client, "list_vocabulary", json!({})).await;
         assert_eq!(
             words.structured_content.unwrap()["items"][0]["text"],
             "perspective"
         );
-        let repo = VocabularyService(SqliteVocabularyRepository::open(&database.0).unwrap());
-        assert_eq!(repo.list("default-en", StudyKind::Word).unwrap().len(), 1);
-        assert_eq!(repo.list("default-ja", StudyKind::Word).unwrap().len(), 1);
+        let retried = call(&client, "record_conversation", record).await;
+        let retried = retried.structured_content.unwrap();
+        assert_eq!(retried["pendingItems"], json!([]));
+        assert_eq!(retried["learnedItems"].as_array().unwrap().len(), 1);
+        assert!(
+            client
+                .call_tool(CallToolRequestParams::new("resolve_conversation_candidate"))
+                .await
+                .is_err()
+        );
         client.cancel().await.unwrap();
         task.await.unwrap();
     });

@@ -134,7 +134,7 @@
   },
   {
     "name": "record_conversation",
-    "description": "Save a confirmed conversation summary, actually used expression IDs and newly learned words or phrases atomically in Lemno’s currently selected learning language. Reuse input.id when retrying.",
+    "description": "Save a confirmed conversation summary, actually used expression IDs and word or phrase candidates atomically in Lemno’s currently selected learning language. Candidates remain pending until the learner chooses to register or skip them in Lemno; they are not added to vocabulary by this call. Reuse input.id when retrying.",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -180,6 +180,7 @@
             },
             "learnedItems": {
               "type": "array",
+              "description": "New expression candidates for the learner to review in Lemno. This does not register vocabulary. Include their meanings and examples so the learner can decide.",
               "items": {
                 "type": "object",
                 "properties": {

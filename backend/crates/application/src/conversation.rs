@@ -38,4 +38,15 @@ impl<R: ConversationRepository> ConversationService<R> {
     ) -> Result<ConversationDetail, Error> {
         self.0.record(profile_id, &input.normalized()?)
     }
+
+    pub fn resolve_candidate(
+        &self,
+        profile_id: &str,
+        session_id: &str,
+        candidate_id: &str,
+        register: bool,
+    ) -> Result<ConversationDetail, Error> {
+        self.0
+            .resolve_candidate(profile_id, session_id, candidate_id, register)
+    }
 }
