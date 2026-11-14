@@ -31,7 +31,7 @@ lemno-mcp = { path = "crates/mcp" }
 tokio = { version = "1", features = ["rt-multi-thread"] }
 
 [workspace]
-members = ["crates/domain", "crates/application", "crates/infrastructure", "crates/mcp"]
+members = ["crates/domain", "crates/application", "crates/infrastructure", "crates/mcp", "crates/architecture-tests"]
 resolver = "2"
 
 # Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration
