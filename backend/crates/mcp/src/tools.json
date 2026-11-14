@@ -1,0 +1,242 @@
+[
+  {
+    "name": "list_vocabulary",
+    "description": "List saved words or phrases for the learning language currently selected in Lemno.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "word",
+            "phrase"
+          ],
+          "default": "word"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "create_vocabulary",
+    "description": "Save a new word or phrase in Lemno’s currently selected learning language after the learner confirms the expression and meaning.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "input": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "word",
+                "phrase"
+              ],
+              "default": "word"
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "explanation": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
+            },
+            "exampleText": {
+              "type": "string",
+              "maxLength": 2000,
+              "default": ""
+            }
+          },
+          "required": [
+            "text",
+            "explanation"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "input"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "idempotentHint": false,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "list_topics",
+    "description": "List conversation practice topics and roles for the learning language currently selected in Lemno.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "list_conversations",
+    "description": "List recorded conversations for the learning language currently selected in Lemno.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "get_conversation",
+    "description": "Read a recorded conversation and its expressions in Lemno’s currently selected learning language.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "record_conversation",
+    "description": "Save a confirmed conversation summary, actually used expression IDs and newly learned words or phrases atomically in Lemno’s currently selected learning language. Reuse input.id when retrying.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "input": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100,
+              "description": "Unique session identifier. Reuse the same ID when retrying this save."
+            },
+            "topicId": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "A topic ID from list_topics for this language, or null."
+            },
+            "ai": {
+              "type": "string",
+              "enum": [
+                "ChatGPT"
+              ]
+            },
+            "durationMinutes": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1440
+            },
+            "notes": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20000
+            },
+            "usedItemIds": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 100,
+              "description": "IDs returned by list_vocabulary for expressions the learner actually used."
+            },
+            "learnedItems": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "word",
+                      "phrase"
+                    ],
+                    "default": "word"
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "explanation": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2000
+                  },
+                  "exampleText": {
+                    "type": "string",
+                    "maxLength": 2000,
+                    "default": ""
+                  }
+                },
+                "required": [
+                  "text",
+                  "explanation"
+                ],
+                "additionalProperties": false
+              },
+              "maxItems": 100
+            }
+          },
+          "required": [
+            "id",
+            "ai",
+            "durationMinutes",
+            "notes",
+            "usedItemIds",
+            "learnedItems"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "input"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  }
+]

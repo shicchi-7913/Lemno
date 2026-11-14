@@ -74,7 +74,7 @@ impl ConversationInput {
         if input.id.is_empty()
             || input.id.len() > 100
             || !(1..=1440).contains(&input.duration_minutes)
-            || !["ChatGPT", "Claude Desktop"].contains(&input.ai.as_str())
+            || input.ai != "ChatGPT"
             || input.notes.is_empty()
             || input.notes.chars().count() > 20000
             || input.used_item_ids.len() > 100

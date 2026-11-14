@@ -11,9 +11,9 @@ import { ConversationHistoryPage } from '../pages/conversation-history';
 import { ConversationRecordPage } from '../pages/conversation-record';
 import { ConversationRecorderPage } from '../pages/conversation-recorder';
 import { HomePage } from '../pages/home';
+import { IntegrationPage } from '../pages/integration';
 import { PhraseReviewPage } from '../pages/phrase-review';
 import { PhrasePage } from '../pages/phrases';
-import { ProfilesPage } from '../pages/profiles';
 import { TopicsPage } from '../pages/topics';
 import { VocabularyPage } from '../pages/vocabulary';
 import { VocabularyReviewPage } from '../pages/vocabulary-review';
@@ -40,7 +40,7 @@ async function start(): Promise<void> {
               <Route path="phrases" element={<PhrasePage />} />
               <Route path="phrases/review" element={<PhraseReviewPage />} />
               <Route path="vocabulary/review" element={<VocabularyReviewPage />} />
-              <Route path="profiles" element={<ProfilesPage />} />
+              <Route path="integration" element={<IntegrationPage />} />
             </Route>
           </Routes>
         </MemoryRouter>

@@ -84,8 +84,7 @@
   box-shadow: 0 space(2) space(5) var(--color-shadow);
 }
 
-.profileOption,
-.profileSettings {
+.profileOption {
   display: flex;
   align-items: center;
   gap: space(2);
@@ -107,8 +106,7 @@
 }
 
 .profileOption[aria-pressed='true'],
-.profileOption:hover,
-.profileSettings:hover {
+.profileOption:hover {
   background: var(--color-brand-bg);
   color: var(--color-brand-text);
 }
@@ -118,14 +116,8 @@
   opacity: 0.6;
 }
 
-.profileSettings {
-  margin-top: space(1);
-  border-top: 1px solid var(--color-border-subtle);
-}
-
 .profileCard:focus-visible,
-.profileOption:focus-visible,
-.profileSettings:focus-visible {
+.profileOption:focus-visible {
   outline: 3px solid var(--color-focus);
   outline-offset: 2px;
 }

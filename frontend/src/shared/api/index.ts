@@ -16,3 +16,4 @@ export {
   type TopicDifficulty,
   type TopicInput,
 } from './conversations';
+export { mcpApi } from './mcp';

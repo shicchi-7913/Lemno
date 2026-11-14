@@ -1,7 +1,8 @@
+import { invoke } from '@tauri-apps/api/core';
 import { type SubmitEvent, useId, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 
-import { conversationApi, type Topic, type TopicInput } from '@/shared/api';
+import { conversationApi, desktopAvailable, type Topic, type TopicInput } from '@/shared/api';
 import { useI18n } from '@/shared/i18n';
 import { useLearningLanguage } from '@/shared/learning-language';
 import { useFormValidation } from '@/shared/model/use-form-validation';
@@ -11,7 +12,6 @@ import { FormLabel } from '@/shared/ui/FormLabel';
 import { Heading } from '@/shared/ui/Heading';
 import { Icon } from '@/shared/ui/Icon';
 import { Input } from '@/shared/ui/Input';
-import { Link } from '@/shared/ui/Link';
 import { Modal } from '@/shared/ui/Modal';
 import { Select } from '@/shared/ui/Select';
 import { Textarea } from '@/shared/ui/Textarea';
@@ -166,7 +166,20 @@ export const TopicDialog = ({ mode, topic, onDismiss, onComplete }: Props) => {
             >
               {t('topicCopyPrompt')}
             </Button>
-            <Link href="https://chatgpt.com/">{t('topicOpenChatGPT')}</Link>
+            <Button
+              disabled={!desktopAvailable}
+              title={desktopAvailable ? undefined : t('topicOpenDesktopOnly')}
+              rightIcon={<Icon name="external" size={15} />}
+              onClick={async () => {
+                try {
+                  await invoke('open_chatgpt_app', { prompt });
+                } catch {
+                  notify(t('topicOpenError'));
+                }
+              }}
+            >
+              {t('topicOpenChatGPT')}
+            </Button>
           </div>
           <Button
             className={styles.fullWidth}

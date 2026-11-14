@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router';
 
 import { useI18n } from '@/shared/i18n';
 import {
@@ -85,16 +84,6 @@ export const LanguageSwitcher = () => {
             </ButtonBase>
           ))}
         </div>
-        <Link
-          to="/profiles"
-          className={styles.profileSettings}
-          onClick={() => {
-            detailsRef.current!.open = false;
-          }}
-        >
-          <Icon name="plus" size={14} />
-          {t('changeLearningSettings')}
-        </Link>
       </div>
     </details>
   );
