@@ -9,7 +9,6 @@ import { initLearningLanguage } from '@/shared/learning-language';
 
 import { ConversationHistoryPage } from '../pages/conversation-history';
 import { ConversationRecordPage } from '../pages/conversation-record';
-import { ConversationRecorderPage } from '../pages/conversation-recorder';
 import { HomePage } from '../pages/home';
 import { IntegrationPage } from '../pages/integration';
 import { PhraseReviewPage } from '../pages/phrase-review';
@@ -35,7 +34,6 @@ async function start(): Promise<void> {
               <Route path="vocabulary" element={<VocabularyPage />} />
               <Route path="topics" element={<TopicsPage />} />
               <Route path="topics/history" element={<ConversationHistoryPage />} />
-              <Route path="conversations/new" element={<ConversationRecorderPage />} />
               <Route path="conversations/:id" element={<ConversationRecordPage />} />
               <Route path="phrases" element={<PhrasePage />} />
               <Route path="phrases/review" element={<PhraseReviewPage />} />

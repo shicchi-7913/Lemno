@@ -11,7 +11,6 @@ export type Styles = {
   field: string;
   filters: string;
   formRow: string;
-  fullWidth: string;
   notice: string;
   pageHeading: string;
   searchField: string;

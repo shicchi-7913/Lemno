@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { Link, useNavigate } from 'react-router';
+import { Link } from 'react-router';
 
 import { conversationApi, desktopAvailable } from '@/shared/api';
 import { useI18n } from '@/shared/i18n';
@@ -15,7 +15,6 @@ import styles from './history.module.scss';
 
 export const ConversationHistoryPage = () => {
   const { t, locale } = useI18n();
-  const navigate = useNavigate();
   const history = useQuery({
     queryKey: ['conversations'],
     queryFn: conversationApi.list,
@@ -44,9 +43,6 @@ export const ConversationHistoryPage = () => {
           <Heading as="h1">{t('conversationHistory')}</Heading>
           <p>{t('conversationHistorySubtitle')}</p>
         </div>
-        <Button leftIcon={<Icon name="plus" />} onClick={() => navigate('/conversations/new')}>
-          {t('conversationAdd')}
-        </Button>
       </section>
       <ConversationTabs />
       {!desktopAvailable && <p className={styles.notice}>{t('conversationDesktopOnly')}</p>}
@@ -80,9 +76,6 @@ export const ConversationHistoryPage = () => {
               {t('conversationEmpty')}
             </Heading>
             <p>{t('conversationEmptyBody')}</p>
-            <Button variant="outline" onClick={() => navigate('/conversations/new')}>
-              {t('conversationAdd')}
-            </Button>
           </div>
         ) : (
           items.map((item) => (
