@@ -1,4 +1,7 @@
 {
+  "appUpdateAvailable": "An update is available.",
+  "appUpdating": "Updating…",
+  "appUpdateError": "Could not complete the update. Please try again.",
   "brandSubtitle": "Your language companion",
   "languageJapanese": "日本語",
   "languageEnglish": "English",

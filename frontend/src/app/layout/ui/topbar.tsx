@@ -8,6 +8,7 @@ import { useToast } from '@/shared/ui/Toast';
 import { getCurrentNavigation } from '../model';
 
 import { LocaleControl } from './locale-control';
+import { UpdateControl } from './update-control';
 
 import styles from './topbar.module.scss';
 
@@ -37,6 +38,7 @@ export const Topbar = () => {
         )}
       </div>
       <div className={styles.topbarRight}>
+        <UpdateControl onError={notify} />
         <LocaleControl onError={notify} />
         <Avatar aria-hidden="true">S</Avatar>
       </div>

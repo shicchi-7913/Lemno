@@ -62,6 +62,7 @@ const shapes = {
   close: <path d="m6 6 12 12M6 18 18 6" />,
   chevron: <path d="m9 5 7 7-7 7" />,
   down: <path d="m6 9 6 6 6-6" />,
+  download: <path d="M12 3v12m-6-6 6 6 6-6M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4" />,
   repeat: <path d="m17 2 4 4-4 4M3 10V8a2 2 0 0 1 2-2h16M7 22l-4-4 4-4M21 14v2a2 2 0 0 1-2 2H3" />,
   home: (
     <>
