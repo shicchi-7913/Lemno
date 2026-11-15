@@ -28,6 +28,14 @@ impl Database {
         )
         .unwrap();
     }
+
+    fn vocabulary(&self) -> VocabularyService<SqliteVocabularyRepository> {
+        VocabularyService(SqliteVocabularyRepository::open(&self.0).unwrap())
+    }
+
+    fn conversations(&self) -> ConversationService<SqliteVocabularyRepository> {
+        ConversationService(SqliteVocabularyRepository::open(&self.0).unwrap())
+    }
 }
 
 impl Drop for Database {
@@ -63,41 +71,39 @@ async fn call(client: &RunningService<RoleClient, ()>, name: &str, args: Value) 
         .unwrap()
 }
 
+fn record_args(id: &str) -> Value {
+    json!({"input": {
+        "id": id, "topicId": null, "ai": "ChatGPT", "durationMinutes": 10,
+        "notes": "  Practiced hobbies.  ", "feedback": "  Clear reasons. Practice past tense next.  ",
+        "usedItemIds": [],
+        "learnedItems": [{"kind": "word", "text": "perspective", "explanation": "視点"}]
+    }})
+}
+
 #[test]
 fn protocol_round_trip_follows_selected_language_without_reconnecting() {
     tokio::runtime::Runtime::new().unwrap().block_on(async {
         let database = Database::new();
+        let vocabulary = database.vocabulary();
+        let created = vocabulary
+            .create(
+                "default-en",
+                serde_json::from_value(json!({
+                    "kind": "phrase", "text": "It depends", "explanation": "場合による"
+                }))
+                .unwrap(),
+            )
+            .unwrap();
         let (client, task) = connect(&database).await;
         let tools = client.list_all_tools().await.unwrap();
-        assert_eq!(tools.len(), 6);
-        assert!(
-            tools
-                .iter()
-                .all(|tool| tool.annotations.as_ref().unwrap().open_world_hint == Some(false))
+        assert_eq!(tools.len(), 1);
+        assert_eq!(tools[0].name, "record_conversation");
+        assert_eq!(
+            tools[0].annotations.as_ref().unwrap().open_world_hint,
+            Some(false)
         );
-        let topics = call(&client, "list_topics", json!({})).await;
-        assert!(
-            !topics.structured_content.unwrap()["topics"]
-                .as_array()
-                .unwrap()
-                .is_empty()
-        );
-        let created = call(
-            &client,
-            "create_vocabulary",
-            json!({
-                "input": { "kind": "phrase", "text": "  It depends  ", "explanation": "場合による" }
-            }),
-        )
-        .await;
-        let created = created.structured_content.unwrap();
-        assert_eq!(created["text"], "It depends");
-        let used_id = created["id"].as_str().unwrap();
-        let record = json!({"input": {
-            "id": "mcp-session-1", "topicId": null, "ai": "ChatGPT", "durationMinutes": 10,
-            "notes": "  Practiced hobbies.  ", "feedback": "  Clear reasons. Practice past tense next.  ", "usedItemIds": [used_id, used_id],
-            "learnedItems": [{"kind": "word", "text": "perspective", "explanation": "視点"}]
-        }});
+        let mut record = record_args("mcp-session-1");
+        record["input"]["usedItemIds"] = json!([created.id, created.id]);
         for _ in 0..2 {
             let saved = call(&client, "record_conversation", record.clone()).await;
             assert_eq!(saved.is_error, Some(false));
@@ -107,59 +113,49 @@ fn protocol_round_trip_follows_selected_language_without_reconnecting() {
             assert_eq!(saved["learnedItems"], json!([]));
             assert_eq!(saved["candidates"].as_array().unwrap().len(), 1);
             assert!(saved["reviewedAt"].is_null());
-            assert_eq!(saved["feedback"], "Clear reasons. Practice past tense next.");
+            assert_eq!(
+                saved["feedback"],
+                "Clear reasons. Practice past tense next."
+            );
         }
-        let phrases = call(&client, "list_vocabulary", json!({"kind": "phrase"})).await;
         assert_eq!(
-            phrases.structured_content.unwrap()["items"][0]["usageCount"],
+            vocabulary.list("default-en", StudyKind::Phrase).unwrap()[0].usage_count,
             1
         );
-        let words = call(&client, "list_vocabulary", json!({})).await;
-        assert_eq!(
-            words.structured_content.unwrap()["items"]
-                .as_array()
-                .unwrap()
-                .len(),
-            0
-        );
-        let history = call(&client, "list_conversations", json!({})).await;
-        assert_eq!(
-            history.structured_content.unwrap()["conversations"]
-                .as_array()
-                .unwrap()
-                .len(),
-            1
-        );
-        let detail = call(&client, "get_conversation", json!({"id": "mcp-session-1"})).await;
-        assert_eq!(detail.is_error, Some(false));
+        let conversations = database.conversations();
+        assert_eq!(conversations.conversations("default-en").unwrap().len(), 1);
         database.select_language("ja");
-        let foreign = call(&client, "get_conversation", json!({"id": "mcp-session-1"})).await;
-        assert_eq!(foreign.is_error, Some(true));
         let foreign = call(&client, "record_conversation", record.clone()).await;
         assert_eq!(foreign.is_error, Some(true));
-        let empty = call(&client, "list_vocabulary", json!({})).await;
-        assert_eq!(empty.structured_content.unwrap()["items"], json!([]));
-        let created = call(
-            &client,
-            "create_vocabulary",
-            json!({"input": {"text": "こんにちは", "explanation": "hello"}}),
-        )
-        .await;
+        let mut japanese = record_args("mcp-session-ja");
+        japanese["input"]["learnedItems"] = json!([{"text": "こんにちは", "explanation": "hello"}]);
         assert_eq!(
-            created.structured_content.unwrap()["profileId"],
-            "default-ja"
+            call(&client, "record_conversation", japanese)
+                .await
+                .is_error,
+            Some(false)
         );
         database.select_language("en");
-        let detail = call(&client, "get_conversation", json!({"id": "mcp-session-1"})).await;
-        assert_eq!(detail.is_error, Some(false));
-        let words = call(&client, "list_vocabulary", json!({})).await;
-        assert_eq!(words.structured_content.unwrap()["items"], json!([]));
-        let repo = VocabularyService(SqliteVocabularyRepository::open(&database.0).unwrap());
-        assert_eq!(repo.list("default-en", StudyKind::Word).unwrap().len(), 0);
-        assert_eq!(repo.list("default-ja", StudyKind::Word).unwrap().len(), 1);
-        // Candidate registration is a desktop action, never part of the MCP save.
-        let conversations =
-            ConversationService(SqliteVocabularyRepository::open(&database.0).unwrap());
+        assert_eq!(
+            call(&client, "record_conversation", record.clone())
+                .await
+                .is_error,
+            Some(false)
+        );
+        for profile in ["default-en", "default-ja"] {
+            assert!(
+                vocabulary
+                    .list(profile, StudyKind::Word)
+                    .unwrap()
+                    .is_empty()
+            );
+        }
+        let japanese = conversations
+            .conversation("default-ja", "mcp-session-ja")
+            .unwrap();
+        assert_eq!(japanese.candidates[0].input.text, "こんにちは");
+        assert!(japanese.conversation.reviewed_at.is_none());
+        // Candidates are registered only after the learner saves a desktop review.
         let detail = conversations
             .conversation("default-en", "mcp-session-1")
             .unwrap();
@@ -170,9 +166,8 @@ fn protocol_round_trip_follows_selected_language_without_reconnecting() {
                 vec![detail.candidates[0].id.clone()],
             )
             .unwrap();
-        let words = call(&client, "list_vocabulary", json!({})).await;
         assert_eq!(
-            words.structured_content.unwrap()["items"][0]["text"],
+            vocabulary.list("default-en", StudyKind::Word).unwrap()[0].text,
             "perspective"
         );
         let retried = call(&client, "record_conversation", record).await;
@@ -180,70 +175,95 @@ fn protocol_round_trip_follows_selected_language_without_reconnecting() {
         assert!(retried["reviewedAt"].is_string());
         assert_eq!(retried["candidates"][0]["registered"], true);
         assert_eq!(retried["learnedItems"].as_array().unwrap().len(), 1);
-        assert!(
-            client
-                .call_tool(CallToolRequestParams::new("save_conversation_review"))
-                .await
-                .is_err()
-        );
+        assert_eq!(conversations.conversations("default-en").unwrap().len(), 1);
+        assert_eq!(conversations.conversations("default-ja").unwrap().len(), 1);
         client.cancel().await.unwrap();
         task.await.unwrap();
     });
 }
 
 #[test]
-fn invalid_calls_do_not_write_and_client_can_recover() {
+fn removed_tools_and_invalid_calls_do_not_write_and_client_can_recover() {
     tokio::runtime::Runtime::new().unwrap().block_on(async {
         let database = Database::new();
         let (client, task) = connect(&database).await;
-        for input in [
-            json!({"text":" ", "explanation":"meaning"}),
-            json!({"text":"hello", "explanation":" "}),
-            json!({"text":"hello", "explanation":"meaning", "extra": true}),
+        for name in [
+            "list_vocabulary",
+            "create_vocabulary",
+            "list_topics",
+            "list_conversations",
+            "get_conversation",
+            "save_conversation_review",
+            "unknown_tool",
         ] {
-            assert_eq!(
-                call(&client, "create_vocabulary", json!({"input":input}))
+            assert!(
+                client
+                    .call_tool(CallToolRequestParams::new(name))
                     .await
-                    .is_error,
+                    .is_err(),
+                "{name} is still callable"
+            );
+        }
+        for (field, value) in [
+            ("durationMinutes", json!(0)),
+            ("notes", json!(" ")),
+            ("feedback", json!(" ")),
+            ("extra", json!(true)),
+            ("profileId", json!("default-ja")),
+            (
+                "learnedItems",
+                json!([{"text":" ", "explanation":"meaning"}]),
+            ),
+            ("learnedItems", json!([{"text":"hello", "explanation":" "}])),
+            (
+                "learnedItems",
+                json!([{"text":"hello", "explanation":"meaning", "extra":true}]),
+            ),
+        ] {
+            let mut invalid = record_args("bad-session");
+            invalid["input"][field] = value;
+            assert_eq!(
+                call(&client, "record_conversation", invalid).await.is_error,
                 Some(true)
             );
         }
-        assert_eq!(
-            call(
-                &client,
-                "list_vocabulary",
-                json!({"profileId":"default-ja"})
-            )
-            .await
-            .is_error,
-            Some(true)
-        );
-        assert_eq!(
-            call(&client, "list_vocabulary", json!({"kind":"invalid"}))
-                .await
-                .is_error,
-            Some(true)
-        );
-        assert!(
-            client
-                .call_tool(CallToolRequestParams::new("unknown_tool"))
-                .await
-                .is_err()
-        );
-        let invalid = json!({"input":{
-            "id":"bad-session", "ai":"ChatGPT", "durationMinutes":0, "notes":"practice", "feedback":"Practice past tense.",
-            "usedItemIds":[], "learnedItems":[{"text":"hello", "explanation":"こんにちは"}]
-        }});
+        let mut invalid = record_args("bad-session");
+        invalid["profileId"] = json!("default-ja");
         assert_eq!(
             call(&client, "record_conversation", invalid).await.is_error,
             Some(true)
         );
-        let words = call(&client, "list_vocabulary", json!({})).await;
-        assert_eq!(words.structured_content.unwrap()["items"], json!([]));
-        let history = call(&client, "list_conversations", json!({})).await;
+        assert!(
+            database
+                .vocabulary()
+                .list("default-en", StudyKind::Word)
+                .unwrap()
+                .is_empty()
+        );
+        assert!(
+            database
+                .conversations()
+                .conversations("default-en")
+                .unwrap()
+                .is_empty()
+        );
         assert_eq!(
-            history.structured_content.unwrap()["conversations"],
-            json!([])
+            call(
+                &client,
+                "record_conversation",
+                record_args("recovered-session")
+            )
+            .await
+            .is_error,
+            Some(false)
+        );
+        assert_eq!(
+            database
+                .conversations()
+                .conversations("default-en")
+                .unwrap()
+                .len(),
+            1
         );
         client.cancel().await.unwrap();
         task.await.unwrap();
@@ -263,19 +283,52 @@ fn unreadable_language_settings_do_not_write_to_a_fallback_language() {
         .unwrap();
         let result = call(
             &client,
-            "create_vocabulary",
-            json!({"input": {"text": "こんにちは", "explanation": "hello"}}),
+            "record_conversation",
+            record_args("language-session"),
         )
         .await;
         assert_eq!(result.is_error, Some(true));
-        let repo = VocabularyService(SqliteVocabularyRepository::open(&database.0).unwrap());
         for profile in ["default-en", "default-ja"] {
-            assert!(repo.list(profile, StudyKind::Word).unwrap().is_empty());
+            assert!(
+                database
+                    .vocabulary()
+                    .list(profile, StudyKind::Word)
+                    .unwrap()
+                    .is_empty()
+            );
+            assert!(
+                database
+                    .conversations()
+                    .conversations(profile)
+                    .unwrap()
+                    .is_empty()
+            );
         }
         database.select_language("ja");
         assert_eq!(
-            call(&client, "list_vocabulary", json!({})).await.is_error,
+            call(
+                &client,
+                "record_conversation",
+                record_args("language-session")
+            )
+            .await
+            .is_error,
             Some(false)
+        );
+        assert!(
+            database
+                .conversations()
+                .conversations("default-en")
+                .unwrap()
+                .is_empty()
+        );
+        assert_eq!(
+            database
+                .conversations()
+                .conversations("default-ja")
+                .unwrap()
+                .len(),
+            1
         );
         client.cancel().await.unwrap();
         task.await.unwrap();

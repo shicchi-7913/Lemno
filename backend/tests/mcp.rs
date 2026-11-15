@@ -23,7 +23,7 @@ fn desktop_executable_serves_mcp_without_opening_a_window() {
         .unwrap();
         let config =
             ConnectionConfig::new(Path::new(env!("CARGO_BIN_EXE_lemno")), &database).unwrap();
-        assert_eq!(runtime.block_on(check_connection(config)).unwrap(), 6);
+        assert_eq!(runtime.block_on(check_connection(config)).unwrap(), 1);
     }
     std::fs::remove_dir_all(directory).unwrap();
 }

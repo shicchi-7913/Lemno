@@ -14,14 +14,7 @@ import { Surface } from '@/shared/ui/Surface';
 
 import styles from './integration.module.scss';
 
-const tools = [
-  { name: 'list_vocabulary', description: 'mcpToolVocabulary', write: false },
-  { name: 'list_topics', description: 'mcpToolTopics', write: false },
-  { name: 'list_conversations', description: 'mcpToolConversations', write: false },
-  { name: 'get_conversation', description: 'mcpToolDetail', write: false },
-  { name: 'create_vocabulary', description: 'mcpToolCreate', write: true },
-  { name: 'record_conversation', description: 'mcpToolRecord', write: true },
-] as const;
+const toolName = 'record_conversation';
 
 export const McpSettings = () => {
   const { t } = useI18n();
@@ -149,17 +142,13 @@ export const McpSettings = () => {
           description={t('mcpToolsDescription')}
         />
         <ul className={styles.toolList}>
-          {tools.map((tool) => (
-            <li key={tool.name}>
-              <div className={styles.toolHeading}>
-                <code>{tool.name}</code>
-                <Label tone={tool.write ? 'brand' : 'neutral'}>
-                  {t(tool.write ? 'mcpWrite' : 'mcpRead')}
-                </Label>
-              </div>
-              <p>{t(tool.description)}</p>
-            </li>
-          ))}
+          <li>
+            <div className={styles.toolHeading}>
+              <code>{toolName}</code>
+              <Label tone="brand">{t('mcpWrite')}</Label>
+            </div>
+            <p>{t('mcpToolRecord')}</p>
+          </li>
         </ul>
       </Surface>
     </div>

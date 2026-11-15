@@ -112,6 +112,21 @@ rules:
       - backend-build
       - backend-test
 
+  # Same MCP protocol tests as backend CI, without building Tauri.
+  - match:
+      - "backend/**/*.rs"
+      - "backend/**/Cargo.toml"
+      - "backend/Cargo.lock"
+      - "backend/crates/mcp/src/tools.json"
+      - "mise.toml"
+      - ".github/workflows/test.yaml"
+      - ".agents/gate.yaml"
+    timeout: 120
+    run:
+      - name: mcp-test
+        cmd: mise run test-mcp
+        files: false
+
   # Same Rust layer dependency check as backend CI, without building Tauri.
   - match:
       - "backend/**/*.rs"
