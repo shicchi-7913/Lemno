@@ -1,7 +1,7 @@
 import { type SubmitEvent, useId, useRef, useState } from 'react';
 
-import { errorCode, type VocabularyInput } from '@/shared/api';
-import { useI18n } from '@/shared/i18n';
+import { errorCode, type StudyKind, type VocabularyInput } from '@/shared/api';
+import { type t, useI18n } from '@/shared/i18n';
 import { useFormValidation } from '@/shared/model/use-form-validation';
 import { Alert } from '@/shared/ui/Alert';
 import { Button } from '@/shared/ui/Button';
@@ -15,23 +15,34 @@ import { Textarea } from '@/shared/ui/Textarea';
 
 import { useVocabularyMutation, type VocabularyChange, type VocabularyDialogState } from '../model';
 
-import { PhraseMemoField } from './phrase-memo-field';
-import { WordExampleField } from './word-example-field';
-
 import styles from './dialog.module.scss';
 
-interface VocabularyDialogProps {
+interface StudyItemDialogCopy {
+  createTitle: Parameters<typeof t>[0];
+  exampleLabel: Parameters<typeof t>[0];
+  textLabel: Parameters<typeof t>[0];
+}
+
+export interface StudyItemDialogProps {
+  copy: StudyItemDialogCopy;
+  kind: StudyKind;
   state: VocabularyDialogState;
   onDismiss: () => void;
   onComplete: (change: VocabularyChange) => void;
 }
 
-export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDialogProps) => {
+export const StudyItemDialog = ({
+  copy,
+  kind,
+  state,
+  onDismiss,
+  onComplete,
+}: StudyItemDialogProps) => {
   const { t } = useI18n();
   const item = state.mode === 'create' ? undefined : state.item;
   const deleting = state.mode === 'delete';
   const [input, setInput] = useState<VocabularyInput>(() => ({
-    kind: state.mode === 'create' ? state.kind : state.item.kind,
+    kind,
     text: item?.text ?? '',
     explanation: item?.explanation ?? '',
     exampleText: item?.exampleText ?? '',
@@ -49,7 +60,6 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
   const wordRef = useRef<HTMLInputElement>(null);
   const cancelRef = useRef<HTMLButtonElement>(null);
   const id = useId();
-  const KindExampleField = input.kind === 'word' ? WordExampleField : PhraseMemoField;
 
   function changeInput(
     name: keyof VocabularyInput,
@@ -101,7 +111,7 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
           <div className={styles.dialogHeading}>
             <div>
               <Heading as="h2" id={`${id}-title`} className={styles.dialogTitle}>
-                {t(deleting ? 'studyDeleteTitle' : item ? 'studyEditTitle' : 'studyCreateTitle')}
+                {t(deleting ? 'studyDeleteTitle' : item ? 'studyEditTitle' : copy.createTitle)}
               </Heading>
             </div>
             <Button
@@ -122,7 +132,7 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
           ) : (
             <div className={styles.fields}>
               <div className={styles.field}>
-                <FormLabel htmlFor={`${id}-text`}>{t('studyText')}</FormLabel>
+                <FormLabel htmlFor={`${id}-text`}>{t(copy.textLabel)}</FormLabel>
                 <Input
                   {...fields.text.input}
                   ref={wordRef}
@@ -151,18 +161,19 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
                 />
                 <FieldError {...fields.explanation.error} />
               </div>
-              <KindExampleField
-                id={`${id}-example`}
-                textareaProps={{
-                  ...fields.exampleText.input,
-                  maxLength: 2000,
-                  rows: 1,
-                  value: input.exampleText,
-                  onChange: (event) => changeInput('exampleText', event.currentTarget),
-                  placeholder: t('studyExamplePlaceholder'),
-                }}
-                errorProps={fields.exampleText.error}
-              />
+              <div className={styles.field}>
+                <FormLabel htmlFor={`${id}-example`}>{t(copy.exampleLabel)}</FormLabel>
+                <Textarea
+                  {...fields.exampleText.input}
+                  id={`${id}-example`}
+                  maxLength={2000}
+                  rows={1}
+                  value={input.exampleText}
+                  onChange={(event) => changeInput('exampleText', event.currentTarget)}
+                  placeholder={t('studyExamplePlaceholder')}
+                />
+                <FieldError {...fields.exampleText.error} />
+              </div>
               <div id={`${id}-description`} className={styles.languageNote}>
                 <Alert type="info">{t('studyLanguageNote')}</Alert>
               </div>
