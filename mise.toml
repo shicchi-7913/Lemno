@@ -1,7 +1,7 @@
 [tools]
-rust = "1.99.1"
+rust = "1.100.0"
 node = "24.22.3"
-pnpm = "11.28.11"
+pnpm = "12.20.0"
 
 [env]
 TAURI_APP_PATH = "{{ config_root }}/backend"
