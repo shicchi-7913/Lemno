@@ -1,4 +1,5 @@
-export { VocabularyDialog } from './ui';
+export { PhraseDialog } from './ui/phrase-dialog';
+export { WordDialog } from './ui/word-dialog';
 export {
   useVocabulary,
   useVocabularyReview,

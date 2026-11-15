@@ -12,10 +12,11 @@ import { useToast } from '@/shared/ui/Toast';
 import { ToggleButton } from '@/shared/ui/ToggleButton';
 
 import {
+  PhraseDialog,
   useVocabulary,
   type VocabularyChange,
-  VocabularyDialog,
   type VocabularyDialogState,
+  WordDialog,
 } from '../../manage-vocabulary';
 import { filterStudyItems, memoryStatus, type Status, statuses } from '../model';
 
@@ -197,9 +198,12 @@ export const StudyLibrary = ({
           onDelete={(item) => setDialog({ mode: 'delete', item })}
         />
       </section>
-      {dialog && (
-        <VocabularyDialog state={dialog} onDismiss={() => setDialog(null)} onComplete={complete} />
-      )}
+      {dialog &&
+        (kind === 'word' ? (
+          <WordDialog state={dialog} onDismiss={() => setDialog(null)} onComplete={complete} />
+        ) : (
+          <PhraseDialog state={dialog} onDismiss={() => setDialog(null)} onComplete={complete} />
+        ))}
     </>
   );
 };

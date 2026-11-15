@@ -1,7 +1,7 @@
 import { type SubmitEvent, useId, useRef, useState } from 'react';
 
 import { errorCode, type StudyKind, type VocabularyInput } from '@/shared/api';
-import { useI18n } from '@/shared/i18n';
+import { type t, useI18n } from '@/shared/i18n';
 import { useFormValidation } from '@/shared/model/use-form-validation';
 import { Alert } from '@/shared/ui/Alert';
 import { Button } from '@/shared/ui/Button';
@@ -11,25 +11,41 @@ import { Heading } from '@/shared/ui/Heading';
 import { Icon } from '@/shared/ui/Icon';
 import { Input } from '@/shared/ui/Input';
 import { Modal } from '@/shared/ui/Modal';
-import { Select } from '@/shared/ui/Select';
 import { Textarea } from '@/shared/ui/Textarea';
 
 import { useVocabularyMutation, type VocabularyChange, type VocabularyDialogState } from '../model';
 
 import styles from './dialog.module.scss';
 
-interface VocabularyDialogProps {
+interface StudyItemDialogCopy {
+  createTitle: Parameters<typeof t>[0];
+  exampleLabel: Parameters<typeof t>[0];
+  examplePlaceholder: Parameters<typeof t>[0];
+  meaningPlaceholder: Parameters<typeof t>[0];
+  textLabel: Parameters<typeof t>[0];
+  textPlaceholder: Parameters<typeof t>[0];
+}
+
+export interface StudyItemDialogProps {
+  copy: StudyItemDialogCopy;
+  kind: StudyKind;
   state: VocabularyDialogState;
   onDismiss: () => void;
   onComplete: (change: VocabularyChange) => void;
 }
 
-export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDialogProps) => {
+export const StudyItemDialog = ({
+  copy,
+  kind,
+  state,
+  onDismiss,
+  onComplete,
+}: StudyItemDialogProps) => {
   const { t } = useI18n();
   const item = state.mode === 'create' ? undefined : state.item;
   const deleting = state.mode === 'delete';
   const [input, setInput] = useState<VocabularyInput>(() => ({
-    kind: state.mode === 'create' ? state.kind : state.item.kind,
+    kind,
     text: item?.text ?? '',
     explanation: item?.explanation ?? '',
     exampleText: item?.exampleText ?? '',
@@ -98,7 +114,7 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
           <div className={styles.dialogHeading}>
             <div>
               <Heading as="h2" id={`${id}-title`} className={styles.dialogTitle}>
-                {t(deleting ? 'studyDeleteTitle' : item ? 'studyEditTitle' : 'studyCreateTitle')}
+                {t(deleting ? 'studyDeleteTitle' : item ? 'studyEditTitle' : copy.createTitle)}
               </Heading>
             </div>
             <Button
@@ -119,7 +135,7 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
           ) : (
             <div className={styles.fields}>
               <div className={styles.field}>
-                <FormLabel htmlFor={`${id}-text`}>{t('studyText')}</FormLabel>
+                <FormLabel htmlFor={`${id}-text`}>{t(copy.textLabel)}</FormLabel>
                 <Input
                   {...fields.text.input}
                   ref={wordRef}
@@ -127,7 +143,7 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
                   maxLength={200}
                   value={input.text}
                   onChange={(event) => changeInput('text', event.currentTarget)}
-                  placeholder={t('wordPlaceholder')}
+                  placeholder={t(copy.textPlaceholder)}
                   autoComplete="off"
                   spellCheck={false}
                   required
@@ -143,13 +159,13 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
                   rows={1}
                   value={input.explanation}
                   onChange={(event) => changeInput('explanation', event.currentTarget)}
-                  placeholder={t('studyMeaningPlaceholder')}
+                  placeholder={t(copy.meaningPlaceholder)}
                   required
                 />
                 <FieldError {...fields.explanation.error} />
               </div>
               <div className={styles.field}>
-                <FormLabel htmlFor={`${id}-example`}>{t('studyExample')}</FormLabel>
+                <FormLabel htmlFor={`${id}-example`}>{t(copy.exampleLabel)}</FormLabel>
                 <Textarea
                   {...fields.exampleText.input}
                   id={`${id}-example`}
@@ -157,26 +173,9 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
                   rows={1}
                   value={input.exampleText}
                   onChange={(event) => changeInput('exampleText', event.currentTarget)}
-                  placeholder={t('studyExamplePlaceholder')}
+                  placeholder={t(copy.examplePlaceholder)}
                 />
                 <FieldError {...fields.exampleText.error} />
-              </div>
-              <div className={styles.field}>
-                <FormLabel htmlFor={`${id}-kind`}>{t('studyKind')}</FormLabel>
-                <Select
-                  id={`${id}-kind`}
-                  name="kind"
-                  size="md"
-                  value={input.kind}
-                  options={[
-                    { label: t('vocabulary'), value: 'word' },
-                    { label: t('phrases'), value: 'phrase' },
-                  ]}
-                  disabled={state.mode === 'edit'}
-                  onChange={(value) =>
-                    setInput((previous) => ({ ...previous, kind: value as StudyKind }))
-                  }
-                />
               </div>
               <div id={`${id}-description`} className={styles.languageNote}>
                 <Alert type="info">{t('studyLanguageNote')}</Alert>
