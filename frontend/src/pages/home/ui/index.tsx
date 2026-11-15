@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 
 import { conversationApi, desktopAvailable } from '@/shared/api';
 import { useI18n } from '@/shared/i18n';
+import { ActionBanner } from '@/shared/ui/ActionBanner';
 import { Alert } from '@/shared/ui/Alert';
 import { Button } from '@/shared/ui/Button';
 import { Heading } from '@/shared/ui/Heading';
@@ -33,6 +34,9 @@ export const HomePage = () => {
     queryKey: ['conversations'],
     queryFn: conversationApi.list,
     enabled: desktopAvailable,
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: 'always',
+    refetchInterval: 10_000,
   });
   const [now, setNow] = useState(() => new Date());
   useEffect(() => {
@@ -45,6 +49,7 @@ export const HomePage = () => {
   const expressionsAvailable = desktopAvailable && !!words.data && !!phrases.data;
   const historyAvailable = desktopAvailable && !!history.data;
   const activity = conversationActivity(history.data ?? [], now);
+  const unreviewedConversations = (history.data ?? []).filter((item) => !item.reviewedAt);
   const dateLabel = new Intl.DateTimeFormat(locale, {
     year: 'numeric',
     month: 'long',
@@ -103,6 +108,21 @@ export const HomePage = () => {
         </time>
       </section>
       <Hero />
+      {unreviewedConversations.map((item) => (
+        <ActionBanner
+          key={item.id}
+          title={t('homePendingTitle')}
+          action={
+            <Link className={styles.textLink} to={`/conversations/${item.id}`}>
+              {t('homePendingReview')} <Icon name="arrow" size={14} />
+            </Link>
+          }
+        >
+          {t('homePendingDescription', {
+            title: item.title || t('conversationUntitled'),
+          })}
+        </ActionBanner>
+      ))}
       {!desktopAvailable && <Alert type="info">{t('homeDesktopOnly')}</Alert>}
       {queries.some((query) => query.isError) && (
         <Alert type="error">

@@ -1,4 +1,5 @@
 import { invokeForLearningLanguage as invoke } from './invoke';
+import type { VocabularyInput } from './vocabulary';
 
 export type TopicCategory = 'daily' | 'work' | 'travel' | 'hobby';
 export type TopicDifficulty = 'beginner' | 'intermediate' | 'advanced';
@@ -24,6 +25,7 @@ export interface Conversation {
   durationMinutes: number;
   notes: string;
   occurredAt: string;
+  reviewedAt: string | null;
 }
 
 interface Expression {
@@ -35,6 +37,8 @@ interface Expression {
 export interface ConversationDetail extends Conversation {
   usedItems: Expression[];
   learnedItems: Expression[];
+  feedback: string;
+  candidates: (VocabularyInput & { id: string; registered: boolean })[];
 }
 
 export const conversationApi = {
@@ -43,4 +47,6 @@ export const conversationApi = {
   deleteTopic: (id: string) => invoke<void>('delete_topic', { id }),
   list: () => invoke<Conversation[]>('list_conversations'),
   detail: (id: string) => invoke<ConversationDetail>('get_conversation', { id }),
+  saveReview: (id: string, selectedCandidateIds: string[]) =>
+    invoke<ConversationDetail>('save_conversation_review', { id, selectedCandidateIds }),
 };

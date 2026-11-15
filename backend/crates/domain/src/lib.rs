@@ -58,7 +58,7 @@ pub struct Vocabulary {
     pub kind: StudyKind,
 }
 
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct VocabularyInput {
     #[serde(default)]
