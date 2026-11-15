@@ -90,6 +90,10 @@ rules:
       - "backend/Cargo.lock"
       - "backend/tauri.conf.json"
       - "backend/capabilities/*.json"
+      - "backend/crates/infrastructure/migrations/*.sql"
+      - "backend/crates/mcp/src/tools.json"
+      - "mise.toml"
+      - ".agents/gate.yaml"
     timeout: 60
     run:
       - name: rust-format-check
@@ -106,6 +110,7 @@ rules:
           done
     run_checks:
       - backend-build
+      - backend-test
 
   # Same MCP protocol tests as backend CI, without building Tauri.
   - match:
@@ -160,5 +165,13 @@ consistency_checks:
     run:
       - name: backend-build
         cmd: mise run exec -- cargo build --workspace --locked --manifest-path backend/Cargo.toml
+        files: false
+        timeout: 600
+
+  # Full Rust workspace test command already defined in mise task "check".
+  - name: backend-test
+    run:
+      - name: backend-test
+        cmd: mise run exec -- cargo test --workspace --locked --manifest-path backend/Cargo.toml
         files: false
         timeout: 600

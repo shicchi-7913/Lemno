@@ -38,4 +38,19 @@ impl<R: ConversationRepository> ConversationService<R> {
     ) -> Result<ConversationDetail, Error> {
         self.0.record(profile_id, &input.normalized()?)
     }
+
+    pub fn save_review(
+        &self,
+        profile_id: &str,
+        session_id: &str,
+        mut selected_candidate_ids: Vec<String>,
+    ) -> Result<ConversationDetail, Error> {
+        if selected_candidate_ids.len() > 100 {
+            return Err(Error::Validation("selectedCandidateIds"));
+        }
+        selected_candidate_ids.sort();
+        selected_candidate_ids.dedup();
+        self.0
+            .save_review(profile_id, session_id, &selected_candidate_ids)
+    }
 }

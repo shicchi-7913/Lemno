@@ -88,9 +88,12 @@ impl ServerHandler for LearningServer {
             .with_instructions(
                 "Lemno uses the learning language currently selected in the desktop app. \
                  The language is read on every tool call, so switching languages needs no reconnection. \
-                 Only record expressions the learner actually used. Ask the learner to confirm \
-                 the summary and learned expressions before saving. Reuse the same conversation \
-                 input.id on retries to avoid duplicates. Use ai=ChatGPT. \
+                 Only record expressions the learner actually used. When the learner asks to save \
+                 after practice, use record_conversation to save the summary in notes, AI feedback in \
+                 feedback (strengths, concrete corrections and next steps), and new word/phrase \
+                 candidates in learnedItems. Candidates are not added to vocabulary: \
+                 the learner reviews the feedback, checks new expressions and saves the review in Lemno. \
+                 Reuse the same conversation input.id on retries to avoid duplicates. Use ai=ChatGPT. \
                  If existing topic or expression IDs are unavailable, use topicId=null \
                  and usedItemIds=[]."
                     .to_owned(),

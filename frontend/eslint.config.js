@@ -137,6 +137,20 @@ export default defineConfig([
     },
   })),
   {
+    files: ['src/**/*.{ts,tsx}'],
+    ignores: ['src/shared/ui/Checkbox/checkbox.tsx'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            'JSXAttribute[name.name="type"][value.value="checkbox"], JSXAttribute[name.name="type"][value.expression.value="checkbox"]',
+          message: 'Use the shared Checkbox component for checkbox inputs.',
+        },
+      ],
+    },
+  },
+  {
     files: ['src/**/*.tsx'],
     ignores: ['src/**/ui/**/*.tsx', 'src/app/main.tsx'],
     rules: {

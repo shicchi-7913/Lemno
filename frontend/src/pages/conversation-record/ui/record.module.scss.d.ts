@@ -2,10 +2,18 @@
 export type Styles = {
   backButton: string;
   badges: string;
+  candidate: string;
+  candidateContent: string;
+  candidateDescription: string;
+  candidateExample: string;
+  candidateGroup: string;
+  candidateHeading: string;
+  candidateList: string;
   contained: string;
   detailGrid: string;
   empty: string;
   expressionsPanel: string;
+  feedback: string;
   fullWidth: string;
   learnedExpression: string;
   muted: string;
@@ -14,7 +22,11 @@ export type Styles = {
   notice: string;
   pageHeading: string;
   panel: string;
+  review: string;
+  reviewActions: string;
+  reviewHeading: string;
   sectionHeading: string;
+  usageCount: string;
   usedExpression: string;
 };
 

@@ -74,7 +74,8 @@ async fn call(client: &RunningService<RoleClient, ()>, name: &str, args: Value) 
 fn record_args(id: &str) -> Value {
     json!({"input": {
         "id": id, "topicId": null, "ai": "ChatGPT", "durationMinutes": 10,
-        "notes": "  Practiced hobbies.  ", "usedItemIds": [],
+        "notes": "  Practiced hobbies.  ", "feedback": "  Clear reasons. Practice past tense next.  ",
+        "usedItemIds": [],
         "learnedItems": [{"kind": "word", "text": "perspective", "explanation": "視点"}]
     }})
 }
@@ -109,7 +110,13 @@ fn protocol_round_trip_follows_selected_language_without_reconnecting() {
             let saved = saved.structured_content.unwrap();
             assert_eq!(saved["notes"], "Practiced hobbies.");
             assert_eq!(saved["usedItems"].as_array().unwrap().len(), 1);
-            assert_eq!(saved["learnedItems"].as_array().unwrap().len(), 1);
+            assert_eq!(saved["learnedItems"], json!([]));
+            assert_eq!(saved["candidates"].as_array().unwrap().len(), 1);
+            assert!(saved["reviewedAt"].is_null());
+            assert_eq!(
+                saved["feedback"],
+                "Clear reasons. Practice past tense next."
+            );
         }
         assert_eq!(
             vocabulary.list("default-en", StudyKind::Phrase).unwrap()[0].usage_count,
@@ -130,17 +137,44 @@ fn protocol_round_trip_follows_selected_language_without_reconnecting() {
         );
         database.select_language("en");
         assert_eq!(
-            call(&client, "record_conversation", record).await.is_error,
+            call(&client, "record_conversation", record.clone())
+                .await
+                .is_error,
             Some(false)
         );
+        for profile in ["default-en", "default-ja"] {
+            assert!(
+                vocabulary
+                    .list(profile, StudyKind::Word)
+                    .unwrap()
+                    .is_empty()
+            );
+        }
+        let japanese = conversations
+            .conversation("default-ja", "mcp-session-ja")
+            .unwrap();
+        assert_eq!(japanese.candidates[0].input.text, "こんにちは");
+        assert!(japanese.conversation.reviewed_at.is_none());
+        // Candidates are registered only after the learner saves a desktop review.
+        let detail = conversations
+            .conversation("default-en", "mcp-session-1")
+            .unwrap();
+        conversations
+            .save_review(
+                "default-en",
+                "mcp-session-1",
+                vec![detail.candidates[0].id.clone()],
+            )
+            .unwrap();
         assert_eq!(
             vocabulary.list("default-en", StudyKind::Word).unwrap()[0].text,
             "perspective"
         );
-        assert_eq!(
-            vocabulary.list("default-ja", StudyKind::Word).unwrap()[0].text,
-            "こんにちは"
-        );
+        let retried = call(&client, "record_conversation", record).await;
+        let retried = retried.structured_content.unwrap();
+        assert!(retried["reviewedAt"].is_string());
+        assert_eq!(retried["candidates"][0]["registered"], true);
+        assert_eq!(retried["learnedItems"].as_array().unwrap().len(), 1);
         assert_eq!(conversations.conversations("default-en").unwrap().len(), 1);
         assert_eq!(conversations.conversations("default-ja").unwrap().len(), 1);
         client.cancel().await.unwrap();
@@ -159,6 +193,7 @@ fn removed_tools_and_invalid_calls_do_not_write_and_client_can_recover() {
             "list_topics",
             "list_conversations",
             "get_conversation",
+            "save_conversation_review",
             "unknown_tool",
         ] {
             assert!(
@@ -172,6 +207,7 @@ fn removed_tools_and_invalid_calls_do_not_write_and_client_can_recover() {
         for (field, value) in [
             ("durationMinutes", json!(0)),
             ("notes", json!(" ")),
+            ("feedback", json!(" ")),
             ("extra", json!(true)),
             ("profileId", json!("default-ja")),
             (

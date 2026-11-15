@@ -166,6 +166,7 @@ pub fn run() {
             conversation::list_conversations,
             conversation::get_conversation,
             conversation::record_conversation,
+            conversation::save_conversation_review,
             mcp::get_codex_status,
             mcp::connect_codex
         ])

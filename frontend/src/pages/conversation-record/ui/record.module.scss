@@ -86,6 +86,11 @@
 .usedExpression {
   background: var(--color-brand-bg);
   color: var(--color-brand-text);
+  flex-wrap: wrap;
+}
+.usageCount {
+  margin-left: auto;
+  font-size: var(--font-size-xs);
 }
 .learnedExpression {
   background: var(--color-info-bg);
@@ -119,6 +124,103 @@
   outline-offset: 3px;
 }
 
+.review {
+  display: grid;
+  gap: space(4);
+  padding: space(7);
+  margin-top: space(5);
+}
+
+.reviewHeading,
+.reviewActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: space(3);
+  flex-wrap: wrap;
+}
+
+.reviewActions {
+  justify-content: flex-end;
+}
+
+.feedback {
+  margin: 0;
+  padding: space(5);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-muted);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: 2;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.candidateGroup {
+  min-width: 0;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.candidateGroup legend {
+  padding: 0 0 space(4);
+  color: var(--color-text-strong);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.candidateDescription {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.8;
+}
+
+.candidateList {
+  display: grid;
+  gap: space(4);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.candidate {
+  display: flex;
+  align-items: flex-start;
+  gap: space(4);
+  padding: space(4);
+  background: var(--color-surface-muted);
+  border-radius: var(--radius-md);
+}
+
+.candidateContent {
+  display: grid;
+  gap: space(2);
+  min-width: 0;
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+
+.candidateHeading {
+  display: flex;
+  align-items: center;
+  gap: space(3);
+  flex-wrap: wrap;
+}
+
+.candidateContent p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.candidateContent .candidateExample {
+  color: var(--color-text-muted);
+}
+
 @media (max-width: 1200px) {
   .detailGrid {
     grid-template-columns: 1fr;
@@ -134,7 +236,8 @@
   }
 
   .notesPanel,
-  .expressionsPanel {
+  .expressionsPanel,
+  .review {
     padding: space(5);
   }
 }
