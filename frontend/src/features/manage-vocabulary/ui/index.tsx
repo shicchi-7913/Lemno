@@ -1,6 +1,6 @@
 import { type SubmitEvent, useId, useRef, useState } from 'react';
 
-import { errorCode, type StudyKind, type VocabularyInput } from '@/shared/api';
+import { errorCode, type VocabularyInput } from '@/shared/api';
 import { useI18n } from '@/shared/i18n';
 import { useFormValidation } from '@/shared/model/use-form-validation';
 import { Alert } from '@/shared/ui/Alert';
@@ -11,10 +11,12 @@ import { Heading } from '@/shared/ui/Heading';
 import { Icon } from '@/shared/ui/Icon';
 import { Input } from '@/shared/ui/Input';
 import { Modal } from '@/shared/ui/Modal';
-import { Select } from '@/shared/ui/Select';
 import { Textarea } from '@/shared/ui/Textarea';
 
 import { useVocabularyMutation, type VocabularyChange, type VocabularyDialogState } from '../model';
+
+import { PhraseMemoField } from './phrase-memo-field';
+import { WordExampleField } from './word-example-field';
 
 import styles from './dialog.module.scss';
 
@@ -47,6 +49,7 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
   const wordRef = useRef<HTMLInputElement>(null);
   const cancelRef = useRef<HTMLButtonElement>(null);
   const id = useId();
+  const KindExampleField = input.kind === 'word' ? WordExampleField : PhraseMemoField;
 
   function changeInput(
     name: keyof VocabularyInput,
@@ -148,36 +151,18 @@ export const VocabularyDialog = ({ state, onDismiss, onComplete }: VocabularyDia
                 />
                 <FieldError {...fields.explanation.error} />
               </div>
-              <div className={styles.field}>
-                <FormLabel htmlFor={`${id}-example`}>{t('studyExample')}</FormLabel>
-                <Textarea
-                  {...fields.exampleText.input}
-                  id={`${id}-example`}
-                  maxLength={2000}
-                  rows={1}
-                  value={input.exampleText}
-                  onChange={(event) => changeInput('exampleText', event.currentTarget)}
-                  placeholder={t('studyExamplePlaceholder')}
-                />
-                <FieldError {...fields.exampleText.error} />
-              </div>
-              <div className={styles.field}>
-                <FormLabel htmlFor={`${id}-kind`}>{t('studyKind')}</FormLabel>
-                <Select
-                  id={`${id}-kind`}
-                  name="kind"
-                  size="md"
-                  value={input.kind}
-                  options={[
-                    { label: t('vocabulary'), value: 'word' },
-                    { label: t('phrases'), value: 'phrase' },
-                  ]}
-                  disabled={state.mode === 'edit'}
-                  onChange={(value) =>
-                    setInput((previous) => ({ ...previous, kind: value as StudyKind }))
-                  }
-                />
-              </div>
+              <KindExampleField
+                id={`${id}-example`}
+                textareaProps={{
+                  ...fields.exampleText.input,
+                  maxLength: 2000,
+                  rows: 1,
+                  value: input.exampleText,
+                  onChange: (event) => changeInput('exampleText', event.currentTarget),
+                  placeholder: t('studyExamplePlaceholder'),
+                }}
+                errorProps={fields.exampleText.error}
+              />
               <div id={`${id}-description`} className={styles.languageNote}>
                 <Alert type="info">{t('studyLanguageNote')}</Alert>
               </div>
