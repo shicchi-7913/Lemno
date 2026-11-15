@@ -12,7 +12,7 @@ const conversation = (day: number, hour?: number): Conversation => ({
   durationMinutes: 10,
   notes: '',
   occurredAt: localDate(day, hour).toISOString(),
-  pendingCandidateCount: 0,
+  reviewedAt: null,
 });
 
 describe('conversationActivity', () => {

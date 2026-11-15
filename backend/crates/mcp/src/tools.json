@@ -134,7 +134,7 @@
   },
   {
     "name": "record_conversation",
-    "description": "Save a confirmed conversation summary, actually used expression IDs and word or phrase candidates atomically in Lemno’s currently selected learning language. Candidates remain pending until the learner chooses to register or skip them in Lemno; they are not added to vocabulary by this call. Reuse input.id when retrying.",
+    "description": "Save a conversation summary, AI feedback, actually used expression IDs and new word/phrase candidates atomically. The conversation remains unreviewed until the learner reads the feedback, checks new expressions to register and saves the review in Lemno. Reuse input.id on retries.",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -215,6 +215,12 @@
                 "additionalProperties": false
               },
               "maxItems": 100
+            },
+            "feedback": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20000,
+              "description": "AI feedback grounded in this conversation: strengths, concrete corrections or better phrasing with examples, and what to practice next. Separate this from the factual summary in notes."
             }
           },
           "required": [
@@ -223,7 +229,8 @@
             "durationMinutes",
             "notes",
             "usedItemIds",
-            "learnedItems"
+            "learnedItems",
+            "feedback"
           ],
           "additionalProperties": false
         }

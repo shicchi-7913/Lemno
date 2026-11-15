@@ -8,10 +8,7 @@ use uuid::Uuid;
 use crate::{SqliteVocabularyRepository, create_vocabulary_in, storage};
 
 const TOPIC_SELECT: &str = "SELECT id, category, title, scenario, learner_role, ai_role, objective, difficulty FROM topics";
-const SESSION_SELECT: &str = "SELECT id, title, ai, duration_minutes, notes, occurred_at,
-    (SELECT COUNT(*) FROM conversation_learning_candidates c
-     WHERE c.session_id = conversation_sessions.id AND c.profile_id = conversation_sessions.profile_id
-       AND c.reviewed = 0) FROM conversation_sessions";
+const SESSION_SELECT: &str = "SELECT id, title, ai, duration_minutes, notes, occurred_at, reviewed_at FROM conversation_sessions";
 
 fn topic_row(row: &rusqlite::Row<'_>) -> rusqlite::Result<Topic> {
     Ok(Topic {
@@ -36,13 +33,14 @@ fn session_row(row: &rusqlite::Row<'_>) -> rusqlite::Result<Conversation> {
         duration_minutes: row.get(3)?,
         notes: row.get(4)?,
         occurred_at: row.get(5)?,
-        pending_candidate_count: row.get(6)?,
+        reviewed_at: row.get(6)?,
     })
 }
 
 fn candidate_row(row: &rusqlite::Row<'_>) -> rusqlite::Result<LearningCandidate> {
     Ok(LearningCandidate {
         id: row.get(0)?,
+        registered: row.get(5)?,
         input: VocabularyInput {
             kind: match row.get::<_, String>(1)?.as_str() {
                 "phrase" => StudyKind::Phrase,
@@ -101,10 +99,11 @@ fn get_session(
             .collect::<rusqlite::Result<Vec<_>>>()
             .map_err(storage)
     };
-    let pending_items = connection
+    let candidates = connection
         .prepare(
-            "SELECT id, kind, text, explanation, example_text FROM conversation_learning_candidates
-             WHERE session_id = ?1 AND profile_id = ?2 AND reviewed = 0 ORDER BY rowid",
+            "SELECT id, kind, text, explanation, example_text, learning_item_id IS NOT NULL
+             FROM conversation_learning_candidates
+             WHERE session_id = ?1 AND profile_id = ?2 ORDER BY rowid",
         )
         .map_err(storage)?
         .query_map(params![id, profile_id], candidate_row)
@@ -118,7 +117,14 @@ fn get_session(
             "AND COALESCE(r.manual_usage_count, r.ai_usage_count) > 0",
         )?,
         learned_items: expressions("session_learning_items", "")?,
-        pending_items,
+        feedback: connection
+            .query_row(
+                "SELECT feedback FROM conversation_sessions WHERE id = ?1 AND profile_id = ?2",
+                params![id, profile_id],
+                |row| row.get(0),
+            )
+            .map_err(storage)?,
+        candidates,
     })
 }
 
@@ -244,9 +250,9 @@ impl ConversationRepository for SqliteVocabularyRepository {
             .unwrap_or_default();
         tx.execute(
             "INSERT INTO conversation_sessions
-             (id, profile_id, topic_id, status, occurred_at, title, ai, duration_minutes, notes)
-             VALUES (?1, ?2, ?3, 'recorded', strftime('%Y-%m-%dT%H:%M:%fZ', 'now'), ?4, ?5, ?6, ?7)",
-            params![input.id, profile_id, input.topic_id, title, input.ai, input.duration_minutes, input.notes],
+             (id, profile_id, topic_id, status, occurred_at, title, ai, duration_minutes, notes, feedback)
+             VALUES (?1, ?2, ?3, 'recorded', strftime('%Y-%m-%dT%H:%M:%fZ', 'now'), ?4, ?5, ?6, ?7, ?8)",
+            params![input.id, profile_id, input.topic_id, title, input.ai, input.duration_minutes, input.notes, input.feedback],
         ).map_err(storage)?;
         for id in &input.used_item_ids {
             // The composite foreign key enforces membership in the same learning profile.
@@ -279,47 +285,57 @@ impl ConversationRepository for SqliteVocabularyRepository {
         Ok(detail)
     }
 
-    fn resolve_candidate(
+    fn save_review(
         &self,
         profile_id: &str,
         session_id: &str,
-        candidate_id: &str,
-        register: bool,
+        selected_candidate_ids: &[String],
     ) -> Result<ConversationDetail, Error> {
         let mut connection = self.connection.lock().map_err(storage)?;
         let tx = connection
             .transaction_with_behavior(rusqlite::TransactionBehavior::Immediate)
             .map_err(storage)?;
-        get_session(&tx, profile_id, session_id)?;
-        let (candidate, reviewed) = tx
-            .query_row(
-                "SELECT id, kind, text, explanation, example_text, reviewed
-                 FROM conversation_learning_candidates
-                 WHERE id = ?1 AND session_id = ?2 AND profile_id = ?3",
-                params![candidate_id, session_id, profile_id],
-                |row| Ok((candidate_row(row)?, row.get::<_, bool>(5)?)),
-            )
-            .optional()
-            .map_err(storage)?
-            .ok_or(Error::NotFound)?;
-        // A retried decision must never create another vocabulary item.
-        if !reviewed {
-            if register {
-                let item = create_vocabulary_in(&tx, profile_id, &candidate.input)?;
-                tx.execute(
-                    "INSERT INTO session_learning_items (session_id, learning_item_id, profile_id)
-                     VALUES (?1, ?2, ?3)",
-                    params![session_id, item.id, profile_id],
-                )
-                .map_err(storage)?;
+        let current = get_session(&tx, profile_id, session_id)?;
+        if selected_candidate_ids
+            .iter()
+            .any(|id| !current.candidates.iter().any(|item| &item.id == id))
+        {
+            return Err(Error::NotFound);
+        }
+        // The first successful save completes the review; retries return its saved choices.
+        if current.conversation.reviewed_at.is_some() {
+            return Ok(current);
+        }
+        for candidate in &current.candidates {
+            if candidate.registered || !selected_candidate_ids.contains(&candidate.id) {
+                continue;
             }
+            let item = create_vocabulary_in(&tx, profile_id, &candidate.input)?;
             tx.execute(
-                "UPDATE conversation_learning_candidates SET reviewed = 1
-                 WHERE id = ?1 AND session_id = ?2 AND profile_id = ?3",
-                params![candidate_id, session_id, profile_id],
+                "INSERT INTO session_learning_items (session_id, learning_item_id, profile_id)
+                 VALUES (?1, ?2, ?3)",
+                params![session_id, item.id, profile_id],
+            )
+            .map_err(storage)?;
+            tx.execute(
+                "UPDATE conversation_learning_candidates SET learning_item_id = ?1
+                 WHERE id = ?2 AND session_id = ?3 AND profile_id = ?4",
+                params![item.id, candidate.id, session_id, profile_id],
             )
             .map_err(storage)?;
         }
+        tx.execute(
+            "UPDATE conversation_learning_candidates SET reviewed = 1
+             WHERE session_id = ?1 AND profile_id = ?2",
+            params![session_id, profile_id],
+        )
+        .map_err(storage)?;
+        tx.execute(
+            "UPDATE conversation_sessions SET reviewed_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+             WHERE id = ?1 AND profile_id = ?2",
+            params![session_id, profile_id],
+        )
+        .map_err(storage)?;
         let detail = get_session(&tx, profile_id, session_id)?;
         tx.commit().map_err(storage)?;
         Ok(detail)

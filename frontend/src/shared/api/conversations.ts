@@ -25,7 +25,7 @@ export interface Conversation {
   durationMinutes: number;
   notes: string;
   occurredAt: string;
-  pendingCandidateCount: number;
+  reviewedAt: string | null;
 }
 
 interface Expression {
@@ -37,7 +37,8 @@ interface Expression {
 export interface ConversationDetail extends Conversation {
   usedItems: Expression[];
   learnedItems: Expression[];
-  pendingItems: (VocabularyInput & { id: string })[];
+  feedback: string;
+  candidates: (VocabularyInput & { id: string; registered: boolean })[];
 }
 
 export const conversationApi = {
@@ -46,6 +47,6 @@ export const conversationApi = {
   deleteTopic: (id: string) => invoke<void>('delete_topic', { id }),
   list: () => invoke<Conversation[]>('list_conversations'),
   detail: (id: string) => invoke<ConversationDetail>('get_conversation', { id }),
-  resolveCandidate: (id: string, candidateId: string, register: boolean) =>
-    invoke<ConversationDetail>('resolve_conversation_candidate', { id, candidateId, register }),
+  saveReview: (id: string, selectedCandidateIds: string[]) =>
+    invoke<ConversationDetail>('save_conversation_review', { id, selectedCandidateIds }),
 };

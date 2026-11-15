@@ -80,7 +80,7 @@ export const TopicDialog = ({ mode, topic, onDismiss, onComplete }: Props) => {
   const starting = mode === 'start';
   // Practice the selected learning language regardless of the display locale.
   const targetLanguage = language === 'ja' ? 'Japanese' : 'English';
-  const prompt = `Let's practice ${targetLanguage} conversation.\nTopic: ${input.title}\nSituation: ${input.scenario}\nMy role: ${input.learnerRole}\nYour role: ${input.aiRole}\nGoal: ${input.objective}\nLevel: ${input.difficulty}\nPlease ask one question at a time. After our conversation, summarize expressions I used and new expressions to learn. When I ask you to save using MCP, use Lemno's record_conversation to save the summary, used expression IDs, and new expression candidates in learnedItems. I will choose which candidates to register in Lemno; do not register them directly as vocabulary.`;
+  const prompt = `Let's practice ${targetLanguage} conversation.\nTopic: ${input.title}\nSituation: ${input.scenario}\nMy role: ${input.learnerRole}\nYour role: ${input.aiRole}\nGoal: ${input.objective}\nLevel: ${input.difficulty}\nPlease ask one question at a time. After our conversation, summarize expressions I used and new expressions to learn. When I ask you to save using MCP, use Lemno's record_conversation to save the summary in notes, your feedback in feedback (strengths, corrections with examples, and next steps), used expression IDs, and new word and phrase candidates in learnedItems. I will review your feedback, check which new expressions to register, and save my review in Lemno; do not register them directly as vocabulary.`;
 
   async function submit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();

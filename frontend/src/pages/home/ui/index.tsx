@@ -49,9 +49,7 @@ export const HomePage = () => {
   const expressionsAvailable = desktopAvailable && !!words.data && !!phrases.data;
   const historyAvailable = desktopAvailable && !!history.data;
   const activity = conversationActivity(history.data ?? [], now);
-  const pendingConversations = (history.data ?? []).filter(
-    (item) => item.pendingCandidateCount > 0,
-  );
+  const unreviewedConversations = (history.data ?? []).filter((item) => !item.reviewedAt);
   const dateLabel = new Intl.DateTimeFormat(locale, {
     year: 'numeric',
     month: 'long',
@@ -110,7 +108,7 @@ export const HomePage = () => {
         </time>
       </section>
       <Hero />
-      {pendingConversations.map((item) => (
+      {unreviewedConversations.map((item) => (
         <ActionBanner
           key={item.id}
           title={t('homePendingTitle')}
@@ -122,7 +120,6 @@ export const HomePage = () => {
         >
           {t('homePendingDescription', {
             title: item.title || t('conversationUntitled'),
-            count: item.pendingCandidateCount,
           })}
         </ActionBanner>
       ))}

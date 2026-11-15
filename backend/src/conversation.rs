@@ -79,19 +79,17 @@ pub fn record_conversation(
 }
 
 #[tauri::command]
-pub fn resolve_conversation_candidate(
+pub fn save_conversation_review(
     service: State<'_, Service>,
     profile_id: Option<String>,
     id: String,
-    candidate_id: String,
-    register: bool,
+    selected_candidate_ids: Vec<String>,
 ) -> Result<ConversationDetail, CommandError> {
     service
-        .resolve_candidate(
+        .save_review(
             profile_id.as_deref().unwrap_or(DEFAULT_PROFILE_ID),
             &id,
-            &candidate_id,
-            register,
+            selected_candidate_ids,
         )
         .map_err(Into::into)
 }

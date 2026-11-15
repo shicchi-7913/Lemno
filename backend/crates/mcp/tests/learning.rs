@@ -95,7 +95,7 @@ fn protocol_round_trip_follows_selected_language_without_reconnecting() {
         let used_id = created["id"].as_str().unwrap();
         let record = json!({"input": {
             "id": "mcp-session-1", "topicId": null, "ai": "ChatGPT", "durationMinutes": 10,
-            "notes": "  Practiced hobbies.  ", "usedItemIds": [used_id, used_id],
+            "notes": "  Practiced hobbies.  ", "feedback": "  Clear reasons. Practice past tense next.  ", "usedItemIds": [used_id, used_id],
             "learnedItems": [{"kind": "word", "text": "perspective", "explanation": "視点"}]
         }});
         for _ in 0..2 {
@@ -105,8 +105,9 @@ fn protocol_round_trip_follows_selected_language_without_reconnecting() {
             assert_eq!(saved["notes"], "Practiced hobbies.");
             assert_eq!(saved["usedItems"].as_array().unwrap().len(), 1);
             assert_eq!(saved["learnedItems"], json!([]));
-            assert_eq!(saved["pendingItems"].as_array().unwrap().len(), 1);
-            assert_eq!(saved["pendingCandidateCount"], 1);
+            assert_eq!(saved["candidates"].as_array().unwrap().len(), 1);
+            assert!(saved["reviewedAt"].is_null());
+            assert_eq!(saved["feedback"], "Clear reasons. Practice past tense next.");
         }
         let phrases = call(&client, "list_vocabulary", json!({"kind": "phrase"})).await;
         assert_eq!(
@@ -163,11 +164,10 @@ fn protocol_round_trip_follows_selected_language_without_reconnecting() {
             .conversation("default-en", "mcp-session-1")
             .unwrap();
         conversations
-            .resolve_candidate(
+            .save_review(
                 "default-en",
                 "mcp-session-1",
-                &detail.pending_items[0].id,
-                true,
+                vec![detail.candidates[0].id.clone()],
             )
             .unwrap();
         let words = call(&client, "list_vocabulary", json!({})).await;
@@ -177,11 +177,12 @@ fn protocol_round_trip_follows_selected_language_without_reconnecting() {
         );
         let retried = call(&client, "record_conversation", record).await;
         let retried = retried.structured_content.unwrap();
-        assert_eq!(retried["pendingItems"], json!([]));
+        assert!(retried["reviewedAt"].is_string());
+        assert_eq!(retried["candidates"][0]["registered"], true);
         assert_eq!(retried["learnedItems"].as_array().unwrap().len(), 1);
         assert!(
             client
-                .call_tool(CallToolRequestParams::new("resolve_conversation_candidate"))
+                .call_tool(CallToolRequestParams::new("save_conversation_review"))
                 .await
                 .is_err()
         );
@@ -230,7 +231,7 @@ fn invalid_calls_do_not_write_and_client_can_recover() {
                 .is_err()
         );
         let invalid = json!({"input":{
-            "id":"bad-session", "ai":"ChatGPT", "durationMinutes":0, "notes":"practice",
+            "id":"bad-session", "ai":"ChatGPT", "durationMinutes":0, "notes":"practice", "feedback":"Practice past tense.",
             "usedItemIds":[], "learnedItems":[{"text":"hello", "explanation":"こんにちは"}]
         }});
         assert_eq!(

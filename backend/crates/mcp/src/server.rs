@@ -136,9 +136,10 @@ impl ServerHandler for LearningServer {
                  The language is read on every tool call, so switching languages needs no reconnection. \
                  List topics and vocabulary before practice. \
                  Only record expressions the learner actually used. When the learner asks to save \
-                 after practice, use record_conversation to save the confirmed summary and new \
-                 expression candidates in learnedItems. Candidates are not added to vocabulary: \
-                 the learner chooses which to register or skip in Lemno. Do not use create_vocabulary \
+                 after practice, use record_conversation to save the summary in notes, AI feedback in \
+                 feedback (strengths, concrete corrections and next steps), and new word/phrase \
+                 candidates in learnedItems. Candidates are not added to vocabulary: \
+                 the learner reviews the feedback, checks new expressions and saves the review in Lemno. Do not use create_vocabulary \
                  for these candidates. Reuse the same conversation input.id on retries to avoid \
                  duplicates. Use ai=ChatGPT."
                     .to_owned(),

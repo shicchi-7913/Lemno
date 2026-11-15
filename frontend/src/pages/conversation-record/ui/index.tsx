@@ -1,7 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQueries, useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router';
 
-import { conversationApi, desktopAvailable } from '@/shared/api';
+import { conversationApi, desktopAvailable, vocabularyApi } from '@/shared/api';
 import { useI18n } from '@/shared/i18n';
 import { Button } from '@/shared/ui/Button';
 import { Heading } from '@/shared/ui/Heading';
@@ -9,7 +9,7 @@ import { Icon } from '@/shared/ui/Icon';
 
 import { conversationDate } from '../../../features/conversation-workspace';
 
-import { LearningCandidates } from './learning-candidates';
+import { ConversationReview } from './conversation-review';
 
 import styles from './record.module.scss';
 
@@ -25,6 +25,18 @@ export const ConversationRecordPage = () => {
     refetchOnWindowFocus: 'always',
   });
   const item = record.data;
+  const vocabulary = useQueries({
+    queries: (['word', 'phrase'] as const).map((kind) => ({
+      queryKey: ['vocabulary', kind],
+      queryFn: () => vocabularyApi.list(kind),
+      enabled: desktopAvailable,
+      refetchOnMount: 'always' as const,
+      refetchOnWindowFocus: 'always' as const,
+    })),
+  });
+  const usageCounts = new Map(
+    vocabulary.flatMap((query) => query.data ?? []).map((entry) => [entry.id, entry.usageCount]),
+  );
   return (
     <div className={styles.contained}>
       <Button
@@ -58,13 +70,10 @@ export const ConversationRecordPage = () => {
               </p>
             </div>
           </section>
-          {item.pendingItems.length > 0 && (
-            <LearningCandidates id={item.id} items={item.pendingItems} />
-          )}
           <div className={styles.detailGrid}>
             <section className={`${styles.panel} ${styles.notesPanel}`}>
               <Heading as="h2" size="md" className={styles.sectionHeading}>
-                {t('conversationReflection')}
+                {t('conversationSummary')}
               </Heading>
               <p className={styles.noteContent}>{item.notes}</p>
               <div className={styles.badges}>
@@ -85,28 +94,31 @@ export const ConversationRecordPage = () => {
                   >
                     <Icon name="check" size={16} />
                     {expression.text}
+                    {usageCounts.has(expression.id) && (
+                      <span className={styles.usageCount}>
+                        {t('conversationUsageCount', { count: usageCounts.get(expression.id)! })}
+                      </span>
+                    )}
                   </Link>
                 ))
               ) : (
                 <p className={styles.muted}>{t('conversationNoExpressions')}</p>
               )}
-              <Heading as="h2" size="md" className={styles.sectionHeading}>
-                {t('conversationLearnedExpressions')}
-              </Heading>
-              {item.learnedItems.length ? (
-                item.learnedItems.map((expression) => (
-                  <Link
-                    key={expression.id}
-                    to={expression.kind === 'word' ? '/vocabulary' : '/phrases'}
-                    className={styles.learnedExpression}
-                  >
-                    <Icon name="book" size={16} />
-                    {expression.text}
-                  </Link>
-                ))
-              ) : (
-                <p className={styles.muted}>{t('conversationNoExpressions')}</p>
+              {item.learnedItems.length > 0 && (
+                <Heading as="h2" size="md" className={styles.sectionHeading}>
+                  {t('conversationLearnedExpressions')}
+                </Heading>
               )}
+              {item.learnedItems.map((expression) => (
+                <Link
+                  key={expression.id}
+                  to={expression.kind === 'word' ? '/vocabulary' : '/phrases'}
+                  className={styles.learnedExpression}
+                >
+                  <Icon name="book" size={16} />
+                  {expression.text}
+                </Link>
+              ))}
               <Button
                 className={styles.fullWidth}
                 variant="outline"
@@ -117,6 +129,7 @@ export const ConversationRecordPage = () => {
               </Button>
             </section>
           </div>
+          <ConversationReview key={item.id} item={item} />
         </>
       )}
     </div>

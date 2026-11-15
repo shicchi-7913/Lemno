@@ -131,7 +131,12 @@ impl SqliteVocabularyRepository {
             ))
             .map_err(storage)?;
             tx.pragma_update(None, "user_version", 4).map_err(storage)?;
-        } else if version != 4 {
+        }
+        if version < 5 {
+            tx.execute_batch(include_str!("../migrations/0005_conversation_reviews.sql"))
+                .map_err(storage)?;
+            tx.pragma_update(None, "user_version", 5).map_err(storage)?;
+        } else if version != 5 {
             return Err(Error::Storage("Unsupported database version".into()));
         }
         tx.commit().map_err(storage)?;

@@ -61,6 +61,7 @@ pub struct ConversationInput {
     pub ai: String,
     pub duration_minutes: i64,
     pub notes: String,
+    pub feedback: String,
     pub used_item_ids: Vec<String>,
     pub learned_items: Vec<VocabularyInput>,
 }
@@ -69,6 +70,7 @@ impl ConversationInput {
     pub fn normalized(self) -> Result<Self, Error> {
         let mut input = Self {
             notes: self.notes.trim().into(),
+            feedback: self.feedback.trim().into(),
             ..self
         };
         if input.id.is_empty()
@@ -77,6 +79,8 @@ impl ConversationInput {
             || input.ai != "ChatGPT"
             || input.notes.is_empty()
             || input.notes.chars().count() > 20000
+            || input.feedback.is_empty()
+            || input.feedback.chars().count() > 20000
             || input.used_item_ids.len() > 100
             || input.learned_items.len() > 100
         {
@@ -102,7 +106,7 @@ pub struct Conversation {
     pub duration_minutes: i64,
     pub notes: String,
     pub occurred_at: String,
-    pub pending_candidate_count: i64,
+    pub reviewed_at: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -117,6 +121,7 @@ pub struct Expression {
 #[serde(rename_all = "camelCase")]
 pub struct LearningCandidate {
     pub id: String,
+    pub registered: bool,
     #[serde(flatten)]
     pub input: VocabularyInput,
 }
@@ -128,7 +133,8 @@ pub struct ConversationDetail {
     pub conversation: Conversation,
     pub used_items: Vec<Expression>,
     pub learned_items: Vec<Expression>,
-    pub pending_items: Vec<LearningCandidate>,
+    pub feedback: String,
+    pub candidates: Vec<LearningCandidate>,
 }
 
 pub trait ConversationRepository {
@@ -147,11 +153,10 @@ pub trait ConversationRepository {
         profile_id: &str,
         input: &ConversationInput,
     ) -> Result<ConversationDetail, Error>;
-    fn resolve_candidate(
+    fn save_review(
         &self,
         profile_id: &str,
         session_id: &str,
-        candidate_id: &str,
-        register: bool,
+        selected_candidate_ids: &[String],
     ) -> Result<ConversationDetail, Error>;
 }
