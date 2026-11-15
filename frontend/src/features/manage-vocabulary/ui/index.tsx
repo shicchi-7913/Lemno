@@ -20,7 +20,10 @@ import styles from './dialog.module.scss';
 interface StudyItemDialogCopy {
   createTitle: Parameters<typeof t>[0];
   exampleLabel: Parameters<typeof t>[0];
+  examplePlaceholder: Parameters<typeof t>[0];
+  meaningPlaceholder: Parameters<typeof t>[0];
   textLabel: Parameters<typeof t>[0];
+  textPlaceholder: Parameters<typeof t>[0];
 }
 
 export interface StudyItemDialogProps {
@@ -140,7 +143,7 @@ export const StudyItemDialog = ({
                   maxLength={200}
                   value={input.text}
                   onChange={(event) => changeInput('text', event.currentTarget)}
-                  placeholder={t('wordPlaceholder')}
+                  placeholder={t(copy.textPlaceholder)}
                   autoComplete="off"
                   spellCheck={false}
                   required
@@ -156,7 +159,7 @@ export const StudyItemDialog = ({
                   rows={1}
                   value={input.explanation}
                   onChange={(event) => changeInput('explanation', event.currentTarget)}
-                  placeholder={t('studyMeaningPlaceholder')}
+                  placeholder={t(copy.meaningPlaceholder)}
                   required
                 />
                 <FieldError {...fields.explanation.error} />
@@ -170,7 +173,7 @@ export const StudyItemDialog = ({
                   rows={1}
                   value={input.exampleText}
                   onChange={(event) => changeInput('exampleText', event.currentTarget)}
-                  placeholder={t('studyExamplePlaceholder')}
+                  placeholder={t(copy.examplePlaceholder)}
                 />
                 <FieldError {...fields.exampleText.error} />
               </div>
