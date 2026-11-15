@@ -60,6 +60,11 @@ description = "Check Rust production layer dependency boundaries"
 dir = "{{ config_root }}"
 run = "cargo test --locked --manifest-path backend/Cargo.toml -p lemno-architecture-tests"
 
+[tasks.test-mcp]
+description = "Test the MCP conversation recording protocol"
+dir = "{{ config_root }}"
+run = "cargo test --locked --manifest-path backend/Cargo.toml -p lemno-mcp"
+
 [tasks.build]
 description = "Build and bundle the Tauri desktop app"
 dir = "{{ config_root }}/frontend"

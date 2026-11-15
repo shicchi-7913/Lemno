@@ -5,8 +5,8 @@ use std::{
     sync::Arc,
 };
 
-use lemno_application::{ConversationService, VocabularyService};
-use lemno_domain::{ConversationInput, DEFAULT_PROFILE_ID, Error, StudyKind, VocabularyInput};
+use lemno_application::ConversationService;
+use lemno_domain::{ConversationInput, DEFAULT_PROFILE_ID, Error};
 use lemno_infrastructure::SqliteVocabularyRepository;
 use rmcp::{
     ErrorData, RoleServer, ServerHandler,
@@ -17,38 +17,20 @@ use rmcp::{
     service::RequestContext,
 };
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
-use serde_json::{Value, json};
+use serde_json::Value;
 
 use crate::McpResult;
 
 #[derive(Clone)]
 pub struct LearningServer {
-    vocabulary: Arc<VocabularyService<SqliteVocabularyRepository>>,
     conversations: Arc<ConversationService<SqliteVocabularyRepository>>,
     language_settings: PathBuf,
 }
 
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
-struct Empty {}
-
-#[derive(Deserialize)]
-#[serde(deny_unknown_fields)]
-struct ListVocabulary {
-    #[serde(default)]
-    kind: StudyKind,
-}
-
-#[derive(Deserialize)]
-#[serde(deny_unknown_fields)]
 struct Input<T> {
     input: T,
-}
-
-#[derive(Deserialize)]
-#[serde(deny_unknown_fields)]
-struct Id {
-    id: String,
 }
 
 fn arguments<T: DeserializeOwned>(value: Value) -> Result<T, Error> {
@@ -62,9 +44,6 @@ fn result(value: impl Serialize) -> Result<Value, Error> {
 impl LearningServer {
     pub fn open(database: &Path) -> McpResult<Self> {
         Ok(Self {
-            vocabulary: Arc::new(VocabularyService(SqliteVocabularyRepository::open(
-                database,
-            )?)),
             conversations: Arc::new(ConversationService(SqliteVocabularyRepository::open(
                 database,
             )?)),
@@ -90,35 +69,10 @@ impl LearningServer {
         )
     }
 
-    fn execute(&self, name: &str, args: Value) -> Result<Value, Error> {
+    fn execute(&self, args: Value) -> Result<Value, Error> {
         let profile = self.current_profile()?;
-        match name {
-            "list_vocabulary" => {
-                let args: ListVocabulary = arguments(args)?;
-                result(json!({ "items": self.vocabulary.list(profile, args.kind)? }))
-            }
-            "create_vocabulary" => {
-                let args: Input<VocabularyInput> = arguments(args)?;
-                result(self.vocabulary.create(profile, args.input)?)
-            }
-            "list_topics" => {
-                let _: Empty = arguments(args)?;
-                result(json!({ "topics": self.conversations.topics(profile)? }))
-            }
-            "list_conversations" => {
-                let _: Empty = arguments(args)?;
-                result(json!({ "conversations": self.conversations.conversations(profile)? }))
-            }
-            "get_conversation" => {
-                let args: Id = arguments(args)?;
-                result(self.conversations.conversation(profile, &args.id)?)
-            }
-            "record_conversation" => {
-                let args: Input<ConversationInput> = arguments(args)?;
-                result(self.conversations.record(profile, args.input)?)
-            }
-            _ => unreachable!("Tool names are checked before dispatch"),
-        }
+        let args: Input<ConversationInput> = arguments(args)?;
+        result(self.conversations.record(profile, args.input)?)
     }
 
     pub fn tools() -> Vec<Tool> {
@@ -134,10 +88,11 @@ impl ServerHandler for LearningServer {
             .with_instructions(
                 "Lemno uses the learning language currently selected in the desktop app. \
                  The language is read on every tool call, so switching languages needs no reconnection. \
-                 List topics and vocabulary before practice. \
                  Only record expressions the learner actually used. Ask the learner to confirm \
                  the summary and learned expressions before saving. Reuse the same conversation \
-                 input.id on retries to avoid duplicates. Use ai=ChatGPT."
+                 input.id on retries to avoid duplicates. Use ai=ChatGPT. \
+                 If existing topic or expression IDs are unavailable, use topicId=null \
+                 and usedItemIds=[]."
                     .to_owned(),
             )
     }
@@ -168,10 +123,7 @@ impl ServerHandler for LearningServer {
         let server = self.clone();
         // SQLite waits and transactions must not block the MCP runtime's IO tasks.
         let output = tokio::task::spawn_blocking(move || {
-            server.execute(
-                &request.name,
-                Value::Object(request.arguments.unwrap_or_default()),
-            )
+            server.execute(Value::Object(request.arguments.unwrap_or_default()))
         })
         .await
         .map_err(|_| ErrorData::internal_error("Learning task failed", None))?;

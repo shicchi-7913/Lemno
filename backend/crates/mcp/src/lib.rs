@@ -1,6 +1,6 @@
 use std::{ffi::OsString, path::Path, time::Duration};
 
-use rmcp::{ServiceExt, model::CallToolRequestParams, transport::TokioChildProcess};
+use rmcp::{ServiceExt, transport::TokioChildProcess};
 use serde::Serialize;
 
 mod server;
@@ -66,7 +66,7 @@ pub fn run_cli(args: impl IntoIterator<Item = OsString>) -> McpResult<()> {
     run_stdio(Path::new(&database))
 }
 
-/// Test the actual executable, handshake, tool discovery and a read-only database query.
+/// Test the actual executable, handshake and tool discovery without recording a conversation.
 pub async fn check_connection(config: ConnectionConfig) -> McpResult<usize> {
     tokio::time::timeout(Duration::from_secs(15), async move {
         let mut command = tokio::process::Command::new(&config.command);
@@ -74,11 +74,8 @@ pub async fn check_connection(config: ConnectionConfig) -> McpResult<usize> {
         let client = ().serve(TokioChildProcess::new(command)?).await?;
         let result = async {
             let tools = client.list_all_tools().await?;
-            let topics = client
-                .call_tool(CallToolRequestParams::new("list_topics"))
-                .await?;
-            if topics.is_error == Some(true) {
-                return Err("Could not read learning data".into());
+            if tools.len() != 1 || tools[0].name != "record_conversation" {
+                return Err("Unexpected learning tools".into());
             }
             Ok(tools.len())
         }
