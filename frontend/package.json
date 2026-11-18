@@ -2,7 +2,15 @@
   "name": "lemno",
   "private": true,
   "version": "0.1.0",
+  "packageManager": "pnpm@12.20.0",
   "type": "module",
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "26.13.1",
+      "onFail": "download"
+    }
+  },
   "scripts": {
     "dev": "pnpm styles:types && concurrently --kill-others --names styles,vite \"pnpm styles:types:watch\" \"vite\"",
     "format": "pnpm lint:fix && prettier --write .",

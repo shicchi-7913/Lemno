@@ -19,6 +19,14 @@
       "matchDatasources": ["npm"],
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "npm non-major dependencies"
+    },
+    {
+      "matchDepNames": ["node"],
+      "groupName": "Node.js"
+    },
+    {
+      "matchDepNames": ["pnpm"],
+      "groupName": "pnpm"
     }
   ]
 }
