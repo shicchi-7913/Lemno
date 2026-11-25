@@ -2,7 +2,7 @@
   "name": "lemno",
   "private": true,
   "version": "0.1.0",
-  "packageManager": "pnpm@12.21.0",
+  "packageManager": "pnpm@12.23.0",
   "type": "module",
   "devEngines": {
     "runtime": {
