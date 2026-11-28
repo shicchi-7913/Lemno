@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.1.1](https://github.com/shicchi-7913/Lemno/compare/v0.1.0...v0.1.1) (2026-11-28)
+
+
+### Bug Fixes
+
+* **deps:** update npm non-major dependencies ([#54](https://github.com/shicchi-7913/Lemno/issues/54)) ([d25f5a2](https://github.com/shicchi-7913/Lemno/commit/d25f5a2dc3586bff22c7c1c78e5d56590e45053f))
+* **deps:** update npm non-major dependencies ([#60](https://github.com/shicchi-7913/Lemno/issues/60)) ([4473071](https://github.com/shicchi-7913/Lemno/commit/447307189efb53d293868cfde9afe77f1a0d92e7))
+* **deps:** update rust crate rmcp to v3.11.0 ([#55](https://github.com/shicchi-7913/Lemno/issues/55)) ([12f92ee](https://github.com/shicchi-7913/Lemno/commit/12f92ee89f0699b3e857189af728711024d344de))
+* **deps:** update rust crate rusqlite to 0.43 ([#47](https://github.com/shicchi-7913/Lemno/issues/47)) ([188af21](https://github.com/shicchi-7913/Lemno/commit/188af218b3a1064526548426c67b880a4c103e13))
+* **deps:** update rust crate toml_edit to v0.25.21 ([#62](https://github.com/shicchi-7913/Lemno/issues/62)) ([4c0ed32](https://github.com/shicchi-7913/Lemno/commit/4c0ed32ab55fa1a72363b9bd2ad314d99b12d041))
+* **deps:** update tauri monorepo ([#52](https://github.com/shicchi-7913/Lemno/issues/52)) ([86f47cd](https://github.com/shicchi-7913/Lemno/commit/86f47cd0ecbdd00ec5646fb9cfa8246eeb8aada8))
+* split word and phrase study forms ([#50](https://github.com/shicchi-7913/Lemno/issues/50)) ([73b2759](https://github.com/shicchi-7913/Lemno/commit/73b275969bf7513453498c96a932c5e6979bfaec))
+
 ## 0.1.0 (2026-11-15)
 
 
